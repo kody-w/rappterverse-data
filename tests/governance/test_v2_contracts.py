@@ -401,6 +401,10 @@ class V2GovernanceTests(unittest.TestCase):
 
     def test_fixture_bypass_is_confined_to_exact_contract_directory(self) -> None:
         allowed = "tests/fixtures/contracts/invalid/direct-v2.json"
+        allowed_release = (
+            "tests/fixtures/contracts/v2/release-graph/objects/"
+            "records/sha256/aa/direct-v2.json"
+        )
         denied = "tests/fixtures/contracts-evil/invalid/direct-v2.json"
         value = {
             "schemaVersion": "rappterverse.public-record/v2",
@@ -408,16 +412,23 @@ class V2GovernanceTests(unittest.TestCase):
         }
         data = canonical_json_v2(value, stored=True)
         self.write(allowed, data)
+        self.write(allowed_release, data)
         self.write(denied, data)
 
         allowed_report = GovernanceValidator(self.root, POLICIES).validate(
             [Change("A", allowed)]
         )
+        allowed_release_report = GovernanceValidator(
+            self.root, POLICIES
+        ).validate([Change("A", allowed_release)])
         denied_report = GovernanceValidator(self.root, POLICIES).validate(
             [Change("A", denied)]
         )
 
         self.assertTrue(allowed_report.ok, allowed_report.as_dict())
+        self.assertTrue(
+            allowed_release_report.ok, allowed_release_report.as_dict()
+        )
         self.assertFalse(denied_report.ok)
         self.assertTrue(
             {"FIELD_FORBIDDEN", "V2_CONTRACT_REQUIRED"}
