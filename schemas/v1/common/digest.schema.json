@@ -1,0 +1,25 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json",
+    "title": "RAPPterverse Digests",
+    "description": "Canonical digest and Git object identifiers used by public data contracts.",
+    "$ref": "#/$defs/Sha256Digest",
+    "$defs": {
+        "Sha256Hex": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+        },
+        "Sha256Digest": {
+            "type": "string",
+            "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "GitCommit": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{40}$"
+        },
+        "GitObject": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{40,64}$"
+        }
+    }
+}

@@ -1,0 +1,32 @@
+{
+    "$schema": "rappterverse.policy/reasoning/v1",
+    "policyVersion": "1.0.0",
+    "requiredLayers": {
+        "visibleTranscript": {
+            "required": true,
+            "status": "included",
+            "description": "Public-safe prompts, visible outputs, tool calls, tool arguments, tool results, verifier results, and final outcomes."
+        },
+        "publicDeliberation": {
+            "required": true,
+            "status": "included",
+            "description": "Explicitly authored evidence, assumptions, alternatives, uncertainty, critiques, rejected options, decision, and expected outcome."
+        },
+        "providerExposedReasoning": {
+            "required": false,
+            "allowedStatuses": [
+                "not-provided",
+                "approved-public"
+            ],
+            "approvalRequiredFor": "approved-public",
+            "termsVerificationRequired": true,
+            "redistributionPermissionRequired": true
+        }
+    },
+    "neverCollect": [
+        "inaccessible-provider-scratchpad",
+        "inferred-hidden-reasoning",
+        "copilot-system-instructions",
+        "operational-secrets"
+    ]
+}

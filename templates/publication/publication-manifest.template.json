@@ -1,0 +1,92 @@
+{
+    "$template": "Replace every angle-bracket value and recompute every hash before publication.",
+    "schema": "rappterverse.publication/v1",
+    "publicationId": "publication-<dataset>-<sequence>",
+    "datasetId": "<d01-through-d10-dataset-id>",
+    "policyVersion": "1.0.0",
+    "candidateSha256": "<64-lowercase-hex>",
+    "publicArtifactSha256": "<aggregate-artifact-digest>",
+    "licenses": {
+        "data": "CC-BY-4.0",
+        "code": "Apache-2.0"
+    },
+    "artifacts": [
+        {
+            "path": "objects/records/sha256/<prefix>/<64-lowercase-hex>.jsonl",
+            "sha256": "<64-lowercase-hex>",
+            "bytes": 1,
+            "mediaType": "application/x-ndjson",
+            "role": "records"
+        }
+    ],
+    "layers": {
+        "visibleTranscript": {
+            "status": "included",
+            "ref": "sha256:<64-lowercase-hex>"
+        },
+        "publicDeliberation": {
+            "status": "included",
+            "ref": "sha256:<64-lowercase-hex>"
+        },
+        "providerExposedReasoning": {
+            "status": "not-provided",
+            "ref": null,
+            "providerFormat": null,
+            "approvalReceipt": null
+        }
+    },
+    "provenance": {
+        "rightsBasis": "synthetic",
+        "rightsStatementId": "synthetic-project-generated-v1",
+        "rightsStatement": "This material was generated for RAPPterverse from project-controlled synthetic inputs and contains no external corpus content.",
+        "sources": [
+            {
+                "type": "deterministic-synthetic",
+                "sourceId": "urn:rappterverse:synthetic:<source-id>",
+                "generatorCommit": "<40-lowercase-hex-commit>"
+            }
+        ]
+    },
+    "governance": {
+        "privacy": "synthetic-nonpersonal",
+        "safetyStatus": "pass",
+        "safetyLabels": [
+            "none"
+        ],
+        "contamination": {
+            "label": "deterministic-synthetic-public"
+        },
+        "publicExposure": {
+            "label": "public-on-release"
+        },
+        "evaluationUse": "contamination-prone-not-clean-evaluation",
+        "quality": {
+            "recordCount": 1,
+            "metrics": {
+                "schemaPassRate": 1.0,
+                "verifierPassRate": 1.0,
+                "provenancePassRate": 1.0,
+                "rightsPassRate": 1.0,
+                "privacyPassRate": 1.0,
+                "safetyPassRate": 1.0,
+                "integrityPassRate": 1.0,
+                "transcriptCoverage": 1.0,
+                "deliberationCoverage": 1.0,
+                "contaminationLabelCoverage": 1.0,
+                "publicExposureLabelCoverage": 1.0,
+                "duplicateRate": 0.0
+            }
+        },
+        "reviewReceipt": {
+            "candidateSha256": "<64-lowercase-hex>",
+            "disposition": "approve_public",
+            "reviewer": "<approved-reviewer-id>",
+            "policyVersion": "1.0.0",
+            "reviewedAt": "<ISO-8601 UTC timestamp ending in Z>",
+            "publicArtifactSha256": "<aggregate-artifact-digest>"
+        }
+    },
+    "withdrawal": {
+        "policy": "append-only-tombstone"
+    }
+}

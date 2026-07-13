@@ -1,0 +1,354 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://data.rappterverse.dev/schemas/v1/worldpacks/world-pack-source.schema.json",
+    "title": "RAPPterverse World-Pack Source ABI",
+    "description": "Reviewed, immutable projections compiled deterministically into playable world packs. Mutable runtime overlay values are never supplied as defaults.",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "schemaVersion",
+        "worldPackSourceId",
+        "release",
+        "projectionRecipe",
+        "namespace",
+        "seedChannels",
+        "entities",
+        "limits",
+        "integrity"
+    ],
+    "properties": {
+        "schemaVersion": {
+            "const": "rappterverse.world-pack-source/v1"
+        },
+        "worldPackSourceId": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/WorldPackSourceId"
+        },
+        "release": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "releaseId",
+                "manifestSha256",
+                "dataCommit"
+            ],
+            "properties": {
+                "releaseId": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/ReleaseId"
+                },
+                "manifestSha256": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+                },
+                "dataCommit": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/GitCommit"
+                }
+            }
+        },
+        "projectionRecipe": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "id",
+                "version",
+                "sha256"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "pattern": "^recipe-[a-z0-9][a-z0-9.-]{0,119}$"
+                },
+                "version": {
+                    "type": "string",
+                    "pattern": "^v[1-9][0-9]*$"
+                },
+                "sha256": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+                }
+            }
+        },
+        "namespace": {
+            "type": "string",
+            "pattern": "^rappterverse/[a-z0-9][a-z0-9._/-]{0,127}$"
+        },
+        "seedChannels": {
+            "type": "array",
+            "minItems": 4,
+            "maxItems": 32,
+            "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                    "channel",
+                    "seedSha256"
+                ],
+                "properties": {
+                    "channel": {
+                        "type": "string",
+                        "enum": [
+                            "immutable-layout",
+                            "frames",
+                            "engines",
+                            "visuals",
+                            "audio",
+                            "narrative",
+                            "economy",
+                            "governance"
+                        ]
+                    },
+                    "seedSha256": {
+                        "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+                    }
+                }
+            }
+        },
+        "entities": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 100000,
+            "items": {
+                "$ref": "#/$defs/SourceEntity"
+            }
+        },
+        "limits": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "shardHardBytes",
+                "fragmentHardBytes",
+                "manifestHardBytes"
+            ],
+            "properties": {
+                "shardHardBytes": {
+                    "const": 1000000
+                },
+                "fragmentHardBytes": {
+                    "const": 262144
+                },
+                "manifestHardBytes": {
+                    "const": 512000
+                }
+            }
+        },
+        "integrity": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "sortedByStableKey",
+                "canonicalization",
+                "manifestBytes",
+                "sourceSha256",
+                "reviewReceiptRef"
+            ],
+            "properties": {
+                "sortedByStableKey": {
+                    "const": true
+                },
+                "canonicalization": {
+                    "const": "rappterverse-canonical-json/v1"
+                },
+                "manifestBytes": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 512000
+                },
+                "sourceSha256": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+                },
+                "reviewReceiptRef": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+                }
+            }
+        }
+    },
+    "$defs": {
+        "SourceEntity": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "entityId",
+                "kind",
+                "stableIdInput",
+                "name",
+                "description",
+                "sourceRecordIds",
+                "tags",
+                "attributes",
+                "references",
+                "compilerHints",
+                "immutableBase",
+                "preservedOverlayFields"
+            ],
+            "properties": {
+                "entityId": {
+                    "type": "string",
+                    "pattern": "^source:[a-z][a-z0-9-]{1,31}:[a-z0-9][a-z0-9._/-]{0,191}$"
+                },
+                "kind": {
+                    "type": "string",
+                    "enum": [
+                        "world",
+                        "portal",
+                        "agent-blueprint",
+                        "npc-blueprint",
+                        "quest",
+                        "object",
+                        "item",
+                        "currency",
+                        "governance",
+                        "incident",
+                        "lineage"
+                    ]
+                },
+                "stableIdInput": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 512
+                },
+                "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 256
+                },
+                "description": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                },
+                "sourceRecordIds": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 1024,
+                    "items": {
+                        "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/RecordId"
+                    }
+                },
+                "tags": {
+                    "type": "array",
+                    "uniqueItems": true,
+                    "maxItems": 128,
+                    "items": {
+                        "type": "string",
+                        "pattern": "^[a-z0-9][a-z0-9.-]{0,63}$"
+                    }
+                },
+                "attributes": {
+                    "type": "array",
+                    "maxItems": 512,
+                    "items": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                            "key",
+                            "value"
+                        ],
+                        "properties": {
+                            "key": {
+                                "type": "string",
+                                "pattern": "^[a-z][a-z0-9.-]{0,127}$"
+                            },
+                            "value": {
+                                "$ref": "https://data.rappterverse.dev/schemas/v1/common/json-value.schema.json#/$defs/JsonValue"
+                            }
+                        }
+                    }
+                },
+                "references": {
+                    "type": "array",
+                    "maxItems": 512,
+                    "items": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                            "relation",
+                            "targetEntityId",
+                            "required"
+                        ],
+                        "properties": {
+                            "relation": {
+                                "type": "string",
+                                "pattern": "^[a-z][a-z0-9.-]{0,127}$"
+                            },
+                            "targetEntityId": {
+                                "type": "string",
+                                "pattern": "^source:[a-z][a-z0-9-]{1,31}:[a-z0-9][a-z0-9._/-]{0,191}$"
+                            },
+                            "required": {
+                                "type": "boolean"
+                            }
+                        }
+                    }
+                },
+                "compilerHints": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                        "seedChannel",
+                        "placementPolicy",
+                        "priority"
+                    ],
+                    "properties": {
+                        "seedChannel": {
+                            "type": "string",
+                            "enum": [
+                                "immutable-layout",
+                                "frames",
+                                "engines",
+                                "visuals",
+                                "audio",
+                                "narrative",
+                                "economy",
+                                "governance"
+                            ]
+                        },
+                        "placementPolicy": {
+                            "type": "string",
+                            "enum": [
+                                "not-applicable",
+                                "fixed",
+                                "seeded"
+                            ]
+                        },
+                        "priority": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 1000
+                        }
+                    }
+                },
+                "immutableBase": {
+                    "const": true
+                },
+                "preservedOverlayFields": {
+                    "type": "array",
+                    "uniqueItems": true,
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "controller",
+                            "position",
+                            "status",
+                            "hp",
+                            "evolved-traits",
+                            "needs",
+                            "mood",
+                            "tasks",
+                            "memory",
+                            "quest-progress",
+                            "damage",
+                            "user-created-state",
+                            "balances",
+                            "listings",
+                            "trades",
+                            "ledger",
+                            "proposals",
+                            "ballots",
+                            "enacted-overlays",
+                            "incident-progress",
+                            "living-descendants",
+                            "history"
+                        ]
+                    }
+                }
+            }
+        }
+    }
+}

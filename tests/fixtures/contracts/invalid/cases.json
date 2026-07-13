@@ -1,0 +1,1232 @@
+[
+    {
+        "name": "record-rejects-open-property",
+        "schema": "schemas/v1/common/public-record.schema.json",
+        "instance": {
+            "schemaVersion": "rappterverse.public-record/v1",
+            "datasetId": "d04-work-trajectories",
+            "recordType": "trajectory",
+            "recordId": "urn:rappterverse:record:sha256:3333333333333333333333333333333333333333333333333333333333333333",
+            "episodeId": "episode-fixture-001",
+            "sequence": 0,
+            "split": "train",
+            "eventTime": "2026-01-01T00:00:00Z",
+            "payload": {
+                "task": "Apply a deterministic repair",
+                "verified": true
+            },
+            "provenance": {
+                "schemaVersion": "rappterverse.provenance/v1",
+                "sources": [
+                    {
+                        "schemaVersion": "rappterverse.source-ref/v1",
+                        "sourceId": "urn:rappterverse:source:sha256:1111111111111111111111111111111111111111111111111111111111111111",
+                        "sourceType": "deterministic-synthetic",
+                        "locator": "urn:rappterverse:synthetic:fixture-001",
+                        "commitSha": null,
+                        "blobSha256": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+                        "path": null,
+                        "rightsStatementId": "rights-synthetic-v1",
+                        "ownershipAttestationRef": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+                        "consentReceiptRef": null,
+                        "publicSafe": true
+                    }
+                ],
+                "rightsBasis": "synthetic",
+                "sourceCommit": null,
+                "sourceBlobs": [],
+                "lineageComplete": true,
+                "externalContentIncluded": false
+            },
+            "generation": {
+                "runId": "run-fixture-001",
+                "threadId": "d04",
+                "generatorCommit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "seed": "fixture-seed",
+                "model": {
+                    "provider": "github-models",
+                    "modelId": "fixture-model",
+                    "requestId": "request-001",
+                    "policyHash": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+                    "providerReasoningExposed": false
+                },
+                "promptTemplate": {
+                    "id": "prompt-public-generation",
+                    "version": "v1",
+                    "sha256": "sha256:5555555555555555555555555555555555555555555555555555555555555555"
+                },
+                "transcriptRef": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+                "deliberationRef": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
+                "providerReasoningRef": null,
+                "providerReasoningReviewRef": null,
+                "tools": [
+                    {
+                        "name": "fixture_tool",
+                        "version": "1",
+                        "definitionSha256": "sha256:8888888888888888888888888888888888888888888888888888888888888888"
+                    }
+                ]
+            },
+            "governance": {
+                "license": "CC-BY-4.0",
+                "privacy": "synthetic-nonpersonal",
+                "safetyLabels": [
+                    "synthetic"
+                ],
+                "safetyReviewPassed": true,
+                "contamination": {
+                    "status": "synthetic-public",
+                    "publicSince": "2026-01-01T00:00:00Z",
+                    "evaluationUse": "disclose-and-control"
+                },
+                "quality": {
+                    "verifierPassed": true,
+                    "verifierRefs": [
+                        "sha256:9999999999999999999999999999999999999999999999999999999999999999"
+                    ],
+                    "score": 1.0
+                },
+                "dataCardRef": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "reviewReceiptRef": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+            },
+            "integrity": {
+                "canonicalization": "rappterverse-canonical-json/v1",
+                "payloadSha256": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+                "recordSha256": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+            },
+            "hiddenReasoning": "forbidden"
+        }
+    },
+    {
+        "name": "record-requires-deliberation",
+        "schema": "schemas/v1/common/public-record.schema.json",
+        "instance": {
+            "schemaVersion": "rappterverse.public-record/v1",
+            "datasetId": "d04-work-trajectories",
+            "recordType": "trajectory",
+            "recordId": "urn:rappterverse:record:sha256:3333333333333333333333333333333333333333333333333333333333333333",
+            "episodeId": "episode-fixture-001",
+            "sequence": 0,
+            "split": "train",
+            "eventTime": "2026-01-01T00:00:00Z",
+            "payload": {
+                "task": "Apply a deterministic repair",
+                "verified": true
+            },
+            "provenance": {
+                "schemaVersion": "rappterverse.provenance/v1",
+                "sources": [
+                    {
+                        "schemaVersion": "rappterverse.source-ref/v1",
+                        "sourceId": "urn:rappterverse:source:sha256:1111111111111111111111111111111111111111111111111111111111111111",
+                        "sourceType": "deterministic-synthetic",
+                        "locator": "urn:rappterverse:synthetic:fixture-001",
+                        "commitSha": null,
+                        "blobSha256": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+                        "path": null,
+                        "rightsStatementId": "rights-synthetic-v1",
+                        "ownershipAttestationRef": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+                        "consentReceiptRef": null,
+                        "publicSafe": true
+                    }
+                ],
+                "rightsBasis": "synthetic",
+                "sourceCommit": null,
+                "sourceBlobs": [],
+                "lineageComplete": true,
+                "externalContentIncluded": false
+            },
+            "generation": {
+                "runId": "run-fixture-001",
+                "threadId": "d04",
+                "generatorCommit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "seed": "fixture-seed",
+                "model": {
+                    "provider": "github-models",
+                    "modelId": "fixture-model",
+                    "requestId": "request-001",
+                    "policyHash": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+                    "providerReasoningExposed": false
+                },
+                "promptTemplate": {
+                    "id": "prompt-public-generation",
+                    "version": "v1",
+                    "sha256": "sha256:5555555555555555555555555555555555555555555555555555555555555555"
+                },
+                "transcriptRef": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+                "providerReasoningRef": null,
+                "providerReasoningReviewRef": null,
+                "tools": [
+                    {
+                        "name": "fixture_tool",
+                        "version": "1",
+                        "definitionSha256": "sha256:8888888888888888888888888888888888888888888888888888888888888888"
+                    }
+                ]
+            },
+            "governance": {
+                "license": "CC-BY-4.0",
+                "privacy": "synthetic-nonpersonal",
+                "safetyLabels": [
+                    "synthetic"
+                ],
+                "safetyReviewPassed": true,
+                "contamination": {
+                    "status": "synthetic-public",
+                    "publicSince": "2026-01-01T00:00:00Z",
+                    "evaluationUse": "disclose-and-control"
+                },
+                "quality": {
+                    "verifierPassed": true,
+                    "verifierRefs": [
+                        "sha256:9999999999999999999999999999999999999999999999999999999999999999"
+                    ],
+                    "score": 1.0
+                },
+                "dataCardRef": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "reviewReceiptRef": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+            },
+            "integrity": {
+                "canonicalization": "rappterverse-canonical-json/v1",
+                "payloadSha256": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+                "recordSha256": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+            }
+        }
+    },
+    {
+        "name": "transcript-must-be-complete",
+        "schema": "schemas/v1/transcripts/visible-transcript.schema.json",
+        "instance": {
+            "schemaVersion": "rappterverse.visible-transcript/v1",
+            "transcriptId": "urn:rappterverse:transcript:sha256:6666666666666666666666666666666666666666666666666666666666666666",
+            "datasetId": "d04-work-trajectories",
+            "recordId": "urn:rappterverse:record:sha256:3333333333333333333333333333333333333333333333333333333333333333",
+            "runId": "run-fixture-001",
+            "episodeId": "episode-fixture-001",
+            "startedAt": "2026-01-01T00:00:00Z",
+            "completedAt": "2026-01-01T00:00:00Z",
+            "participants": [
+                {
+                    "actorId": "public-system",
+                    "role": "system",
+                    "displayName": "Public dataset system"
+                },
+                {
+                    "actorId": "fixture-user",
+                    "role": "user",
+                    "displayName": "Synthetic task author"
+                },
+                {
+                    "actorId": "fixture-agent",
+                    "role": "assistant",
+                    "displayName": "Fixture agent"
+                },
+                {
+                    "actorId": "fixture-tool",
+                    "role": "tool",
+                    "displayName": "Fixture tool"
+                },
+                {
+                    "actorId": "fixture-verifier",
+                    "role": "verifier",
+                    "displayName": "Fixture verifier"
+                }
+            ],
+            "capture": {
+                "systemPrompts": true,
+                "userPrompts": true,
+                "assistantOutputs": true,
+                "toolCalls": true,
+                "toolArguments": true,
+                "toolResults": false,
+                "verifierResults": true,
+                "finalOutcomes": true,
+                "complete": true,
+                "publicSafe": true
+            },
+            "events": [
+                {
+                    "eventId": "event-000",
+                    "sequence": 0,
+                    "timestamp": "2026-01-01T00:00:00Z",
+                    "actorId": "public-system",
+                    "eventSha256": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+                    "previousEventSha256": null,
+                    "kind": "system-prompt",
+                    "content": {
+                        "complete": true,
+                        "mediaType": "text/plain",
+                        "fragments": [
+                            {
+                                "schemaVersion": "rappterverse.artifact-fragment/v1",
+                                "artifactId": "urn:rappterverse:transcript:sha256:1111111111111111111111111111111111111111111111111111111111111111",
+                                "artifactKind": "transcript",
+                                "index": 0,
+                                "count": 1,
+                                "mediaType": "text/plain",
+                                "encoding": "utf-8",
+                                "data": "Generate public artifacts.",
+                                "utf8Bytes": 26,
+                                "sha256": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+                                "previousFragmentSha256": null
+                            }
+                        ],
+                        "sha256": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+                    }
+                },
+                {
+                    "eventId": "event-001",
+                    "sequence": 1,
+                    "timestamp": "2026-01-01T00:00:00Z",
+                    "actorId": "fixture-user",
+                    "eventSha256": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+                    "previousEventSha256": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+                    "kind": "user-prompt",
+                    "content": {
+                        "complete": true,
+                        "mediaType": "text/plain",
+                        "fragments": [
+                            {
+                                "schemaVersion": "rappterverse.artifact-fragment/v1",
+                                "artifactId": "urn:rappterverse:transcript:sha256:2222222222222222222222222222222222222222222222222222222222222222",
+                                "artifactKind": "transcript",
+                                "index": 0,
+                                "count": 1,
+                                "mediaType": "text/plain",
+                                "encoding": "utf-8",
+                                "data": "Repair the synthetic fixture.",
+                                "utf8Bytes": 29,
+                                "sha256": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+                                "previousFragmentSha256": null
+                            }
+                        ],
+                        "sha256": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+                    }
+                },
+                {
+                    "eventId": "event-002",
+                    "sequence": 2,
+                    "timestamp": "2026-01-01T00:00:00Z",
+                    "actorId": "fixture-agent",
+                    "eventSha256": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+                    "previousEventSha256": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+                    "kind": "assistant-output",
+                    "content": {
+                        "complete": true,
+                        "mediaType": "text/plain",
+                        "fragments": [
+                            {
+                                "schemaVersion": "rappterverse.artifact-fragment/v1",
+                                "artifactId": "urn:rappterverse:transcript:sha256:3333333333333333333333333333333333333333333333333333333333333333",
+                                "artifactKind": "transcript",
+                                "index": 0,
+                                "count": 1,
+                                "mediaType": "text/plain",
+                                "encoding": "utf-8",
+                                "data": "I will inspect the fixture.",
+                                "utf8Bytes": 27,
+                                "sha256": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+                                "previousFragmentSha256": null
+                            }
+                        ],
+                        "sha256": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+                    }
+                },
+                {
+                    "eventId": "event-003",
+                    "sequence": 3,
+                    "timestamp": "2026-01-01T00:00:00Z",
+                    "actorId": "fixture-agent",
+                    "eventSha256": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+                    "previousEventSha256": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+                    "kind": "tool-call",
+                    "callId": "call-001",
+                    "toolName": "fixture_tool",
+                    "arguments": {
+                        "complete": true,
+                        "mediaType": "text/plain",
+                        "fragments": [
+                            {
+                                "schemaVersion": "rappterverse.artifact-fragment/v1",
+                                "artifactId": "urn:rappterverse:transcript:sha256:4444444444444444444444444444444444444444444444444444444444444444",
+                                "artifactKind": "tool-arguments",
+                                "index": 0,
+                                "count": 1,
+                                "mediaType": "text/plain",
+                                "encoding": "utf-8",
+                                "data": "{\"fixture\":1}",
+                                "utf8Bytes": 13,
+                                "sha256": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+                                "previousFragmentSha256": null
+                            }
+                        ],
+                        "sha256": "sha256:4444444444444444444444444444444444444444444444444444444444444444"
+                    }
+                },
+                {
+                    "eventId": "event-004",
+                    "sequence": 4,
+                    "timestamp": "2026-01-01T00:00:00Z",
+                    "actorId": "fixture-tool",
+                    "eventSha256": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+                    "previousEventSha256": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+                    "kind": "tool-result",
+                    "callId": "call-001",
+                    "toolName": "fixture_tool",
+                    "success": true,
+                    "result": {
+                        "complete": true,
+                        "mediaType": "text/plain",
+                        "fragments": [
+                            {
+                                "schemaVersion": "rappterverse.artifact-fragment/v1",
+                                "artifactId": "urn:rappterverse:transcript:sha256:5555555555555555555555555555555555555555555555555555555555555555",
+                                "artifactKind": "tool-result",
+                                "index": 0,
+                                "count": 1,
+                                "mediaType": "text/plain",
+                                "encoding": "utf-8",
+                                "data": "{\"valid\":true}",
+                                "utf8Bytes": 14,
+                                "sha256": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+                                "previousFragmentSha256": null
+                            }
+                        ],
+                        "sha256": "sha256:5555555555555555555555555555555555555555555555555555555555555555"
+                    }
+                },
+                {
+                    "eventId": "event-005",
+                    "sequence": 5,
+                    "timestamp": "2026-01-01T00:00:00Z",
+                    "actorId": "fixture-verifier",
+                    "eventSha256": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+                    "previousEventSha256": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+                    "kind": "verifier-result",
+                    "verifierId": "verifier-fixture",
+                    "passed": true,
+                    "result": {
+                        "complete": true,
+                        "mediaType": "text/plain",
+                        "fragments": [
+                            {
+                                "schemaVersion": "rappterverse.artifact-fragment/v1",
+                                "artifactId": "urn:rappterverse:transcript:sha256:6666666666666666666666666666666666666666666666666666666666666666",
+                                "artifactKind": "verifier-result",
+                                "index": 0,
+                                "count": 1,
+                                "mediaType": "text/plain",
+                                "encoding": "utf-8",
+                                "data": "All invariants pass.",
+                                "utf8Bytes": 20,
+                                "sha256": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+                                "previousFragmentSha256": null
+                            }
+                        ],
+                        "sha256": "sha256:6666666666666666666666666666666666666666666666666666666666666666"
+                    }
+                },
+                {
+                    "eventId": "event-006",
+                    "sequence": 6,
+                    "timestamp": "2026-01-01T00:00:00Z",
+                    "actorId": "fixture-agent",
+                    "eventSha256": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
+                    "previousEventSha256": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+                    "kind": "final-outcome",
+                    "status": "success",
+                    "content": {
+                        "complete": true,
+                        "mediaType": "text/plain",
+                        "fragments": [
+                            {
+                                "schemaVersion": "rappterverse.artifact-fragment/v1",
+                                "artifactId": "urn:rappterverse:transcript:sha256:7777777777777777777777777777777777777777777777777777777777777777",
+                                "artifactKind": "transcript",
+                                "index": 0,
+                                "count": 1,
+                                "mediaType": "text/plain",
+                                "encoding": "utf-8",
+                                "data": "The fixture is repaired.",
+                                "utf8Bytes": 24,
+                                "sha256": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
+                                "previousFragmentSha256": null
+                            }
+                        ],
+                        "sha256": "sha256:7777777777777777777777777777777777777777777777777777777777777777"
+                    }
+                }
+            ],
+            "integrity": {
+                "canonicalization": "rappterverse-canonical-json/v1",
+                "eventCount": 7,
+                "firstEventSha256": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+                "lastEventSha256": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
+                "transcriptSha256": "sha256:6666666666666666666666666666666666666666666666666666666666666666"
+            }
+        }
+    },
+    {
+        "name": "deliberation-needs-two-alternatives",
+        "schema": "schemas/v1/deliberations/public-deliberation.schema.json",
+        "instance": {
+            "schemaVersion": "rappterverse.public-deliberation/v1",
+            "deliberationId": "urn:rappterverse:deliberation:sha256:7777777777777777777777777777777777777777777777777777777777777777",
+            "datasetId": "d04-work-trajectories",
+            "recordId": "urn:rappterverse:record:sha256:3333333333333333333333333333333333333333333333333333333333333333",
+            "transcriptRef": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+            "generatedAt": "2026-01-01T00:00:00Z",
+            "purpose": "explicit-publishable-deliberation",
+            "evidence": [
+                {
+                    "claim": "The fixture is invalid before repair.",
+                    "evidenceRef": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+                    "relevance": "Establishes the repair precondition."
+                }
+            ],
+            "assumptions": [
+                {
+                    "statement": "The fixture is synthetic and owned.",
+                    "testability": "verified"
+                }
+            ],
+            "alternatives": [
+                {
+                    "option": "Apply the minimal repair.",
+                    "benefits": [
+                        "Preserves unrelated fields."
+                    ],
+                    "risks": [
+                        "May miss a coupled invariant."
+                    ]
+                }
+            ],
+            "uncertainty": {
+                "confidence": 0.95,
+                "summary": "The invariant is directly testable.",
+                "unknowns": [
+                    "Future schema revisions may add checks."
+                ]
+            },
+            "critiques": [
+                {
+                    "concern": "A local repair could be incomplete.",
+                    "response": "Replay and schema verification cover coupled state."
+                }
+            ],
+            "rejectedOptions": [
+                {
+                    "option": "Ignore the failure.",
+                    "reason": "Released records must pass verification."
+                }
+            ],
+            "decision": "Apply the minimal repair and replay verification.",
+            "expectedOutcome": "The repaired fixture passes every declared invariant.",
+            "limitations": [
+                "This result covers only the synthetic fixture."
+            ],
+            "integrity": {
+                "publicSafe": true,
+                "inaccessibleReasoningIncluded": false,
+                "deliberationSha256": "sha256:7777777777777777777777777777777777777777777777777777777777777777"
+            }
+        }
+    },
+    {
+        "name": "reasoning-must-be-review-approved",
+        "schema": "schemas/v1/deliberations/provider-reasoning.schema.json",
+        "instance": {
+            "schemaVersion": "rappterverse.provider-reasoning/v1",
+            "reasoningId": "urn:rappterverse:reasoning:sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+            "datasetId": "d04-work-trajectories",
+            "recordId": "urn:rappterverse:record:sha256:3333333333333333333333333333333333333333333333333333333333333333",
+            "transcriptRef": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+            "availability": "provider-exposed",
+            "source": {
+                "provider": "fixture-provider",
+                "modelId": "fixture-model",
+                "requestId": "request-001",
+                "apiField": "exposed_reasoning",
+                "providerFormat": "text",
+                "exposedByProvider": true,
+                "redistributionTermsRef": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+                "redistributionPermitted": true
+            },
+            "content": {
+                "verbatim": true,
+                "complete": true,
+                "fragments": [
+                    {
+                        "schemaVersion": "rappterverse.artifact-fragment/v1",
+                        "artifactId": "urn:rappterverse:provider-reasoning:sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+                        "artifactKind": "provider-reasoning",
+                        "index": 0,
+                        "count": 1,
+                        "mediaType": "text/plain",
+                        "encoding": "utf-8",
+                        "data": "Provider-exposed fixture rationale.",
+                        "utf8Bytes": 35,
+                        "sha256": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+                        "previousFragmentSha256": null
+                    }
+                ],
+                "sha256": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+            },
+            "reviewGate": {
+                "reviewReceiptRef": "sha256:8888888888888888888888888888888888888888888888888888888888888888",
+                "disposition": "reject",
+                "candidateSha256": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+                "publicArtifactSha256": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+                "reviewedAt": "2026-01-01T00:00:00Z",
+                "reviewer": "approved-reviewer-001"
+            },
+            "integrity": {
+                "internalReasoningRequested": false,
+                "inaccessibleReasoningIncluded": false,
+                "reasoningSha256": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+            }
+        }
+    },
+    {
+        "name": "review-reject-cannot-publish",
+        "schema": "schemas/v1/governance/review-receipt.schema.json",
+        "instance": {
+            "schemaVersion": "rappterverse.review-receipt/v1",
+            "reviewId": "urn:rappterverse:review:sha256:8888888888888888888888888888888888888888888888888888888888888888",
+            "datasetId": "d04-work-trajectories",
+            "batchId": "urn:rappterverse:batch:sha256:9999999999999999999999999999999999999999999999999999999999999999",
+            "candidateKind": "provider-reasoning",
+            "candidateSha256": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+            "disposition": "reject",
+            "reviewer": "approved-reviewer-001",
+            "policyVersion": "policy-public-v1",
+            "reviewedAt": "2026-01-01T00:00:00Z",
+            "publicArtifactSha256": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+            "reasoningRedistributionApproved": true,
+            "checks": {
+                "sourceOwnership": "pass",
+                "rights": "pass",
+                "privacy": "pass",
+                "secrets": "pass",
+                "safety": "pass",
+                "transcriptPolicy": "pass",
+                "contamination": "pass",
+                "quality": "pass"
+            },
+            "reasonCodes": [
+                "provider-terms-verified"
+            ],
+            "supersedes": null,
+            "receiptSha256": "sha256:8888888888888888888888888888888888888888888888888888888888888888"
+        }
+    },
+    {
+        "name": "shard-hard-limit",
+        "schema": "schemas/v1/manifests/dataset-manifest.schema.json",
+        "instance": {
+            "schemaVersion": "rappterverse.dataset-manifest/v1",
+            "datasetId": "d04-work-trajectories",
+            "datasetVersion": "v1.0.0",
+            "generatedAt": "2026-01-01T00:00:00Z",
+            "dataCommit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "recordSchema": {
+                "uri": "https://data.rappterverse.dev/schemas/v1/datasets/d04.schema.json",
+                "sha256": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+            },
+            "dataCard": {
+                "path": "datasets/d04-work-trajectories/v1.0.0/data-card.json",
+                "sha256": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            },
+            "recordShards": [
+                {
+                    "path": "objects/records/sha256/11/1111111111111111111111111111111111111111111111111111111111111111.jsonl",
+                    "artifactKind": "records",
+                    "mediaType": "application/x-ndjson",
+                    "sha256": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+                    "byteSize": 1000001,
+                    "itemCount": 1,
+                    "firstItemId": "item-1",
+                    "lastItemId": "item-1",
+                    "maxFragmentBytes": 4096,
+                    "contentAddressed": true,
+                    "reviewReceiptRef": "sha256:8888888888888888888888888888888888888888888888888888888888888888"
+                }
+            ],
+            "transcriptShards": [
+                {
+                    "path": "objects/transcripts/sha256/22/2222222222222222222222222222222222222222222222222222222222222222.jsonl",
+                    "artifactKind": "transcripts",
+                    "mediaType": "application/x-ndjson",
+                    "sha256": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+                    "byteSize": 4096,
+                    "itemCount": 1,
+                    "firstItemId": "item-2",
+                    "lastItemId": "item-2",
+                    "maxFragmentBytes": 4096,
+                    "contentAddressed": true,
+                    "reviewReceiptRef": "sha256:8888888888888888888888888888888888888888888888888888888888888888"
+                }
+            ],
+            "deliberationShards": [
+                {
+                    "path": "objects/deliberations/sha256/33/3333333333333333333333333333333333333333333333333333333333333333.jsonl",
+                    "artifactKind": "deliberations",
+                    "mediaType": "application/x-ndjson",
+                    "sha256": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+                    "byteSize": 4096,
+                    "itemCount": 1,
+                    "firstItemId": "item-3",
+                    "lastItemId": "item-3",
+                    "maxFragmentBytes": 4096,
+                    "contentAddressed": true,
+                    "reviewReceiptRef": "sha256:8888888888888888888888888888888888888888888888888888888888888888"
+                }
+            ],
+            "providerReasoningShards": [],
+            "counts": {
+                "records": 1,
+                "transcripts": 1,
+                "deliberations": 1,
+                "providerReasoning": 0
+            },
+            "splits": {
+                "train": 1,
+                "validation": 0,
+                "test": 0,
+                "unassigned": 0
+            },
+            "limits": {
+                "shardHardBytes": 1000000,
+                "fragmentHardBytes": 262144,
+                "manifestHardBytes": 512000
+            },
+            "reviewReceiptRefs": [
+                "sha256:8888888888888888888888888888888888888888888888888888888888888888"
+            ],
+            "manifestBytes": 4096,
+            "manifestSha256": "sha256:4444444444444444444444444444444444444444444444444444444444444444"
+        }
+    },
+    {
+        "name": "manifest-hard-limit",
+        "schema": "schemas/v1/manifests/release-manifest.schema.json",
+        "instance": {
+            "schemaVersion": "rappterverse.release-manifest/v1",
+            "releaseId": "release-civilization-v1",
+            "createdAt": "2026-01-01T00:00:00Z",
+            "dataCommit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "previousRelease": null,
+            "datasets": [
+                {
+                    "datasetId": "d01-civilization-ledger",
+                    "datasetVersion": "v1.0.0",
+                    "manifestPath": "datasets/d01-civilization-ledger/v1.0.0/manifest.json",
+                    "manifestSha256": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+                    "manifestBytes": 4096,
+                    "dataCardSha256": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+                    "recordCount": 1
+                },
+                {
+                    "datasetId": "d02-counterfactual-multiverse",
+                    "datasetVersion": "v1.0.0",
+                    "manifestPath": "datasets/d02-counterfactual-multiverse/v1.0.0/manifest.json",
+                    "manifestSha256": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+                    "manifestBytes": 4096,
+                    "dataCardSha256": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+                    "recordCount": 1
+                },
+                {
+                    "datasetId": "d03-human-judgment",
+                    "datasetVersion": "v1.0.0",
+                    "manifestPath": "datasets/d03-human-judgment/v1.0.0/manifest.json",
+                    "manifestSha256": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+                    "manifestBytes": 4096,
+                    "dataCardSha256": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+                    "recordCount": 1
+                },
+                {
+                    "datasetId": "d04-work-trajectories",
+                    "datasetVersion": "v1.0.0",
+                    "manifestPath": "datasets/d04-work-trajectories/v1.0.0/manifest.json",
+                    "manifestSha256": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+                    "manifestBytes": 4096,
+                    "dataCardSha256": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+                    "recordCount": 1
+                },
+                {
+                    "datasetId": "d05-agent-lifetimes",
+                    "datasetVersion": "v1.0.0",
+                    "manifestPath": "datasets/d05-agent-lifetimes/v1.0.0/manifest.json",
+                    "manifestSha256": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+                    "manifestBytes": 4096,
+                    "dataCardSha256": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+                    "recordCount": 1
+                },
+                {
+                    "datasetId": "d06-social-causality",
+                    "datasetVersion": "v1.0.0",
+                    "manifestPath": "datasets/d06-social-causality/v1.0.0/manifest.json",
+                    "manifestSha256": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+                    "manifestBytes": 4096,
+                    "dataCardSha256": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+                    "recordCount": 1
+                },
+                {
+                    "datasetId": "d07-market-tape",
+                    "datasetVersion": "v1.0.0",
+                    "manifestPath": "datasets/d07-market-tape/v1.0.0/manifest.json",
+                    "manifestSha256": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
+                    "manifestBytes": 4096,
+                    "dataCardSha256": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
+                    "recordCount": 1
+                },
+                {
+                    "datasetId": "d08-governance-precedent",
+                    "datasetVersion": "v1.0.0",
+                    "manifestPath": "datasets/d08-governance-precedent/v1.0.0/manifest.json",
+                    "manifestSha256": "sha256:8888888888888888888888888888888888888888888888888888888888888888",
+                    "manifestBytes": 4096,
+                    "dataCardSha256": "sha256:8888888888888888888888888888888888888888888888888888888888888888",
+                    "recordCount": 1
+                },
+                {
+                    "datasetId": "d09-failure-recovery",
+                    "datasetVersion": "v1.0.0",
+                    "manifestPath": "datasets/d09-failure-recovery/v1.0.0/manifest.json",
+                    "manifestSha256": "sha256:9999999999999999999999999999999999999999999999999999999999999999",
+                    "manifestBytes": 4096,
+                    "dataCardSha256": "sha256:9999999999999999999999999999999999999999999999999999999999999999",
+                    "recordCount": 1
+                },
+                {
+                    "datasetId": "d10-agent-lineage",
+                    "datasetVersion": "v1.0.0",
+                    "manifestPath": "datasets/d10-agent-lineage/v1.0.0/manifest.json",
+                    "manifestSha256": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                    "manifestBytes": 4096,
+                    "dataCardSha256": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                    "recordCount": 1
+                }
+            ],
+            "worldPackSources": [
+                {
+                    "path": "worldpacks/release-civilization-v1/source.json",
+                    "sha256": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+                }
+            ],
+            "totals": {
+                "records": 10,
+                "transcripts": 10,
+                "deliberations": 10,
+                "providerReasoning": 0,
+                "bytes": 40960
+            },
+            "limits": {
+                "shardHardBytes": 1000000,
+                "fragmentHardBytes": 262144,
+                "manifestHardBytes": 512000
+            },
+            "reviewReceiptRefs": [
+                "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+                "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+                "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+                "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+                "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+                "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+                "sha256:7777777777777777777777777777777777777777777777777777777777777777",
+                "sha256:8888888888888888888888888888888888888888888888888888888888888888",
+                "sha256:9999999999999999999999999999999999999999999999999999999999999999",
+                "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            ],
+            "manifestBytes": 512001,
+            "manifestSha256": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+        }
+    },
+    {
+        "name": "release-requires-ten-datasets",
+        "schema": "schemas/v1/manifests/release-manifest.schema.json",
+        "instance": {
+            "schemaVersion": "rappterverse.release-manifest/v1",
+            "releaseId": "release-civilization-v1",
+            "createdAt": "2026-01-01T00:00:00Z",
+            "dataCommit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "previousRelease": null,
+            "datasets": [
+                {
+                    "datasetId": "d01-civilization-ledger",
+                    "datasetVersion": "v1.0.0",
+                    "manifestPath": "datasets/d01-civilization-ledger/v1.0.0/manifest.json",
+                    "manifestSha256": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+                    "manifestBytes": 4096,
+                    "dataCardSha256": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+                    "recordCount": 1
+                },
+                {
+                    "datasetId": "d02-counterfactual-multiverse",
+                    "datasetVersion": "v1.0.0",
+                    "manifestPath": "datasets/d02-counterfactual-multiverse/v1.0.0/manifest.json",
+                    "manifestSha256": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+                    "manifestBytes": 4096,
+                    "dataCardSha256": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+                    "recordCount": 1
+                },
+                {
+                    "datasetId": "d03-human-judgment",
+                    "datasetVersion": "v1.0.0",
+                    "manifestPath": "datasets/d03-human-judgment/v1.0.0/manifest.json",
+                    "manifestSha256": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+                    "manifestBytes": 4096,
+                    "dataCardSha256": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+                    "recordCount": 1
+                },
+                {
+                    "datasetId": "d04-work-trajectories",
+                    "datasetVersion": "v1.0.0",
+                    "manifestPath": "datasets/d04-work-trajectories/v1.0.0/manifest.json",
+                    "manifestSha256": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+                    "manifestBytes": 4096,
+                    "dataCardSha256": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+                    "recordCount": 1
+                },
+                {
+                    "datasetId": "d05-agent-lifetimes",
+                    "datasetVersion": "v1.0.0",
+                    "manifestPath": "datasets/d05-agent-lifetimes/v1.0.0/manifest.json",
+                    "manifestSha256": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+                    "manifestBytes": 4096,
+                    "dataCardSha256": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+                    "recordCount": 1
+                },
+                {
+                    "datasetId": "d06-social-causality",
+                    "datasetVersion": "v1.0.0",
+                    "manifestPath": "datasets/d06-social-causality/v1.0.0/manifest.json",
+                    "manifestSha256": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+                    "manifestBytes": 4096,
+                    "dataCardSha256": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+                    "recordCount": 1
+                },
+                {
+                    "datasetId": "d07-market-tape",
+                    "datasetVersion": "v1.0.0",
+                    "manifestPath": "datasets/d07-market-tape/v1.0.0/manifest.json",
+                    "manifestSha256": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
+                    "manifestBytes": 4096,
+                    "dataCardSha256": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
+                    "recordCount": 1
+                },
+                {
+                    "datasetId": "d08-governance-precedent",
+                    "datasetVersion": "v1.0.0",
+                    "manifestPath": "datasets/d08-governance-precedent/v1.0.0/manifest.json",
+                    "manifestSha256": "sha256:8888888888888888888888888888888888888888888888888888888888888888",
+                    "manifestBytes": 4096,
+                    "dataCardSha256": "sha256:8888888888888888888888888888888888888888888888888888888888888888",
+                    "recordCount": 1
+                },
+                {
+                    "datasetId": "d09-failure-recovery",
+                    "datasetVersion": "v1.0.0",
+                    "manifestPath": "datasets/d09-failure-recovery/v1.0.0/manifest.json",
+                    "manifestSha256": "sha256:9999999999999999999999999999999999999999999999999999999999999999",
+                    "manifestBytes": 4096,
+                    "dataCardSha256": "sha256:9999999999999999999999999999999999999999999999999999999999999999",
+                    "recordCount": 1
+                }
+            ],
+            "worldPackSources": [
+                {
+                    "path": "worldpacks/release-civilization-v1/source.json",
+                    "sha256": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+                }
+            ],
+            "totals": {
+                "records": 10,
+                "transcripts": 10,
+                "deliberations": 10,
+                "providerReasoning": 0,
+                "bytes": 40960
+            },
+            "limits": {
+                "shardHardBytes": 1000000,
+                "fragmentHardBytes": 262144,
+                "manifestHardBytes": 512000
+            },
+            "reviewReceiptRefs": [
+                "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+                "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+                "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+                "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+                "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+                "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+                "sha256:7777777777777777777777777777777777777777777777777777777777777777",
+                "sha256:8888888888888888888888888888888888888888888888888888888888888888",
+                "sha256:9999999999999999999999999999999999999999999999999999999999999999",
+                "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            ],
+            "manifestBytes": 8192,
+            "manifestSha256": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+        }
+    },
+    {
+        "name": "fragment-hard-limit",
+        "schema": "schemas/v1/common/record-fragment.schema.json",
+        "instance": {
+            "schemaVersion": "rappterverse.artifact-fragment/v1",
+            "artifactId": "urn:rappterverse:record:sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "artifactKind": "record",
+            "index": 0,
+            "count": 1,
+            "mediaType": "text/plain",
+            "encoding": "utf-8",
+            "data": "{}",
+            "utf8Bytes": 262145,
+            "sha256": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "previousFragmentSha256": null
+        }
+    },
+    {
+        "name": "world-pack-is-immutable-base",
+        "schema": "schemas/v1/worldpacks/world-pack-source.schema.json",
+        "instance": {
+            "schemaVersion": "rappterverse.world-pack-source/v1",
+            "worldPackSourceId": "urn:rappterverse:world-pack-source:sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "release": {
+                "releaseId": "release-civilization-v1",
+                "manifestSha256": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+                "dataCommit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            },
+            "projectionRecipe": {
+                "id": "recipe-rappterverse-v1",
+                "version": "v1",
+                "sha256": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+            },
+            "namespace": "rappterverse/civilization-v1",
+            "seedChannels": [
+                {
+                    "channel": "immutable-layout",
+                    "seedSha256": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+                },
+                {
+                    "channel": "frames",
+                    "seedSha256": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+                },
+                {
+                    "channel": "engines",
+                    "seedSha256": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+                },
+                {
+                    "channel": "visuals",
+                    "seedSha256": "sha256:4444444444444444444444444444444444444444444444444444444444444444"
+                }
+            ],
+            "entities": [
+                {
+                    "entityId": "source:world:academy-fixture",
+                    "kind": "world",
+                    "stableIdInput": "release-civilization-v1/world/academy-fixture",
+                    "name": "Fixture Academy",
+                    "description": "A deterministic synthetic training world.",
+                    "sourceRecordIds": [
+                        "urn:rappterverse:record:sha256:3333333333333333333333333333333333333333333333333333333333333333"
+                    ],
+                    "tags": [
+                        "academy",
+                        "synthetic"
+                    ],
+                    "attributes": [
+                        {
+                            "key": "bounds-x",
+                            "value": 12
+                        },
+                        {
+                            "key": "atmosphere",
+                            "value": "scholarly"
+                        }
+                    ],
+                    "references": [],
+                    "compilerHints": {
+                        "seedChannel": "immutable-layout",
+                        "placementPolicy": "seeded",
+                        "priority": 100
+                    },
+                    "immutableBase": false,
+                    "preservedOverlayFields": [
+                        "position",
+                        "history"
+                    ]
+                }
+            ],
+            "limits": {
+                "shardHardBytes": 1000000,
+                "fragmentHardBytes": 262144,
+                "manifestHardBytes": 512000
+            },
+            "integrity": {
+                "sortedByStableKey": true,
+                "canonicalization": "rappterverse-canonical-json/v1",
+                "manifestBytes": 4096,
+                "sourceSha256": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "reviewReceiptRef": "sha256:8888888888888888888888888888888888888888888888888888888888888888"
+            }
+        }
+    },
+    {
+        "name": "lease-requires-positive-fence",
+        "schema": "schemas/v1/orchestration/lease.schema.json",
+        "instance": {
+            "schemaVersion": "rappterverse.lease/v1",
+            "leaseId": "urn:rappterverse:lease:sha256:1111111111111111111111111111111111111111111111111111111111111111",
+            "runId": "run-fixture-001",
+            "datasetId": "d04-work-trajectories",
+            "threadId": "d04",
+            "partitionId": "partition-0001",
+            "holder": "worker-fixture-001",
+            "fencingEpoch": 0,
+            "acquiredAt": "2026-01-01T00:00:00Z",
+            "heartbeatAt": "2026-01-01T00:00:00Z",
+            "expiresAt": "2026-01-01T00:05:00Z",
+            "status": "active",
+            "previousLeaseSha256": null,
+            "leaseSha256": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+        }
+    },
+    {
+        "name": "receipt-is-closed",
+        "schema": "schemas/v1/orchestration/receipt.schema.json",
+        "instance": {
+            "schemaVersion": "rappterverse.operation-receipt/v1",
+            "receiptId": "urn:rappterverse:receipt:sha256:1111111111111111111111111111111111111111111111111111111111111111",
+            "runId": "run-fixture-001",
+            "datasetId": "d04-work-trajectories",
+            "threadId": "d04",
+            "partitionId": "partition-0001",
+            "batchId": "urn:rappterverse:batch:sha256:9999999999999999999999999999999999999999999999999999999999999999",
+            "fencingEpoch": 1,
+            "inputDigest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+            "orderedItemIds": [
+                "item-001"
+            ],
+            "promptHash": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+            "modelPolicyHash": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+            "outputDigest": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+            "cursorBefore": 0,
+            "cursorAfter": 1,
+            "checkpointSha256": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+            "repositoryCommit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "effect": "committed",
+            "committedAt": "2026-01-01T00:00:00Z",
+            "receiptSha256": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+            "providerResponse": "not public-safe"
+        }
+    },
+    {
+        "name": "dlq-forbids-secrets",
+        "schema": "schemas/v1/orchestration/dlq.schema.json",
+        "instance": {
+            "schemaVersion": "rappterverse.dlq/v1",
+            "dlqId": "urn:rappterverse:dlq:sha256:1111111111111111111111111111111111111111111111111111111111111111",
+            "runId": "run-fixture-001",
+            "datasetId": "d04-work-trajectories",
+            "threadId": "d04",
+            "partitionId": "partition-0001",
+            "batchId": "urn:rappterverse:batch:sha256:9999999999999999999999999999999999999999999999999999999999999999",
+            "itemId": "item-001",
+            "stage": "schema-validation",
+            "errorClass": "schema-invalid",
+            "safeSummary": "Required synthetic field is absent.",
+            "attempts": 3,
+            "splitDepth": 2,
+            "retryable": false,
+            "inputDigest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+            "firstFailedAt": "2026-01-01T00:00:00Z",
+            "lastFailedAt": "2026-01-01T00:00:00Z",
+            "recoveryAction": "manual-review",
+            "redacted": true,
+            "rawPayloadIncluded": false,
+            "secretsIncluded": true,
+            "dlqSha256": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        }
+    },
+    {
+        "name": "handoff-command-forbids-secrets",
+        "schema": "schemas/v1/orchestration/handoff.schema.json",
+        "instance": {
+            "schemaVersion": "rappterverse.handoff/v1",
+            "handoffId": "urn:rappterverse:handoff:sha256:1111111111111111111111111111111111111111111111111111111111111111",
+            "runId": "run-fixture-001",
+            "datasetId": "d04-work-trajectories",
+            "threadId": "d04",
+            "partitionId": "partition-0001",
+            "sourceCommit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "fencingEpoch": 1,
+            "cursor": {
+                "nextIndex": 1,
+                "inputDigest": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+            },
+            "outstandingBatch": null,
+            "latestValidatedOutput": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+            "currentBlocker": null,
+            "recoveryCommand": {
+                "executable": "python3",
+                "arguments": [
+                    "scripts/worker.py",
+                    "--run",
+                    "run-fixture-001"
+                ],
+                "containsSecrets": true
+            },
+            "nextDeterministicAction": {
+                "action": "plan-next-batch",
+                "inputDigest": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+            },
+            "lessonHashes": [
+                "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+            ],
+            "checkpointSha256": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+            "generatedAt": "2026-01-01T00:00:00Z",
+            "handoffSha256": "sha256:5555555555555555555555555555555555555555555555555555555555555555"
+        }
+    },
+    {
+        "name": "limits-are-contractual",
+        "schema": "schemas/v1/configs/publication-limits.schema.json",
+        "instance": {
+            "schemaVersion": "rappterverse.publication-limits/v1",
+            "canonicalJsonlShard": {
+                "targetBytes": 768000,
+                "hardBytes": 1000001
+            },
+            "recordFragment": {
+                "targetBytes": 128000,
+                "hardBytes": 262144
+            },
+            "manifest": {
+                "targetBytes": 256000,
+                "hardBytes": 512000
+            },
+            "modelRequest": {
+                "targetBytes": 512000,
+                "hardBytes": 1000000
+            },
+            "modelVisibleOutput": {
+                "targetBytes": 256000,
+                "hardBytes": 512000
+            },
+            "contextOccupancy": {
+                "targetRatio": 0.6,
+                "hardRatio": 0.7
+            },
+            "publicationPullRequest": {
+                "targetDiffBytes": 750000,
+                "hardDiffBytes": 900000,
+                "targetFinalFiles": 3,
+                "hardFinalFiles": 5
+            },
+            "workerSlice": {
+                "targetSeconds": 900,
+                "hardSeconds": 1200
+            }
+        }
+    }
+]

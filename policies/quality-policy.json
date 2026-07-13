@@ -1,0 +1,36 @@
+{
+    "$schema": "rappterverse.policy/quality/v1",
+    "policyVersion": "1.0.0",
+    "recordThresholds": {
+        "status": "pass",
+        "verifierPassed": true,
+        "minimumScore": 0.9
+    },
+    "publicationThresholds": {
+        "minimumRecordCount": 1,
+        "minimum": {
+            "schemaPassRate": 1.0,
+            "verifierPassRate": 1.0,
+            "provenancePassRate": 1.0,
+            "rightsPassRate": 1.0,
+            "privacyPassRate": 1.0,
+            "safetyPassRate": 1.0,
+            "integrityPassRate": 1.0,
+            "transcriptCoverage": 1.0,
+            "deliberationCoverage": 1.0,
+            "contaminationLabelCoverage": 1.0,
+            "publicExposureLabelCoverage": 1.0
+        },
+        "maximum": {
+            "duplicateRate": 0.01
+        }
+    },
+    "requiredContaminationLabels": [
+        "deterministic-synthetic-public",
+        "model-generated-synthetic-public",
+        "rappterverse-owned-derived-public",
+        "consented-judgment-public"
+    ],
+    "requiredPublicExposureLabel": "public-on-release",
+    "requiredEvaluationUseLabel": "contamination-prone-not-clean-evaluation"
+}

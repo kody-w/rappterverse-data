@@ -1,0 +1,82 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://data.rappterverse.dev/schemas/v1/orchestration/lease.schema.json",
+    "title": "RAPPterverse Fenced Lease",
+    "description": "Exclusive thread lease. A replacement holder must use a strictly higher fencing epoch.",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "schemaVersion",
+        "leaseId",
+        "runId",
+        "datasetId",
+        "threadId",
+        "partitionId",
+        "holder",
+        "fencingEpoch",
+        "acquiredAt",
+        "heartbeatAt",
+        "expiresAt",
+        "status",
+        "previousLeaseSha256",
+        "leaseSha256"
+    ],
+    "properties": {
+        "schemaVersion": {
+            "const": "rappterverse.lease/v1"
+        },
+        "leaseId": {
+            "type": "string",
+            "pattern": "^urn:rappterverse:lease:sha256:[a-f0-9]{64}$"
+        },
+        "runId": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/RunId"
+        },
+        "datasetId": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/DatasetId"
+        },
+        "threadId": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/ThreadId"
+        },
+        "partitionId": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/PartitionId"
+        },
+        "holder": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/ActorId"
+        },
+        "fencingEpoch": {
+            "type": "integer",
+            "minimum": 1
+        },
+        "acquiredAt": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/UtcTimestamp"
+        },
+        "heartbeatAt": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/UtcTimestamp"
+        },
+        "expiresAt": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/UtcTimestamp"
+        },
+        "status": {
+            "type": "string",
+            "enum": [
+                "active",
+                "released",
+                "expired"
+            ]
+        },
+        "previousLeaseSha256": {
+            "anyOf": [
+                {
+                    "type": "null"
+                },
+                {
+                    "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+                }
+            ]
+        },
+        "leaseSha256": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+        }
+    }
+}

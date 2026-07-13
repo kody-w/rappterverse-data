@@ -1,0 +1,186 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://data.rappterverse.dev/schemas/v1/configs/publication-limits.schema.json",
+    "title": "RAPPterverse Publication Limits",
+    "description": "Versioned byte, context, publication, and worker-slice limits.",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "schemaVersion",
+        "canonicalJsonlShard",
+        "recordFragment",
+        "manifest",
+        "modelRequest",
+        "modelVisibleOutput",
+        "contextOccupancy",
+        "publicationPullRequest",
+        "workerSlice"
+    ],
+    "properties": {
+        "schemaVersion": {
+            "const": "rappterverse.publication-limits/v1"
+        },
+        "canonicalJsonlShard": {
+            "$ref": "#/$defs/ShardLimit"
+        },
+        "recordFragment": {
+            "$ref": "#/$defs/FragmentLimit"
+        },
+        "manifest": {
+            "$ref": "#/$defs/ManifestLimit"
+        },
+        "modelRequest": {
+            "$ref": "#/$defs/ModelRequestLimit"
+        },
+        "modelVisibleOutput": {
+            "$ref": "#/$defs/ModelOutputLimit"
+        },
+        "contextOccupancy": {
+            "$ref": "#/$defs/ContextLimit"
+        },
+        "publicationPullRequest": {
+            "$ref": "#/$defs/PullRequestLimit"
+        },
+        "workerSlice": {
+            "$ref": "#/$defs/WorkerLimit"
+        }
+    },
+    "$defs": {
+        "ShardLimit": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "targetBytes",
+                "hardBytes"
+            ],
+            "properties": {
+                "targetBytes": {
+                    "const": 768000
+                },
+                "hardBytes": {
+                    "const": 1000000
+                }
+            }
+        },
+        "FragmentLimit": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "targetBytes",
+                "hardBytes"
+            ],
+            "properties": {
+                "targetBytes": {
+                    "const": 128000
+                },
+                "hardBytes": {
+                    "const": 262144
+                }
+            }
+        },
+        "ManifestLimit": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "targetBytes",
+                "hardBytes"
+            ],
+            "properties": {
+                "targetBytes": {
+                    "const": 256000
+                },
+                "hardBytes": {
+                    "const": 512000
+                }
+            }
+        },
+        "ModelRequestLimit": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "targetBytes",
+                "hardBytes"
+            ],
+            "properties": {
+                "targetBytes": {
+                    "const": 512000
+                },
+                "hardBytes": {
+                    "const": 1000000
+                }
+            }
+        },
+        "ModelOutputLimit": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "targetBytes",
+                "hardBytes"
+            ],
+            "properties": {
+                "targetBytes": {
+                    "const": 256000
+                },
+                "hardBytes": {
+                    "const": 512000
+                }
+            }
+        },
+        "ContextLimit": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "targetRatio",
+                "hardRatio"
+            ],
+            "properties": {
+                "targetRatio": {
+                    "const": 0.6
+                },
+                "hardRatio": {
+                    "const": 0.7
+                }
+            }
+        },
+        "PullRequestLimit": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "targetDiffBytes",
+                "hardDiffBytes",
+                "targetFinalFiles",
+                "hardFinalFiles"
+            ],
+            "properties": {
+                "targetDiffBytes": {
+                    "const": 750000
+                },
+                "hardDiffBytes": {
+                    "const": 900000
+                },
+                "targetFinalFiles": {
+                    "const": 3
+                },
+                "hardFinalFiles": {
+                    "const": 5
+                }
+            }
+        },
+        "WorkerLimit": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "targetSeconds",
+                "hardSeconds"
+            ],
+            "properties": {
+                "targetSeconds": {
+                    "const": 900
+                },
+                "hardSeconds": {
+                    "const": 1200
+                }
+            }
+        }
+    }
+}

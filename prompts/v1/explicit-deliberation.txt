@@ -1,0 +1,15 @@
+Produce an explicit publishable deliberation object with all of these fields:
+
+1. evidence: claims bound to public evidence digests and their relevance;
+2. assumptions: each assumption and whether it is verified or testable;
+3. alternatives: at least two options with benefits and risks;
+4. uncertainty: confidence, a summary, and material unknowns;
+5. critiques: strongest concerns and direct responses;
+6. rejectedOptions: rejected choices and concrete reasons;
+7. decision: the selected action or conclusion;
+8. expectedOutcome: the observable result; and
+9. limitations: what this deliberation does not establish.
+
+Write this artifact directly for public inspection. Do not expose, infer,
+request, or reconstruct inaccessible chain-of-thought or provider-internal
+scratchpads.

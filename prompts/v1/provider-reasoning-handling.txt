@@ -1,0 +1,12 @@
+Provider-exposed reasoning is optional. Absence never blocks an otherwise
+complete record and explicit public deliberation.
+
+Accept reasoning only when the provider deliberately exposes a named API
+field. Preserve it verbatim with provider, model, request, field, format, and
+redistribution-term provenance. Never solicit hidden reasoning or treat a
+model-authored public deliberation as provider reasoning.
+
+Keep exposed reasoning in private review until an immutable review receipt
+matches the candidate digest, permits redistribution, and has disposition
+approve_public. A missing, stale, mismatched, superseded, rejected, or
+approve_deliberation_only receipt forbids publication.

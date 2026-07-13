@@ -1,0 +1,39 @@
+{
+    "$schema": "rappterverse.policy/safety/v1",
+    "policyVersion": "1.0.0",
+    "defaultAction": "deny",
+    "requiredPrivacyLabel": "synthetic-nonpersonal",
+    "requiredSafetyStatus": "pass",
+    "allowedSafetyLabels": [
+        "fictional-conflict",
+        "fictional-economy",
+        "fictional-governance",
+        "none"
+    ],
+    "prohibitedContent": [
+        "real-personal-data",
+        "credential-or-secret",
+        "unowned-content",
+        "private-message",
+        "inaccessible-provider-reasoning",
+        "raw-review-finding",
+        "malware-payload"
+    ],
+    "findingOutput": {
+        "redacted": true,
+        "allowedFields": [
+            "severity",
+            "code",
+            "path",
+            "line",
+            "column",
+            "message"
+        ],
+        "forbiddenFields": [
+            "value",
+            "snippet",
+            "match",
+            "context"
+        ]
+    }
+}

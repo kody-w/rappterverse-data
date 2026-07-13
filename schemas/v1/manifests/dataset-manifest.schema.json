@@ -1,0 +1,205 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://data.rappterverse.dev/schemas/v1/manifests/dataset-manifest.schema.json",
+    "title": "RAPPterverse Dataset Manifest",
+    "description": "Immutable manifest for one dataset version and its reviewed record, transcript, deliberation, and optional provider-reasoning shards.",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "schemaVersion",
+        "datasetId",
+        "datasetVersion",
+        "generatedAt",
+        "dataCommit",
+        "recordSchema",
+        "dataCard",
+        "recordShards",
+        "transcriptShards",
+        "deliberationShards",
+        "providerReasoningShards",
+        "counts",
+        "splits",
+        "limits",
+        "reviewReceiptRefs",
+        "manifestBytes",
+        "manifestSha256"
+    ],
+    "properties": {
+        "schemaVersion": {
+            "const": "rappterverse.dataset-manifest/v1"
+        },
+        "datasetId": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/DatasetId"
+        },
+        "datasetVersion": {
+            "type": "string",
+            "pattern": "^v[1-9][0-9]*(?:\\.[0-9]+){0,2}$"
+        },
+        "generatedAt": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/UtcTimestamp"
+        },
+        "dataCommit": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/GitCommit"
+        },
+        "recordSchema": {
+            "$ref": "#/$defs/SchemaRef"
+        },
+        "dataCard": {
+            "$ref": "#/$defs/ArtifactRef"
+        },
+        "recordShards": {
+            "$ref": "#/$defs/RequiredShards"
+        },
+        "transcriptShards": {
+            "$ref": "#/$defs/RequiredShards"
+        },
+        "deliberationShards": {
+            "$ref": "#/$defs/RequiredShards"
+        },
+        "providerReasoningShards": {
+            "type": "array",
+            "maxItems": 4096,
+            "items": {
+                "$ref": "https://data.rappterverse.dev/schemas/v1/manifests/shard-descriptor.schema.json"
+            }
+        },
+        "counts": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "records",
+                "transcripts",
+                "deliberations",
+                "providerReasoning"
+            ],
+            "properties": {
+                "records": {
+                    "type": "integer",
+                    "minimum": 1
+                },
+                "transcripts": {
+                    "type": "integer",
+                    "minimum": 1
+                },
+                "deliberations": {
+                    "type": "integer",
+                    "minimum": 1
+                },
+                "providerReasoning": {
+                    "type": "integer",
+                    "minimum": 0
+                }
+            }
+        },
+        "splits": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "train",
+                "validation",
+                "test",
+                "unassigned"
+            ],
+            "properties": {
+                "train": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "validation": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "test": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "unassigned": {
+                    "type": "integer",
+                    "minimum": 0
+                }
+            }
+        },
+        "limits": {
+            "$ref": "#/$defs/Limits"
+        },
+        "reviewReceiptRefs": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 4096,
+            "items": {
+                "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+            }
+        },
+        "manifestBytes": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 512000
+        },
+        "manifestSha256": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+        }
+    },
+    "$defs": {
+        "SchemaRef": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "uri",
+                "sha256"
+            ],
+            "properties": {
+                "uri": {
+                    "type": "string",
+                    "pattern": "^https://data\\.rappterverse\\.dev/schemas/v1/"
+                },
+                "sha256": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+                }
+            }
+        },
+        "ArtifactRef": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "path",
+                "sha256"
+            ],
+            "properties": {
+                "path": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/ObjectPath"
+                },
+                "sha256": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+                }
+            }
+        },
+        "RequiredShards": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 4096,
+            "items": {
+                "$ref": "https://data.rappterverse.dev/schemas/v1/manifests/shard-descriptor.schema.json"
+            }
+        },
+        "Limits": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "shardHardBytes",
+                "fragmentHardBytes",
+                "manifestHardBytes"
+            ],
+            "properties": {
+                "shardHardBytes": {
+                    "const": 1000000
+                },
+                "fragmentHardBytes": {
+                    "const": 262144
+                },
+                "manifestHardBytes": {
+                    "const": 512000
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,79 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://data.rappterverse.dev/schemas/v1/common/provenance.schema.json",
+    "title": "RAPPterverse Record Provenance",
+    "description": "Complete public lineage and rights basis for one released record.",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "schemaVersion",
+        "sources",
+        "rightsBasis",
+        "sourceCommit",
+        "sourceBlobs",
+        "lineageComplete",
+        "externalContentIncluded"
+    ],
+    "properties": {
+        "schemaVersion": {
+            "const": "rappterverse.provenance/v1"
+        },
+        "sources": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 128,
+            "items": {
+                "$ref": "https://data.rappterverse.dev/schemas/v1/common/source-ref.schema.json"
+            }
+        },
+        "rightsBasis": {
+            "type": "string",
+            "enum": [
+                "synthetic",
+                "rappterverse-owned",
+                "system-controlled",
+                "human-consented"
+            ]
+        },
+        "sourceCommit": {
+            "anyOf": [
+                {
+                    "type": "null"
+                },
+                {
+                    "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/GitCommit"
+                }
+            ]
+        },
+        "sourceBlobs": {
+            "type": "array",
+            "maxItems": 1024,
+            "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                    "path",
+                    "gitObject",
+                    "sha256"
+                ],
+                "properties": {
+                    "path": {
+                        "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/ObjectPath"
+                    },
+                    "gitObject": {
+                        "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/GitObject"
+                    },
+                    "sha256": {
+                        "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+                    }
+                }
+            }
+        },
+        "lineageComplete": {
+            "const": true
+        },
+        "externalContentIncluded": {
+            "const": false
+        }
+    }
+}

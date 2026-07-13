@@ -1,0 +1,20 @@
+{
+    "$template": "Replace every angle-bracket value before publication.",
+    "schema": "rappterverse.withdrawal-tombstone/v1",
+    "policyVersion": "1.0.0",
+    "tombstoneId": "urn:rappterverse:tombstone:sha256:<64-lowercase-hex>",
+    "target": {
+        "path": "<immutable-released-path>",
+        "sha256": "<64-lowercase-hex>",
+        "recordIds": []
+    },
+    "status": "withdrawn",
+    "reasonCode": "<allowed-reason-code>",
+    "publicReason": "<brief redacted reason with no personal data or source excerpt>",
+    "requestedAt": "<ISO-8601 UTC timestamp ending in Z>",
+    "reviewedAt": "<ISO-8601 UTC timestamp ending in Z>",
+    "reviewer": "<approved-reviewer-id>",
+    "originalRemainsAvailable": true,
+    "replacement": null,
+    "license": "CC-BY-4.0"
+}

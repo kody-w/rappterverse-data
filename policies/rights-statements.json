@@ -1,0 +1,49 @@
+{
+    "$schema": "rappterverse.policy/rights-statements/v1",
+    "policyVersion": "1.0.0",
+    "dataLicense": "CC-BY-4.0",
+    "codeLicense": "Apache-2.0",
+    "statements": {
+        "synthetic-project-generated-v1": {
+            "rightsBasis": "synthetic",
+            "sourceTypes": [
+                "deterministic-synthetic",
+                "model-generated-synthetic"
+            ],
+            "statement": "This material was generated for RAPPterverse from project-controlled synthetic inputs and contains no external corpus content.",
+            "requiredAttestations": []
+        },
+        "rappterverse-owned-source-v1": {
+            "rightsBasis": "rappterverse-owned",
+            "sourceTypes": [
+                "rappterverse-repository"
+            ],
+            "statement": "This material is derived only from RAPPterverse-owned repository content pinned to the declared commits and blobs.",
+            "requiredAttestations": [
+                "repository",
+                "commit",
+                "blobs"
+            ]
+        },
+        "system-controlled-agent-v1": {
+            "rightsBasis": "rappterverse-owned",
+            "sourceTypes": [
+                "system-controlled-agent"
+            ],
+            "statement": "The declared system-controlled agent material is owned or licensed by RAPPterverse for public release under CC-BY-4.0.",
+            "requiredAttestations": [
+                "ownershipAttestation"
+            ]
+        },
+        "consented-human-judgment-v1": {
+            "rightsBasis": "rappterverse-owned",
+            "sourceTypes": [
+                "consented-human-judgment"
+            ],
+            "statement": "The judgment was submitted with explicit consent for public release under CC-BY-4.0 and contains no retained identity data.",
+            "requiredAttestations": [
+                "consentReceipt"
+            ]
+        }
+    }
+}

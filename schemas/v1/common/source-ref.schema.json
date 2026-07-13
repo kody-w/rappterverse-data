@@ -1,0 +1,156 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://data.rappterverse.dev/schemas/v1/common/source-ref.schema.json",
+    "title": "RAPPterverse SourceRef",
+    "description": "A public-safe, rights-bearing reference to a synthetic or RAPPterverse-owned source.",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "schemaVersion",
+        "sourceId",
+        "sourceType",
+        "locator",
+        "commitSha",
+        "blobSha256",
+        "path",
+        "rightsStatementId",
+        "ownershipAttestationRef",
+        "consentReceiptRef",
+        "publicSafe"
+    ],
+    "properties": {
+        "schemaVersion": {
+            "const": "rappterverse.source-ref/v1"
+        },
+        "sourceId": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/SourceId"
+        },
+        "sourceType": {
+            "type": "string",
+            "enum": [
+                "deterministic-synthetic",
+                "rappterverse-owned-git",
+                "system-controlled",
+                "human-consented"
+            ]
+        },
+        "locator": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024,
+            "pattern": "^(?:urn:rappterverse:|https://github\\.com/kody-w/)"
+        },
+        "commitSha": {
+            "anyOf": [
+                {
+                    "type": "null"
+                },
+                {
+                    "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/GitCommit"
+                }
+            ]
+        },
+        "blobSha256": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+        },
+        "path": {
+            "anyOf": [
+                {
+                    "type": "null"
+                },
+                {
+                    "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/ObjectPath"
+                }
+            ]
+        },
+        "rightsStatementId": {
+            "type": "string",
+            "pattern": "^rights-[a-z0-9][a-z0-9.-]{0,119}$"
+        },
+        "ownershipAttestationRef": {
+            "anyOf": [
+                {
+                    "type": "null"
+                },
+                {
+                    "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+                }
+            ]
+        },
+        "consentReceiptRef": {
+            "anyOf": [
+                {
+                    "type": "null"
+                },
+                {
+                    "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+                }
+            ]
+        },
+        "publicSafe": {
+            "const": true
+        }
+    },
+    "allOf": [
+        {
+            "if": {
+                "properties": {
+                    "sourceType": {
+                        "const": "rappterverse-owned-git"
+                    }
+                },
+                "required": [
+                    "sourceType"
+                ]
+            },
+            "then": {
+                "properties": {
+                    "commitSha": {
+                        "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/GitCommit"
+                    },
+                    "path": {
+                        "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/ObjectPath"
+                    }
+                }
+            }
+        },
+        {
+            "if": {
+                "properties": {
+                    "sourceType": {
+                        "const": "system-controlled"
+                    }
+                },
+                "required": [
+                    "sourceType"
+                ]
+            },
+            "then": {
+                "properties": {
+                    "ownershipAttestationRef": {
+                        "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+                    }
+                }
+            }
+        },
+        {
+            "if": {
+                "properties": {
+                    "sourceType": {
+                        "const": "human-consented"
+                    }
+                },
+                "required": [
+                    "sourceType"
+                ]
+            },
+            "then": {
+                "properties": {
+                    "consentReceiptRef": {
+                        "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+                    }
+                }
+            }
+        }
+    ]
+}

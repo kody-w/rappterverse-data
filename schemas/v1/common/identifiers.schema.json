@@ -1,0 +1,131 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json",
+    "title": "RAPPterverse Public Data Identifiers",
+    "description": "Stable identifiers shared by records, artifacts, releases, and orchestration state.",
+    "$ref": "#/$defs/StableId",
+    "$defs": {
+        "DatasetId": {
+            "type": "string",
+            "enum": [
+                "d01-civilization-ledger",
+                "d02-counterfactual-multiverse",
+                "d03-human-judgment",
+                "d04-work-trajectories",
+                "d05-agent-lifetimes",
+                "d06-social-causality",
+                "d07-market-tape",
+                "d08-governance-precedent",
+                "d09-failure-recovery",
+                "d10-agent-lineage"
+            ]
+        },
+        "DatasetCode": {
+            "type": "string",
+            "pattern": "^d(?:0[1-9]|10)$"
+        },
+        "RecordId": {
+            "type": "string",
+            "pattern": "^urn:rappterverse:record:sha256:[a-f0-9]{64}$"
+        },
+        "SourceId": {
+            "type": "string",
+            "pattern": "^urn:rappterverse:source:sha256:[a-f0-9]{64}$"
+        },
+        "TranscriptId": {
+            "type": "string",
+            "pattern": "^urn:rappterverse:transcript:sha256:[a-f0-9]{64}$"
+        },
+        "DeliberationId": {
+            "type": "string",
+            "pattern": "^urn:rappterverse:deliberation:sha256:[a-f0-9]{64}$"
+        },
+        "ReasoningId": {
+            "type": "string",
+            "pattern": "^urn:rappterverse:reasoning:sha256:[a-f0-9]{64}$"
+        },
+        "ReviewId": {
+            "type": "string",
+            "pattern": "^urn:rappterverse:review:sha256:[a-f0-9]{64}$"
+        },
+        "ReleaseId": {
+            "type": "string",
+            "pattern": "^release-[a-z0-9][a-z0-9.-]{0,126}$"
+        },
+        "WorldPackSourceId": {
+            "type": "string",
+            "pattern": "^urn:rappterverse:world-pack-source:sha256:[a-f0-9]{64}$"
+        },
+        "RunId": {
+            "type": "string",
+            "pattern": "^run-[a-z0-9][a-z0-9.-]{0,126}$"
+        },
+        "ThreadId": {
+            "type": "string",
+            "pattern": "^d(?:0[1-9]|10)(?:-[a-z0-9][a-z0-9.-]{0,62})?$"
+        },
+        "EpisodeId": {
+            "type": "string",
+            "pattern": "^episode-[a-z0-9][a-z0-9.-]{0,118}$"
+        },
+        "PartitionId": {
+            "type": "string",
+            "pattern": "^partition-[a-z0-9][a-z0-9.-]{0,116}$"
+        },
+        "BatchId": {
+            "type": "string",
+            "pattern": "^urn:rappterverse:batch:sha256:[a-f0-9]{64}$"
+        },
+        "ArtifactId": {
+            "type": "string",
+            "pattern": "^urn:rappterverse:[a-z][a-z0-9-]{1,40}:sha256:[a-f0-9]{64}$"
+        },
+        "ActorId": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"
+        },
+        "StableKey": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9._:/-]{0,255}$"
+        },
+        "ObjectPath": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[A-Za-z0-9._/-]+$"
+        },
+        "UtcTimestamp": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$"
+        },
+        "StableId": {
+            "anyOf": [
+                {
+                    "$ref": "#/$defs/RecordId"
+                },
+                {
+                    "$ref": "#/$defs/SourceId"
+                },
+                {
+                    "$ref": "#/$defs/TranscriptId"
+                },
+                {
+                    "$ref": "#/$defs/DeliberationId"
+                },
+                {
+                    "$ref": "#/$defs/ReasoningId"
+                },
+                {
+                    "$ref": "#/$defs/ReviewId"
+                },
+                {
+                    "$ref": "#/$defs/WorldPackSourceId"
+                },
+                {
+                    "$ref": "#/$defs/BatchId"
+                }
+            ]
+        }
+    }
+}

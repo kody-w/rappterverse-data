@@ -1,0 +1,63 @@
+"""Deterministic canonicalization, sharding, and manifest utilities."""
+
+from .canonical import (
+    CANONICALIZATION,
+    CanonicalJSONError,
+    canonical_json_bytes,
+    canonical_jsonl_bytes,
+    canonical_jsonl_line,
+    canonical_loads,
+    content_hash,
+    content_id,
+    deterministic_gzip,
+    normalize_json,
+    sha256_digest,
+    sha256_hex,
+)
+from .manifests import (
+    ManifestError,
+    VerificationResult,
+    load_manifest,
+    verify_manifest,
+)
+from .sharding import (
+    DEFAULT_HARD_CAP_BYTES,
+    DEFAULT_FRAGMENT_TARGET_BYTES,
+    DEFAULT_LINE_CAP_BYTES,
+    DEFAULT_TARGET_BYTES,
+    Shard,
+    ShardPlan,
+    ShardingError,
+    plan_shards,
+    write_plan,
+    write_shards,
+)
+
+__all__ = [
+    "CanonicalJSONError",
+    "CANONICALIZATION",
+    "DEFAULT_HARD_CAP_BYTES",
+    "DEFAULT_FRAGMENT_TARGET_BYTES",
+    "DEFAULT_LINE_CAP_BYTES",
+    "DEFAULT_TARGET_BYTES",
+    "ManifestError",
+    "Shard",
+    "ShardPlan",
+    "ShardingError",
+    "VerificationResult",
+    "canonical_json_bytes",
+    "canonical_jsonl_bytes",
+    "canonical_jsonl_line",
+    "canonical_loads",
+    "content_hash",
+    "content_id",
+    "deterministic_gzip",
+    "normalize_json",
+    "load_manifest",
+    "plan_shards",
+    "sha256_digest",
+    "sha256_hex",
+    "verify_manifest",
+    "write_plan",
+    "write_shards",
+]

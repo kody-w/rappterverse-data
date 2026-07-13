@@ -1,0 +1,47 @@
+{
+    "$schema": "rappterverse.policy/field-allowlist/v1",
+    "policyVersion": "1.0.0",
+    "defaultAction": "deny-for-public-records",
+    "requiredRecordSections": [
+        "schemaVersion",
+        "datasetId",
+        "recordType",
+        "recordId",
+        "episodeId",
+        "sequence",
+        "split",
+        "eventTime",
+        "payload",
+        "provenance",
+        "generation",
+        "governance",
+        "integrity"
+    ],
+    "forbiddenRecursiveFieldNames": [
+        "chainOfThought",
+        "hiddenReasoning",
+        "internalReasoning",
+        "privateScratchpad",
+        "scratchpad",
+        "privateSystemPrompt",
+        "privateDeveloperPrompt",
+        "operationalInstructions",
+        "copilotSystemInstructions",
+        "rawIdentity",
+        "emailAddress",
+        "phoneNumber",
+        "postalAddress",
+        "ipAddress",
+        "secret",
+        "accessToken",
+        "apiKey",
+        "privateKey"
+    ],
+    "forbiddenSourceFields": [
+        "downloadedHtml",
+        "browserTelemetry",
+        "privateLog",
+        "whisper",
+        "gitAuthorEmail"
+    ]
+}
