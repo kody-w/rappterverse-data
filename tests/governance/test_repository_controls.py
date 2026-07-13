@@ -23,6 +23,9 @@ class RepositoryControlTests(unittest.TestCase):
         self.assertEqual(2, workflow.count("persist-credentials: false"))
         self.assertIn("$TRUSTED_ROOT/scripts/governance/validate.py", workflow)
         self.assertIn("github.event.pull_request.base.sha", workflow)
+        self.assertIn("BOOTSTRAP_BASE_SHA", workflow)
+        self.assertIn("Bootstrap PR contains non-foundation path", workflow)
+        self.assertIn("ref: ${{ github.event.pull_request.head.sha }}", workflow)
 
     def test_ruleset_requires_review_and_governance(self) -> None:
         value = json.loads(

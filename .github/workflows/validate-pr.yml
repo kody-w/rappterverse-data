@@ -22,6 +22,7 @@ jobs:
       - name: Check out candidate without credentials
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
+          ref: ${{ github.event.pull_request.head.sha }}
           path: candidate
           fetch-depth: 0
           persist-credentials: false
@@ -34,10 +35,41 @@ jobs:
           fetch-depth: 1
           persist-credentials: false
 
+      - name: Select trusted governance root
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          BOOTSTRAP_BASE_SHA: 0de153ed7e16ff7ad51c91b370732f2ac200688c
+          CANDIDATE_ROOT: ${{ github.workspace }}/candidate
+          BASE_ROOT: ${{ github.workspace }}/trusted-governance
+        run: |
+          if [ -f "$BASE_ROOT/scripts/governance/validate.py" ]; then
+            echo "TRUSTED_ROOT=$BASE_ROOT" >> "$GITHUB_ENV"
+            exit 0
+          fi
+
+          if [ "$BASE_SHA" != "$BOOTSTRAP_BASE_SHA" ]; then
+            echo "::error::Trusted base governance is missing outside the bootstrap commit"
+            exit 1
+          fi
+
+          while IFS= read -r path; do
+            case "$path" in
+              .github/CODEOWNERS|.github/rulesets/*|.github/workflows/*|\
+              configs/*|policies/*|prompts/*|schemas/*|scripts/build_site.py|\
+              scripts/governance/*|scripts/lake/*|templates/*|tests/*)
+                ;;
+              *)
+                echo "::error::Bootstrap PR contains non-foundation path: $path"
+                exit 1
+                ;;
+            esac
+          done < <(git -C "$CANDIDATE_ROOT" diff --name-only "$BASE_SHA...HEAD" --)
+
+          echo "TRUSTED_ROOT=$CANDIDATE_ROOT" >> "$GITHUB_ENV"
+
       - name: Test trusted governance
         env:
           PYTHONDONTWRITEBYTECODE: "1"
-          TRUSTED_ROOT: ${{ github.workspace }}/trusted-governance
         run: >-
           python3 -B -m unittest discover
           -s "$TRUSTED_ROOT/tests/governance"
@@ -48,7 +80,6 @@ jobs:
         env:
           PYTHONDONTWRITEBYTECODE: "1"
           CANDIDATE_ROOT: ${{ github.workspace }}/candidate
-          TRUSTED_ROOT: ${{ github.workspace }}/trusted-governance
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: >-
