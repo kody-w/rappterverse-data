@@ -129,6 +129,19 @@ class CandidateFixture(unittest.TestCase):
             changes, diff_bytes=diff_bytes
         )
 
+    def test_contract_negative_fixture_can_name_forbidden_fields(self) -> None:
+        path = "tests/fixtures/contracts/invalid/cases.json"
+        self.write_json(path, {"chainOfThought": "invalid fixture marker"})
+        report = self.validate([Change("A", path)])
+        self.assertTrue(report.ok, report.as_dict())
+
+    def test_non_fixture_json_cannot_name_forbidden_fields(self) -> None:
+        path = "configs/unsafe.json"
+        self.write_json(path, {"chainOfThought": "must remain prohibited"})
+        report = self.validate([Change("A", path)])
+        self.assertFalse(report.ok)
+        self.assertIn("FIELD_FORBIDDEN", {item.code for item in report.findings})
+
     def manifest_for(
         self,
         artifacts: list[tuple[str, str, str]],

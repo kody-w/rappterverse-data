@@ -391,7 +391,8 @@ class GovernanceValidator:
             document = _read_json_bytes(data, change.path, self.report)
             if document is not None:
                 self._parsed[change.path] = document
-                self._validate_forbidden_fields(document, change.path)
+                if not change.path.startswith("tests/fixtures/contracts/"):
+                    self._validate_forbidden_fields(document, change.path)
 
     def _parse_jsonl(self, path: str, data: bytes) -> None:
         objects: list[Any] = []
