@@ -1,0 +1,32 @@
+{
+    "checkpoint": {
+        "schema": "rappterverse.d02-checkpoint/v1",
+        "supported": true
+    },
+    "dataset_id": "d02",
+    "generator": "generators/d02/generate.py",
+    "intervention": {
+        "branches": [
+            "control",
+            "treatment"
+        ],
+        "isolation_required": true,
+        "operations": [
+            "set",
+            "increment"
+        ],
+        "shared_replay_after_intervention": true
+    },
+    "name": "Counterfactual Multiverse",
+    "output": {
+        "committed_release_data": false,
+        "format": "jsonl",
+        "ordering": [
+            "observed_at",
+            "record_id"
+        ]
+    },
+    "record_schema": "rappterverse.d02-record/v1",
+    "verifier": "generators/d02/verify.py",
+    "version": "0.1.0-scaffold"
+}

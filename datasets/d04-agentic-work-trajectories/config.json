@@ -1,0 +1,29 @@
+{
+    "capture": {
+        "assistant_outputs": true,
+        "complete": true,
+        "final_outcomes": true,
+        "patches": true,
+        "public_safe": true,
+        "system_prompts": true,
+        "tool_arguments": true,
+        "tool_calls": true,
+        "tool_results": true,
+        "user_prompts": true,
+        "verifier_results": true
+    },
+    "checkpoint": {
+        "schema": "rappterverse.d04-checkpoint/v1",
+        "supported": true
+    },
+    "dataset_id": "d04",
+    "generator": "generators/d04/generate.py",
+    "name": "Verified Agentic Work Trajectories",
+    "output": {
+        "committed_release_data": false,
+        "format": "jsonl"
+    },
+    "record_schema": "rappterverse.d04-record/v1",
+    "verifier": "generators/d04/verify.py",
+    "version": "0.1.0-scaffold"
+}

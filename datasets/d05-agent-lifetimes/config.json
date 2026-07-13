@@ -1,0 +1,29 @@
+{
+    "checkpoint": {
+        "schema": "rappterverse.d05-checkpoint/v1",
+        "supported": true
+    },
+    "completeness": {
+        "censored_lifetimes_allowed": false,
+        "decision_and_idle_ticks_required": true,
+        "terminal_event_required": true
+    },
+    "dataset_id": "d05",
+    "generator": "generators/d05/generate.py",
+    "name": "Complete Agent Lifetimes",
+    "output": {
+        "committed_release_data": false,
+        "format": "jsonl",
+        "ordering": [
+            "observed_at",
+            "record_id"
+        ]
+    },
+    "record_schema": "rappterverse.d05-record/v1",
+    "source_policy": [
+        "owned_accelerated_simulation",
+        "synthetic_smoke"
+    ],
+    "verifier": "generators/d05/verify.py",
+    "version": "0.1.0-scaffold"
+}

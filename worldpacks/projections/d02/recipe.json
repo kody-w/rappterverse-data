@@ -1,0 +1,35 @@
+{
+    "dataset_id": "d02",
+    "description": "Compile each verified pair into two simultaneously playable world branches.",
+    "effects": [
+        {
+            "effect": "paired_portals",
+            "input": "control and treatment initial_state_sha256",
+            "playable_result": "Spawns adjacent portals from one shared base-state chamber."
+        },
+        {
+            "effect": "isolated_intervention",
+            "input": "intervention",
+            "playable_result": "Applies the declared operation only beyond the treatment portal."
+        },
+        {
+            "effect": "contrast_overlay",
+            "input": "causal_contrast",
+            "playable_result": "Highlights changed state leaves after both branches replay identical steps."
+        }
+    ],
+    "input_schema": "rappterverse.d02-record/v1",
+    "projection_id": "rappterverse.projection.d02/v1",
+    "rules": {
+        "canonical_state_writes": false,
+        "pair_seed": "sha256(record_id)",
+        "reasoning_display": "Explicit public deliberation only.",
+        "replay_hashes_required": true
+    },
+    "world_effects": {
+        "completion": "Players traverse both branches and inspect the verified contrast.",
+        "failure": "A hash mismatch closes both portals without mutating source worlds.",
+        "interaction": "Replay, compare, inspect intervention, and verify state hashes.",
+        "spawn": "A Multiverse Fork appears in an isolated projection world."
+    }
+}

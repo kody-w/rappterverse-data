@@ -1,0 +1,28 @@
+{
+    "artifacts": {
+        "candidates": {
+            "blinded": true,
+            "labels_allowed": false,
+            "schema": "rappterverse.d03-record/v1"
+        },
+        "consented_labels": {
+            "consent_scope": "public_dataset_label",
+            "minimum_judgments": 2,
+            "schema": "rappterverse.d03-consented-label/v1"
+        }
+    },
+    "checkpoint": {
+        "schema": "rappterverse.d03-checkpoint/v1",
+        "supported": true
+    },
+    "dataset_id": "d03",
+    "generator": "generators/d03/generate.py",
+    "name": "Human Judgment Gold Set",
+    "output": {
+        "committed_release_data": false,
+        "format": "jsonl",
+        "separate_candidate_and_label_files": true
+    },
+    "verifier": "generators/d03/verify.py",
+    "version": "0.1.0-scaffold"
+}

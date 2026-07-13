@@ -1,0 +1,36 @@
+{
+    "dataset_id": "d04",
+    "description": "Compile verified work trajectories into replayable tool-and-patch quests.",
+    "effects": [
+        {
+            "effect": "task_terminal",
+            "input": "work_trajectory.task and transcript",
+            "playable_result": "Presents the original public task and visible dialogue."
+        },
+        {
+            "effect": "tool_workbench",
+            "input": "tool_calls and patches",
+            "playable_result": "Turns each tool call and patch into an ordered interactive station."
+        },
+        {
+            "effect": "verification_gate",
+            "input": "verifier_evidence and outcome",
+            "playable_result": "Unlocks the exit only when replayed evidence matches recorded hashes."
+        }
+    ],
+    "input_schema": "rappterverse.d04-record/v1",
+    "projection_id": "rappterverse.projection.d04/v1",
+    "rules": {
+        "canonical_state_writes": false,
+        "capture_complete_required": true,
+        "reasoning_display": "Explicit publishable deliberation only.",
+        "seed": "sha256(record_id)",
+        "unsafe_commands_executable": false
+    },
+    "world_effects": {
+        "completion": "A verified artifact materializes with provenance.",
+        "failure": "The local workbench resets without executing arbitrary commands.",
+        "interaction": "Inspect tools, apply patches, compare hashes, and run simulated gates.",
+        "spawn": "An Agentic Workbench appears in a sandbox projection world."
+    }
+}

@@ -1,0 +1,41 @@
+{
+    "dataset_id": "d05",
+    "description": "Compile each complete synthetic lifetime into a birth-to-terminal playable journey.",
+    "effects": [
+        {
+            "effect": "birth_gate",
+            "input": "birth_event initial state",
+            "playable_result": "Spawns the player at the exact verified initial state."
+        },
+        {
+            "effect": "tick_path",
+            "input": "ordered decision and idle ticks",
+            "playable_result": "Creates one state-linked encounter for every tick without omissions."
+        },
+        {
+            "effect": "memory_goal_bonds",
+            "input": "memory, goal, and relationship updates",
+            "playable_result": "Changes local lore, objectives, and companion links as recorded updates occur."
+        },
+        {
+            "effect": "terminal_archive",
+            "input": "terminal_event",
+            "playable_result": "Closes the journey only after final state and provenance hashes verify."
+        }
+    ],
+    "input_schema": "rappterverse.d05-record/v1",
+    "projection_id": "rappterverse.projection.d05/v1",
+    "rules": {
+        "canonical_state_writes": false,
+        "complete_lifetime_required": true,
+        "personhood_claims": false,
+        "reasoning_display": "Explicit publishable deliberation only.",
+        "seed": "sha256(record_id)"
+    },
+    "world_effects": {
+        "completion": "Unlocks a provenance-backed lifetime constellation.",
+        "failure": "A continuity mismatch closes the projection without source mutation.",
+        "interaction": "Decide, idle, remember, pursue goals, form bonds, and verify transitions.",
+        "spawn": "A Complete Lifetime Gate appears in an accelerated simulation world."
+    }
+}
