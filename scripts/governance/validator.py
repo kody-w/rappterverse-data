@@ -461,18 +461,36 @@ class GovernanceValidator:
                     )
 
     def _is_candidate(self, path: str) -> bool:
+        publication = self.policies.publication
+        if any(
+            fnmatch.fnmatchcase(path, pattern)
+            for pattern in publication.get("publicationPathGlobs", [])
+        ):
+            return True
+        if any(
+            path.startswith(prefix)
+            for prefix in publication.get("sourcePathPrefixes", [])
+        ):
+            return False
         return any(
             path.startswith(prefix)
-            for prefix in self.policies.publication["candidatePathPrefixes"]
+            for prefix in publication["candidatePathPrefixes"]
         )
 
     def _is_immutable(self, path: str) -> bool:
         publication = self.policies.publication
-        if any(path.startswith(prefix) for prefix in publication["immutablePathPrefixes"]):
-            return True
-        return any(
+        if any(
             fnmatch.fnmatchcase(path, pattern)
             for pattern in publication.get("immutablePathGlobs", [])
+        ):
+            return True
+        if any(
+            path.startswith(prefix)
+            for prefix in publication.get("sourcePathPrefixes", [])
+        ):
+            return False
+        return any(
+            path.startswith(prefix) for prefix in publication["immutablePathPrefixes"]
         )
 
     def _is_withdrawal_path(self, path: str) -> bool:

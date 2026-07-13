@@ -176,6 +176,24 @@ class PolicySet:
             "all public artifact surfaces must remain governed",
         )
         _expect(
+            set(publication.get("sourcePathPrefixes", []))
+            == {"datasets/", "worldpacks/projections/"},
+            "only dataset definitions and projection recipes may bypass publication manifests",
+        )
+        _expect(
+            {
+                "catalog/catalog.json",
+                "catalog/latest.json",
+                "catalog/removals.json",
+                "datasets/*/data-card.json",
+                "datasets/*/publications/**",
+                "datasets/*/releases/**",
+                "datasets/*/shards/**",
+            }
+            <= set(publication.get("publicationPathGlobs", [])),
+            "all finalized dataset and catalog paths must require publication manifests",
+        )
+        _expect(
             {"objects/", "releases/", "worldpacks/", "catalog/tombstones/"}
             <= set(publication.get("immutablePathPrefixes", [])),
             "content-addressed and released paths must remain immutable",
