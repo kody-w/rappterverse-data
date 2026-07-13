@@ -78,6 +78,24 @@ class PolicyTests(unittest.TestCase):
         with self.assertRaises(PolicyConfigurationError):
             self.load()
 
+    def test_source_exemptions_cannot_be_broadened(self) -> None:
+        self.rewrite(
+            "publication-policy.json",
+            lambda value: value["sourcePathPrefixes"].append("objects/"),
+        )
+        with self.assertRaises(PolicyConfigurationError):
+            self.load()
+
+    def test_finalized_dataset_globs_cannot_be_removed(self) -> None:
+        self.rewrite(
+            "publication-policy.json",
+            lambda value: value["publicationPathGlobs"].remove(
+                "datasets/*/publications/**"
+            ),
+        )
+        with self.assertRaises(PolicyConfigurationError):
+            self.load()
+
     def test_untrusted_reviewer_cannot_be_allowlisted(self) -> None:
         self.rewrite(
             "publication-policy.json",

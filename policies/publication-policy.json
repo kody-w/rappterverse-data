@@ -13,6 +13,19 @@
         "releases/",
         "worldpacks/"
     ],
+    "sourcePathPrefixes": [
+        "datasets/",
+        "worldpacks/projections/"
+    ],
+    "publicationPathGlobs": [
+        "catalog/catalog.json",
+        "catalog/latest.json",
+        "catalog/removals.json",
+        "datasets/*/data-card.json",
+        "datasets/*/publications/**",
+        "datasets/*/releases/**",
+        "datasets/*/shards/**"
+    ],
     "immutablePathPrefixes": [
         "objects/",
         "releases/",

@@ -219,6 +219,23 @@ class PublicationTests(CandidateFixture):
         report, _ = self.publish()
         self.assertTrue(report.ok, report.as_dict())
 
+    def test_generator_sources_do_not_require_publication_manifest(self) -> None:
+        paths = [
+            "datasets/d01-civilization-ledger/config.json",
+            "datasets/d01-civilization-ledger/reasoning.json",
+            "worldpacks/projections/d01/recipe.json",
+        ]
+        for path in paths:
+            self.write_json(path, {"fixture": True})
+        report = self.validate([Change("M", path) for path in paths])
+        self.assertTrue(report.ok, report.as_dict())
+
+    def test_catalog_pointer_remains_a_publication_candidate(self) -> None:
+        path = "catalog/latest.json"
+        self.write_json(path, {"release": "release-001"})
+        report = self.validate([Change("M", path)])
+        self.assertIn("PUBLICATION_MANIFEST_REQUIRED", self.codes(report))
+
     def test_missing_manifest_fails_closed(self) -> None:
         path = "objects/verifier/sha256/aa/artifact.json"
         self.write_bytes(path, b'{"verified":true}\n')
