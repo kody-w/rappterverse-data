@@ -1,0 +1,37 @@
+{
+    "$schema": "rappterverse.policy/source-allowlist/v1",
+    "policyVersion": "1.0.0",
+    "defaultAction": "deny",
+    "allowedRightsBases": {
+        "synthetic": {
+            "sourceTypes": [
+                "deterministic-synthetic",
+                "model-generated-synthetic"
+            ],
+            "requiresGeneratorCommit": true,
+            "requiresSyntheticSourceId": true
+        },
+        "rappterverse-owned": {
+            "sourceTypes": [
+                "rappterverse-repository",
+                "system-controlled-agent",
+                "consented-human-judgment"
+            ],
+            "requiresOwnershipEvidence": true
+        }
+    },
+    "allowedRepositories": [
+        "kody-w/rappterverse",
+        "kody-w/rappterverse-data"
+    ],
+    "forbiddenSourceClasses": [
+        "external-dataset",
+        "scraped-web-content",
+        "third-party-corpus",
+        "private-repository-content",
+        "private-message",
+        "browser-telemetry",
+        "git-author-identity",
+        "unverifiable-mixed-lineage"
+    ]
+}

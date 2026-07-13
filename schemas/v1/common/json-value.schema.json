@@ -1,0 +1,46 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://data.rappterverse.dev/schemas/v1/common/json-value.schema.json",
+    "title": "Bounded JSON Value",
+    "description": "A bounded JSON value extension point. Envelopes remain closed while dataset-specific payload schemas further constrain this value.",
+    "$ref": "#/$defs/JsonValue",
+    "$defs": {
+        "JsonValue": {
+            "anyOf": [
+                {
+                    "type": "null"
+                },
+                {
+                    "type": "boolean"
+                },
+                {
+                    "type": "number"
+                },
+                {
+                    "type": "string",
+                    "maxLength": 262144
+                },
+                {
+                    "$ref": "#/$defs/JsonArray"
+                },
+                {
+                    "$ref": "#/$defs/JsonObject"
+                }
+            ]
+        },
+        "JsonArray": {
+            "type": "array",
+            "maxItems": 4096,
+            "items": {
+                "$ref": "#/$defs/JsonValue"
+            }
+        },
+        "JsonObject": {
+            "type": "object",
+            "maxProperties": 4096,
+            "additionalProperties": {
+                "$ref": "#/$defs/JsonValue"
+            }
+        }
+    }
+}

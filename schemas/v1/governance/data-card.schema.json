@@ -1,0 +1,382 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://data.rappterverse.dev/schemas/v1/governance/data-card.schema.json",
+    "title": "RAPPterverse Dataset Data Card",
+    "description": "Public documentation for one immutable dataset version, including provenance, rights, safety, quality, contamination, and limitations.",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "schemaVersion",
+        "datasetId",
+        "datasetVersion",
+        "title",
+        "summary",
+        "maintainers",
+        "license",
+        "sourceBoundary",
+        "composition",
+        "generation",
+        "intendedUses",
+        "outOfScopeUses",
+        "privacy",
+        "rights",
+        "safety",
+        "contamination",
+        "quality",
+        "limitations",
+        "maintenance",
+        "reviewReceiptRefs",
+        "cardSha256"
+    ],
+    "properties": {
+        "schemaVersion": {
+            "const": "rappterverse.data-card/v1"
+        },
+        "datasetId": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/DatasetId"
+        },
+        "datasetVersion": {
+            "type": "string",
+            "pattern": "^v[1-9][0-9]*(?:\\.[0-9]+){0,2}$"
+        },
+        "title": {
+            "$ref": "#/$defs/Text"
+        },
+        "summary": {
+            "$ref": "#/$defs/Text"
+        },
+        "maintainers": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 32,
+            "items": {
+                "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/ActorId"
+            }
+        },
+        "license": {
+            "const": "CC-BY-4.0"
+        },
+        "sourceBoundary": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "allowed",
+                "excluded",
+                "provenanceSchema"
+            ],
+            "properties": {
+                "allowed": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 32,
+                    "items": {
+                        "$ref": "#/$defs/Text"
+                    }
+                },
+                "excluded": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 64,
+                    "items": {
+                        "$ref": "#/$defs/Text"
+                    }
+                },
+                "provenanceSchema": {
+                    "const": "rappterverse.provenance/v1"
+                }
+            }
+        },
+        "composition": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "recordTypes",
+                "recordCount",
+                "transcriptCount",
+                "deliberationCount",
+                "providerReasoningCount",
+                "splits"
+            ],
+            "properties": {
+                "recordTypes": {
+                    "type": "array",
+                    "minItems": 1,
+                    "uniqueItems": true,
+                    "maxItems": 64,
+                    "items": {
+                        "type": "string",
+                        "pattern": "^[a-z][a-z0-9-]{1,63}$"
+                    }
+                },
+                "recordCount": {
+                    "type": "integer",
+                    "minimum": 1
+                },
+                "transcriptCount": {
+                    "type": "integer",
+                    "minimum": 1
+                },
+                "deliberationCount": {
+                    "type": "integer",
+                    "minimum": 1
+                },
+                "providerReasoningCount": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "splits": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                        "train",
+                        "validation",
+                        "test",
+                        "unassigned"
+                    ],
+                    "properties": {
+                        "train": {
+                            "type": "integer",
+                            "minimum": 0
+                        },
+                        "validation": {
+                            "type": "integer",
+                            "minimum": 0
+                        },
+                        "test": {
+                            "type": "integer",
+                            "minimum": 0
+                        },
+                        "unassigned": {
+                            "type": "integer",
+                            "minimum": 0
+                        }
+                    }
+                }
+            }
+        },
+        "generation": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "method",
+                "deterministic",
+                "visibleTranscripts",
+                "explicitDeliberations",
+                "providerReasoningPolicy"
+            ],
+            "properties": {
+                "method": {
+                    "$ref": "#/$defs/Text"
+                },
+                "deterministic": {
+                    "type": "boolean"
+                },
+                "visibleTranscripts": {
+                    "const": "complete"
+                },
+                "explicitDeliberations": {
+                    "const": "required"
+                },
+                "providerReasoningPolicy": {
+                    "const": "optional-provider-exposed-review-gated"
+                }
+            }
+        },
+        "intendedUses": {
+            "$ref": "#/$defs/TextList"
+        },
+        "outOfScopeUses": {
+            "$ref": "#/$defs/TextList"
+        },
+        "privacy": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "classification",
+                "piiPermitted",
+                "secretsPermitted"
+            ],
+            "properties": {
+                "classification": {
+                    "type": "string",
+                    "enum": [
+                        "synthetic-nonpersonal",
+                        "consented-public-judgments"
+                    ]
+                },
+                "piiPermitted": {
+                    "const": false
+                },
+                "secretsPermitted": {
+                    "const": false
+                }
+            }
+        },
+        "rights": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "basis",
+                "ownershipVerified",
+                "externalCorporaIncluded"
+            ],
+            "properties": {
+                "basis": {
+                    "type": "array",
+                    "minItems": 1,
+                    "uniqueItems": true,
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "synthetic",
+                            "rappterverse-owned",
+                            "system-controlled",
+                            "human-consented"
+                        ]
+                    }
+                },
+                "ownershipVerified": {
+                    "const": true
+                },
+                "externalCorporaIncluded": {
+                    "const": false
+                }
+            }
+        },
+        "safety": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "policyVersion",
+                "reviewed",
+                "knownRisks"
+            ],
+            "properties": {
+                "policyVersion": {
+                    "type": "string",
+                    "pattern": "^policy-[a-z0-9][a-z0-9.-]{0,120}$"
+                },
+                "reviewed": {
+                    "const": true
+                },
+                "knownRisks": {
+                    "$ref": "#/$defs/TextList"
+                }
+            }
+        },
+        "contamination": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "publicDataset",
+                "evaluationDisclosureRequired",
+                "guidance"
+            ],
+            "properties": {
+                "publicDataset": {
+                    "const": true
+                },
+                "evaluationDisclosureRequired": {
+                    "const": true
+                },
+                "guidance": {
+                    "$ref": "#/$defs/Text"
+                }
+            }
+        },
+        "quality": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "verifiers",
+                "acceptanceCriteria",
+                "knownMetrics"
+            ],
+            "properties": {
+                "verifiers": {
+                    "$ref": "#/$defs/TextList"
+                },
+                "acceptanceCriteria": {
+                    "$ref": "#/$defs/TextList"
+                },
+                "knownMetrics": {
+                    "type": "array",
+                    "maxItems": 128,
+                    "items": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                            "name",
+                            "value",
+                            "unit"
+                        ],
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "pattern": "^[a-z][a-z0-9.-]{0,127}$"
+                            },
+                            "value": {
+                                "type": "number"
+                            },
+                            "unit": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 64
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "limitations": {
+            "$ref": "#/$defs/TextList"
+        },
+        "maintenance": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "immutableReleases",
+                "removalProcess",
+                "contact"
+            ],
+            "properties": {
+                "immutableReleases": {
+                    "const": true
+                },
+                "removalProcess": {
+                    "$ref": "#/$defs/Text"
+                },
+                "contact": {
+                    "type": "string",
+                    "pattern": "^https://github\\.com/kody-w/rappterverse-data/issues$"
+                }
+            }
+        },
+        "reviewReceiptRefs": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 1024,
+            "items": {
+                "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+            }
+        },
+        "cardSha256": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+        }
+    },
+    "$defs": {
+        "Text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 16384
+        },
+        "TextList": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 128,
+            "items": {
+                "$ref": "#/$defs/Text"
+            }
+        }
+    }
+}

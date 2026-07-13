@@ -1,0 +1,59 @@
+{
+    "$template": "Replace every angle-bracket value before publication.",
+    "schema": "rappterverse.dataset-manifest/v1",
+    "schemaVersion": "1.0.0",
+    "datasetId": "<d01-through-d10-dataset-id>",
+    "title": "<public dataset title>",
+    "version": "<immutable release version>",
+    "description": "<public-safe description>",
+    "licenses": {
+        "data": "CC-BY-4.0",
+        "code": "Apache-2.0"
+    },
+    "provenance": {
+        "rightsBasis": "synthetic",
+        "rightsStatementId": "synthetic-project-generated-v1",
+        "rightsStatement": "This material was generated for RAPPterverse from project-controlled synthetic inputs and contains no external corpus content.",
+        "sources": [
+            {
+                "type": "deterministic-synthetic",
+                "sourceId": "urn:rappterverse:synthetic:<source-id>",
+                "generatorCommit": "<40-lowercase-hex-commit>"
+            }
+        ]
+    },
+    "reasoningLayers": {
+        "visibleTranscript": {
+            "status": "included",
+            "ref": "sha256:<64-lowercase-hex>"
+        },
+        "publicDeliberation": {
+            "status": "included",
+            "ref": "sha256:<64-lowercase-hex>"
+        },
+        "providerExposedReasoning": {
+            "status": "not-provided",
+            "ref": null,
+            "providerFormat": null,
+            "approvalReceipt": null
+        }
+    },
+    "governance": {
+        "privacy": "synthetic-nonpersonal",
+        "safetyStatus": "pass",
+        "safetyLabels": [
+            "none"
+        ],
+        "contamination": {
+            "label": "deterministic-synthetic-public"
+        },
+        "publicExposure": {
+            "label": "public-on-release"
+        },
+        "evaluationUse": "contamination-prone-not-clean-evaluation",
+        "qualityPolicyVersion": "1.0.0",
+        "withdrawalPolicy": "append-only-tombstone"
+    },
+    "dataCard": "datasets/<dataset-id>/data-card.json",
+    "shards": []
+}

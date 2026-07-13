@@ -1,0 +1,551 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://data.rappterverse.dev/schemas/v1/transcripts/visible-transcript.schema.json",
+    "title": "RAPPterverse Full Visible Transcript",
+    "description": "Complete public-safe system/user prompts, visible model outputs, tool calls, tool arguments, tool results, verifier results, and final outcomes.",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "schemaVersion",
+        "transcriptId",
+        "datasetId",
+        "recordId",
+        "runId",
+        "episodeId",
+        "startedAt",
+        "completedAt",
+        "participants",
+        "capture",
+        "events",
+        "integrity"
+    ],
+    "properties": {
+        "schemaVersion": {
+            "const": "rappterverse.visible-transcript/v1"
+        },
+        "transcriptId": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/TranscriptId"
+        },
+        "datasetId": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/DatasetId"
+        },
+        "recordId": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/RecordId"
+        },
+        "runId": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/RunId"
+        },
+        "episodeId": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/EpisodeId"
+        },
+        "startedAt": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/UtcTimestamp"
+        },
+        "completedAt": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/UtcTimestamp"
+        },
+        "participants": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 32,
+            "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                    "actorId",
+                    "role",
+                    "displayName"
+                ],
+                "properties": {
+                    "actorId": {
+                        "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/ActorId"
+                    },
+                    "role": {
+                        "type": "string",
+                        "enum": [
+                            "system",
+                            "user",
+                            "assistant",
+                            "tool",
+                            "verifier"
+                        ]
+                    },
+                    "displayName": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 128
+                    }
+                }
+            }
+        },
+        "capture": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "systemPrompts",
+                "userPrompts",
+                "assistantOutputs",
+                "toolCalls",
+                "toolArguments",
+                "toolResults",
+                "verifierResults",
+                "finalOutcomes",
+                "complete",
+                "publicSafe"
+            ],
+            "properties": {
+                "systemPrompts": {
+                    "const": true
+                },
+                "userPrompts": {
+                    "const": true
+                },
+                "assistantOutputs": {
+                    "const": true
+                },
+                "toolCalls": {
+                    "const": true
+                },
+                "toolArguments": {
+                    "const": true
+                },
+                "toolResults": {
+                    "const": true
+                },
+                "verifierResults": {
+                    "const": true
+                },
+                "finalOutcomes": {
+                    "const": true
+                },
+                "complete": {
+                    "const": true
+                },
+                "publicSafe": {
+                    "const": true
+                }
+            }
+        },
+        "events": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 100000,
+            "items": {
+                "oneOf": [
+                    {
+                        "$ref": "#/$defs/MessageEvent"
+                    },
+                    {
+                        "$ref": "#/$defs/ToolCallEvent"
+                    },
+                    {
+                        "$ref": "#/$defs/ToolResultEvent"
+                    },
+                    {
+                        "$ref": "#/$defs/VerifierEvent"
+                    },
+                    {
+                        "$ref": "#/$defs/OutcomeEvent"
+                    }
+                ]
+            }
+        },
+        "integrity": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "canonicalization",
+                "eventCount",
+                "firstEventSha256",
+                "lastEventSha256",
+                "transcriptSha256"
+            ],
+            "properties": {
+                "canonicalization": {
+                    "const": "rappterverse-canonical-json/v1"
+                },
+                "eventCount": {
+                    "type": "integer",
+                    "minimum": 1
+                },
+                "firstEventSha256": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+                },
+                "lastEventSha256": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+                },
+                "transcriptSha256": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+                }
+            }
+        }
+    },
+    "$defs": {
+        "EventHeader": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "eventId",
+                "sequence",
+                "timestamp",
+                "actorId",
+                "eventSha256",
+                "previousEventSha256"
+            ],
+            "properties": {
+                "eventId": {
+                    "type": "string",
+                    "pattern": "^event-[a-z0-9][a-z0-9.-]{0,119}$"
+                },
+                "sequence": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "timestamp": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/UtcTimestamp"
+                },
+                "actorId": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/ActorId"
+                },
+                "eventSha256": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+                },
+                "previousEventSha256": {
+                    "anyOf": [
+                        {
+                            "type": "null"
+                        },
+                        {
+                            "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+                        }
+                    ]
+                }
+            }
+        },
+        "CapturedContent": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "complete",
+                "mediaType",
+                "fragments",
+                "sha256"
+            ],
+            "properties": {
+                "complete": {
+                    "const": true
+                },
+                "mediaType": {
+                    "type": "string",
+                    "enum": [
+                        "application/json",
+                        "text/plain"
+                    ]
+                },
+                "fragments": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 4096,
+                    "items": {
+                        "$ref": "https://data.rappterverse.dev/schemas/v1/common/record-fragment.schema.json"
+                    }
+                },
+                "sha256": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+                }
+            }
+        },
+        "MessageEvent": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "eventId",
+                "sequence",
+                "timestamp",
+                "actorId",
+                "eventSha256",
+                "previousEventSha256",
+                "kind",
+                "content"
+            ],
+            "properties": {
+                "eventId": {
+                    "type": "string",
+                    "pattern": "^event-[a-z0-9][a-z0-9.-]{0,119}$"
+                },
+                "sequence": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "timestamp": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/UtcTimestamp"
+                },
+                "actorId": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/ActorId"
+                },
+                "eventSha256": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+                },
+                "previousEventSha256": {
+                    "anyOf": [
+                        {
+                            "type": "null"
+                        },
+                        {
+                            "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+                        }
+                    ]
+                },
+                "kind": {
+                    "type": "string",
+                    "enum": [
+                        "system-prompt",
+                        "user-prompt",
+                        "assistant-output"
+                    ]
+                },
+                "content": {
+                    "$ref": "#/$defs/CapturedContent"
+                }
+            }
+        },
+        "ToolCallEvent": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "eventId",
+                "sequence",
+                "timestamp",
+                "actorId",
+                "eventSha256",
+                "previousEventSha256",
+                "kind",
+                "callId",
+                "toolName",
+                "arguments"
+            ],
+            "properties": {
+                "eventId": {
+                    "type": "string",
+                    "pattern": "^event-[a-z0-9][a-z0-9.-]{0,119}$"
+                },
+                "sequence": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "timestamp": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/UtcTimestamp"
+                },
+                "actorId": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/ActorId"
+                },
+                "eventSha256": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+                },
+                "previousEventSha256": {
+                    "anyOf": [
+                        {
+                            "type": "null"
+                        },
+                        {
+                            "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+                        }
+                    ]
+                },
+                "kind": {
+                    "const": "tool-call"
+                },
+                "callId": {
+                    "type": "string",
+                    "pattern": "^call-[a-z0-9][a-z0-9.-]{0,120}$"
+                },
+                "toolName": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                },
+                "arguments": {
+                    "$ref": "#/$defs/CapturedContent"
+                }
+            }
+        },
+        "ToolResultEvent": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "eventId",
+                "sequence",
+                "timestamp",
+                "actorId",
+                "eventSha256",
+                "previousEventSha256",
+                "kind",
+                "callId",
+                "toolName",
+                "success",
+                "result"
+            ],
+            "properties": {
+                "eventId": {
+                    "type": "string",
+                    "pattern": "^event-[a-z0-9][a-z0-9.-]{0,119}$"
+                },
+                "sequence": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "timestamp": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/UtcTimestamp"
+                },
+                "actorId": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/ActorId"
+                },
+                "eventSha256": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+                },
+                "previousEventSha256": {
+                    "anyOf": [
+                        {
+                            "type": "null"
+                        },
+                        {
+                            "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+                        }
+                    ]
+                },
+                "kind": {
+                    "const": "tool-result"
+                },
+                "callId": {
+                    "type": "string",
+                    "pattern": "^call-[a-z0-9][a-z0-9.-]{0,120}$"
+                },
+                "toolName": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                },
+                "success": {
+                    "type": "boolean"
+                },
+                "result": {
+                    "$ref": "#/$defs/CapturedContent"
+                }
+            }
+        },
+        "VerifierEvent": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "eventId",
+                "sequence",
+                "timestamp",
+                "actorId",
+                "eventSha256",
+                "previousEventSha256",
+                "kind",
+                "verifierId",
+                "passed",
+                "result"
+            ],
+            "properties": {
+                "eventId": {
+                    "type": "string",
+                    "pattern": "^event-[a-z0-9][a-z0-9.-]{0,119}$"
+                },
+                "sequence": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "timestamp": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/UtcTimestamp"
+                },
+                "actorId": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/ActorId"
+                },
+                "eventSha256": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+                },
+                "previousEventSha256": {
+                    "anyOf": [
+                        {
+                            "type": "null"
+                        },
+                        {
+                            "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+                        }
+                    ]
+                },
+                "kind": {
+                    "const": "verifier-result"
+                },
+                "verifierId": {
+                    "type": "string",
+                    "pattern": "^verifier-[a-z0-9][a-z0-9.-]{0,115}$"
+                },
+                "passed": {
+                    "type": "boolean"
+                },
+                "result": {
+                    "$ref": "#/$defs/CapturedContent"
+                }
+            }
+        },
+        "OutcomeEvent": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "eventId",
+                "sequence",
+                "timestamp",
+                "actorId",
+                "eventSha256",
+                "previousEventSha256",
+                "kind",
+                "status",
+                "content"
+            ],
+            "properties": {
+                "eventId": {
+                    "type": "string",
+                    "pattern": "^event-[a-z0-9][a-z0-9.-]{0,119}$"
+                },
+                "sequence": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "timestamp": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/UtcTimestamp"
+                },
+                "actorId": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/ActorId"
+                },
+                "eventSha256": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+                },
+                "previousEventSha256": {
+                    "anyOf": [
+                        {
+                            "type": "null"
+                        },
+                        {
+                            "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+                        }
+                    ]
+                },
+                "kind": {
+                    "const": "final-outcome"
+                },
+                "status": {
+                    "type": "string",
+                    "enum": [
+                        "success",
+                        "verified-failure",
+                        "aborted"
+                    ]
+                },
+                "content": {
+                    "$ref": "#/$defs/CapturedContent"
+                }
+            }
+        }
+    }
+}

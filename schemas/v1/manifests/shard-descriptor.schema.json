@@ -1,0 +1,68 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://data.rappterverse.dev/schemas/v1/manifests/shard-descriptor.schema.json",
+    "title": "RAPPterverse Canonical Shard Descriptor",
+    "description": "Descriptor for a content-addressed canonical JSONL shard. No shard may exceed 1,000,000 bytes and no line or fragment may exceed 262,144 bytes.",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "path",
+        "artifactKind",
+        "mediaType",
+        "sha256",
+        "byteSize",
+        "itemCount",
+        "firstItemId",
+        "lastItemId",
+        "maxFragmentBytes",
+        "contentAddressed",
+        "reviewReceiptRef"
+    ],
+    "properties": {
+        "path": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/ObjectPath"
+        },
+        "artifactKind": {
+            "type": "string",
+            "enum": [
+                "records",
+                "transcripts",
+                "deliberations",
+                "provider-reasoning",
+                "world-pack-sources"
+            ]
+        },
+        "mediaType": {
+            "const": "application/x-ndjson"
+        },
+        "sha256": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+        },
+        "byteSize": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1000000
+        },
+        "itemCount": {
+            "type": "integer",
+            "minimum": 1
+        },
+        "firstItemId": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/StableKey"
+        },
+        "lastItemId": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/StableKey"
+        },
+        "maxFragmentBytes": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 262144
+        },
+        "contentAddressed": {
+            "const": true
+        },
+        "reviewReceiptRef": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+        }
+    }
+}

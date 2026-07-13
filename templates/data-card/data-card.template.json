@@ -1,0 +1,88 @@
+{
+    "$template": "Replace every angle-bracket value before publication.",
+    "schema": "rappterverse.data-card/v1",
+    "policyVersion": "1.0.0",
+    "datasetId": "<d01-through-d10-dataset-id>",
+    "title": "<public dataset title>",
+    "summary": "<purpose, contents, and intended use>",
+    "version": "<immutable release version>",
+    "createdAt": "<ISO-8601 UTC timestamp ending in Z>",
+    "licenses": {
+        "data": "CC-BY-4.0",
+        "code": "Apache-2.0"
+    },
+    "sources": {
+        "boundary": "synthetic-or-rappterverse-owned-only",
+        "rightsBasis": "synthetic",
+        "rightsStatementId": "synthetic-project-generated-v1",
+        "rightsStatement": "This material was generated for RAPPterverse from project-controlled synthetic inputs and contains no external corpus content.",
+        "lineage": [
+            {
+                "type": "deterministic-synthetic",
+                "sourceId": "urn:rappterverse:synthetic:<source-id>",
+                "generatorCommit": "<40-lowercase-hex-commit>"
+            }
+        ]
+    },
+    "composition": {
+        "recordCount": 1,
+        "recordTypes": [
+            "<record-type>"
+        ],
+        "splits": {
+            "train": 1
+        }
+    },
+    "reasoningLayers": {
+        "visibleTranscript": "included",
+        "publicDeliberation": "included",
+        "providerExposedReasoning": "not-provided"
+    },
+    "privacyAndSafety": {
+        "privacy": "synthetic-nonpersonal",
+        "realPii": false,
+        "secrets": false,
+        "unownedContent": false,
+        "safetyStatus": "pass",
+        "safetyLabels": [
+            "none"
+        ]
+    },
+    "contamination": {
+        "label": "deterministic-synthetic-public",
+        "publicExposure": "public-on-release",
+        "evaluationUse": "contamination-prone-not-clean-evaluation",
+        "notice": "Public generated data may be incorporated into future model training and must not be represented as a clean unseen evaluation set."
+    },
+    "quality": {
+        "recordCount": 1,
+        "metrics": {
+            "schemaPassRate": 1.0,
+            "verifierPassRate": 1.0,
+            "provenancePassRate": 1.0,
+            "rightsPassRate": 1.0,
+            "privacyPassRate": 1.0,
+            "safetyPassRate": 1.0,
+            "integrityPassRate": 1.0,
+            "transcriptCoverage": 1.0,
+            "deliberationCoverage": 1.0,
+            "contaminationLabelCoverage": 1.0,
+            "publicExposureLabelCoverage": 1.0,
+            "duplicateRate": 0.0
+        }
+    },
+    "intendedUses": [
+        "<intended use>"
+    ],
+    "outOfScopeUses": [
+        "clean or unseen model evaluation",
+        "identification or profiling of real people"
+    ],
+    "limitations": [
+        "<known limitation>"
+    ],
+    "withdrawal": {
+        "policy": "append-only-tombstone",
+        "instructions": "Submit a reviewed tombstone; released bytes and Git history are not deleted or rewritten."
+    }
+}

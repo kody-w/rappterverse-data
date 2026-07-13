@@ -1,0 +1,82 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://data.rappterverse.dev/schemas/v1/common/record-fragment.schema.json",
+    "title": "RAPPterverse Artifact Fragment",
+    "description": "A hash-chained UTF-8 fragment for an oversized record or public artifact. utf8Bytes is authoritative and may not exceed 262,144 bytes.",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "schemaVersion",
+        "artifactId",
+        "artifactKind",
+        "index",
+        "count",
+        "mediaType",
+        "encoding",
+        "data",
+        "utf8Bytes",
+        "sha256",
+        "previousFragmentSha256"
+    ],
+    "properties": {
+        "schemaVersion": {
+            "const": "rappterverse.artifact-fragment/v1"
+        },
+        "artifactId": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/ArtifactId"
+        },
+        "artifactKind": {
+            "type": "string",
+            "enum": [
+                "record",
+                "transcript",
+                "deliberation",
+                "provider-reasoning",
+                "tool-arguments",
+                "tool-result",
+                "verifier-result"
+            ]
+        },
+        "index": {
+            "type": "integer",
+            "minimum": 0
+        },
+        "count": {
+            "type": "integer",
+            "minimum": 1
+        },
+        "mediaType": {
+            "type": "string",
+            "enum": [
+                "application/json",
+                "application/x-ndjson",
+                "text/plain"
+            ]
+        },
+        "encoding": {
+            "const": "utf-8"
+        },
+        "data": {
+            "type": "string",
+            "maxLength": 262144
+        },
+        "utf8Bytes": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 262144
+        },
+        "sha256": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+        },
+        "previousFragmentSha256": {
+            "anyOf": [
+                {
+                    "type": "null"
+                },
+                {
+                    "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+                }
+            ]
+        }
+    }
+}

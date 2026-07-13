@@ -1,0 +1,189 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://data.rappterverse.dev/schemas/v1/manifests/release-manifest.schema.json",
+    "title": "RAPPterverse Civilization Release Manifest",
+    "description": "Atomic content-addressed release over all ten independent datasets. Partial releases cannot become latest.",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "schemaVersion",
+        "releaseId",
+        "createdAt",
+        "dataCommit",
+        "previousRelease",
+        "datasets",
+        "worldPackSources",
+        "totals",
+        "limits",
+        "reviewReceiptRefs",
+        "manifestBytes",
+        "manifestSha256"
+    ],
+    "properties": {
+        "schemaVersion": {
+            "const": "rappterverse.release-manifest/v1"
+        },
+        "releaseId": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/ReleaseId"
+        },
+        "createdAt": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/UtcTimestamp"
+        },
+        "dataCommit": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/GitCommit"
+        },
+        "previousRelease": {
+            "anyOf": [
+                {
+                    "type": "null"
+                },
+                {
+                    "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/ReleaseId"
+                }
+            ]
+        },
+        "datasets": {
+            "type": "array",
+            "minItems": 10,
+            "maxItems": 10,
+            "items": {
+                "$ref": "#/$defs/DatasetRelease"
+            }
+        },
+        "worldPackSources": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 1024,
+            "items": {
+                "$ref": "#/$defs/ArtifactRef"
+            }
+        },
+        "totals": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "records",
+                "transcripts",
+                "deliberations",
+                "providerReasoning",
+                "bytes"
+            ],
+            "properties": {
+                "records": {
+                    "type": "integer",
+                    "minimum": 10
+                },
+                "transcripts": {
+                    "type": "integer",
+                    "minimum": 10
+                },
+                "deliberations": {
+                    "type": "integer",
+                    "minimum": 10
+                },
+                "providerReasoning": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "bytes": {
+                    "type": "integer",
+                    "minimum": 1
+                }
+            }
+        },
+        "limits": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "shardHardBytes",
+                "fragmentHardBytes",
+                "manifestHardBytes"
+            ],
+            "properties": {
+                "shardHardBytes": {
+                    "const": 1000000
+                },
+                "fragmentHardBytes": {
+                    "const": 262144
+                },
+                "manifestHardBytes": {
+                    "const": 512000
+                }
+            }
+        },
+        "reviewReceiptRefs": {
+            "type": "array",
+            "minItems": 10,
+            "maxItems": 10000,
+            "items": {
+                "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+            }
+        },
+        "manifestBytes": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 512000
+        },
+        "manifestSha256": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+        }
+    },
+    "$defs": {
+        "ArtifactRef": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "path",
+                "sha256"
+            ],
+            "properties": {
+                "path": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/ObjectPath"
+                },
+                "sha256": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+                }
+            }
+        },
+        "DatasetRelease": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "datasetId",
+                "datasetVersion",
+                "manifestPath",
+                "manifestSha256",
+                "manifestBytes",
+                "dataCardSha256",
+                "recordCount"
+            ],
+            "properties": {
+                "datasetId": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/DatasetId"
+                },
+                "datasetVersion": {
+                    "type": "string",
+                    "pattern": "^v[1-9][0-9]*(?:\\.[0-9]+){0,2}$"
+                },
+                "manifestPath": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/ObjectPath"
+                },
+                "manifestSha256": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+                },
+                "manifestBytes": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 512000
+                },
+                "dataCardSha256": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+                },
+                "recordCount": {
+                    "type": "integer",
+                    "minimum": 1
+                }
+            }
+        }
+    }
+}

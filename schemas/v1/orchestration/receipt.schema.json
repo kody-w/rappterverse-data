@@ -1,0 +1,105 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://data.rappterverse.dev/schemas/v1/orchestration/receipt.schema.json",
+    "title": "RAPPterverse Exactly-Once Operation Receipt",
+    "description": "Content-bound repository effect receipt. Repeated matching receipts are no-ops; reused batch IDs with different inputs are conflicts.",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "schemaVersion",
+        "receiptId",
+        "runId",
+        "datasetId",
+        "threadId",
+        "partitionId",
+        "batchId",
+        "fencingEpoch",
+        "inputDigest",
+        "orderedItemIds",
+        "promptHash",
+        "modelPolicyHash",
+        "outputDigest",
+        "cursorBefore",
+        "cursorAfter",
+        "checkpointSha256",
+        "repositoryCommit",
+        "effect",
+        "committedAt",
+        "receiptSha256"
+    ],
+    "properties": {
+        "schemaVersion": {
+            "const": "rappterverse.operation-receipt/v1"
+        },
+        "receiptId": {
+            "type": "string",
+            "pattern": "^urn:rappterverse:receipt:sha256:[a-f0-9]{64}$"
+        },
+        "runId": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/RunId"
+        },
+        "datasetId": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/DatasetId"
+        },
+        "threadId": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/ThreadId"
+        },
+        "partitionId": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/PartitionId"
+        },
+        "batchId": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/BatchId"
+        },
+        "fencingEpoch": {
+            "type": "integer",
+            "minimum": 1
+        },
+        "inputDigest": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+        },
+        "orderedItemIds": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 10000,
+            "items": {
+                "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/StableKey"
+            }
+        },
+        "promptHash": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+        },
+        "modelPolicyHash": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+        },
+        "outputDigest": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+        },
+        "cursorBefore": {
+            "type": "integer",
+            "minimum": 0
+        },
+        "cursorAfter": {
+            "type": "integer",
+            "minimum": 0
+        },
+        "checkpointSha256": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+        },
+        "repositoryCommit": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/GitCommit"
+        },
+        "effect": {
+            "type": "string",
+            "enum": [
+                "committed",
+                "matching-noop"
+            ]
+        },
+        "committedAt": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/UtcTimestamp"
+        },
+        "receiptSha256": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+        }
+    }
+}

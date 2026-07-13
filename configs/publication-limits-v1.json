@@ -1,0 +1,37 @@
+{
+    "schemaVersion": "rappterverse.publication-limits/v1",
+    "canonicalJsonlShard": {
+        "targetBytes": 768000,
+        "hardBytes": 1000000
+    },
+    "recordFragment": {
+        "targetBytes": 128000,
+        "hardBytes": 262144
+    },
+    "manifest": {
+        "targetBytes": 256000,
+        "hardBytes": 512000
+    },
+    "modelRequest": {
+        "targetBytes": 512000,
+        "hardBytes": 1000000
+    },
+    "modelVisibleOutput": {
+        "targetBytes": 256000,
+        "hardBytes": 512000
+    },
+    "contextOccupancy": {
+        "targetRatio": 0.6,
+        "hardRatio": 0.7
+    },
+    "publicationPullRequest": {
+        "targetDiffBytes": 750000,
+        "hardDiffBytes": 900000,
+        "targetFinalFiles": 3,
+        "hardFinalFiles": 5
+    },
+    "workerSlice": {
+        "targetSeconds": 900,
+        "hardSeconds": 1200
+    }
+}

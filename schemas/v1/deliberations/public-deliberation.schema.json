@@ -1,0 +1,245 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://data.rappterverse.dev/schemas/v1/deliberations/public-deliberation.schema.json",
+    "title": "RAPPterverse Explicit Public Deliberation",
+    "description": "A deliberately generated, publishable decision artifact. It is not an extraction of inaccessible model-internal reasoning.",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "schemaVersion",
+        "deliberationId",
+        "datasetId",
+        "recordId",
+        "transcriptRef",
+        "generatedAt",
+        "purpose",
+        "evidence",
+        "assumptions",
+        "alternatives",
+        "uncertainty",
+        "critiques",
+        "rejectedOptions",
+        "decision",
+        "expectedOutcome",
+        "limitations",
+        "integrity"
+    ],
+    "properties": {
+        "schemaVersion": {
+            "const": "rappterverse.public-deliberation/v1"
+        },
+        "deliberationId": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/DeliberationId"
+        },
+        "datasetId": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/DatasetId"
+        },
+        "recordId": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/RecordId"
+        },
+        "transcriptRef": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+        },
+        "generatedAt": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/UtcTimestamp"
+        },
+        "purpose": {
+            "const": "explicit-publishable-deliberation"
+        },
+        "evidence": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 256,
+            "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                    "claim",
+                    "evidenceRef",
+                    "relevance"
+                ],
+                "properties": {
+                    "claim": {
+                        "$ref": "#/$defs/PublicText"
+                    },
+                    "evidenceRef": {
+                        "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+                    },
+                    "relevance": {
+                        "$ref": "#/$defs/PublicText"
+                    }
+                }
+            }
+        },
+        "assumptions": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 128,
+            "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                    "statement",
+                    "testability"
+                ],
+                "properties": {
+                    "statement": {
+                        "$ref": "#/$defs/PublicText"
+                    },
+                    "testability": {
+                        "type": "string",
+                        "enum": [
+                            "verified",
+                            "testable",
+                            "untestable"
+                        ]
+                    }
+                }
+            }
+        },
+        "alternatives": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 64,
+            "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                    "option",
+                    "benefits",
+                    "risks"
+                ],
+                "properties": {
+                    "option": {
+                        "$ref": "#/$defs/PublicText"
+                    },
+                    "benefits": {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 32,
+                        "items": {
+                            "$ref": "#/$defs/PublicText"
+                        }
+                    },
+                    "risks": {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 32,
+                        "items": {
+                            "$ref": "#/$defs/PublicText"
+                        }
+                    }
+                }
+            }
+        },
+        "uncertainty": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "confidence",
+                "summary",
+                "unknowns"
+            ],
+            "properties": {
+                "confidence": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                },
+                "summary": {
+                    "$ref": "#/$defs/PublicText"
+                },
+                "unknowns": {
+                    "type": "array",
+                    "maxItems": 64,
+                    "items": {
+                        "$ref": "#/$defs/PublicText"
+                    }
+                }
+            }
+        },
+        "critiques": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 64,
+            "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                    "concern",
+                    "response"
+                ],
+                "properties": {
+                    "concern": {
+                        "$ref": "#/$defs/PublicText"
+                    },
+                    "response": {
+                        "$ref": "#/$defs/PublicText"
+                    }
+                }
+            }
+        },
+        "rejectedOptions": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 64,
+            "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                    "option",
+                    "reason"
+                ],
+                "properties": {
+                    "option": {
+                        "$ref": "#/$defs/PublicText"
+                    },
+                    "reason": {
+                        "$ref": "#/$defs/PublicText"
+                    }
+                }
+            }
+        },
+        "decision": {
+            "$ref": "#/$defs/PublicText"
+        },
+        "expectedOutcome": {
+            "$ref": "#/$defs/PublicText"
+        },
+        "limitations": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 64,
+            "items": {
+                "$ref": "#/$defs/PublicText"
+            }
+        },
+        "integrity": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "publicSafe",
+                "inaccessibleReasoningIncluded",
+                "deliberationSha256"
+            ],
+            "properties": {
+                "publicSafe": {
+                    "const": true
+                },
+                "inaccessibleReasoningIncluded": {
+                    "const": false
+                },
+                "deliberationSha256": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+                }
+            }
+        }
+    },
+    "$defs": {
+        "PublicText": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 16384
+        }
+    }
+}

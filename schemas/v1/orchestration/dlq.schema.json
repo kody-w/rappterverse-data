@@ -1,0 +1,136 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://data.rappterverse.dev/schemas/v1/orchestration/dlq.schema.json",
+    "title": "RAPPterverse Dead-Letter Queue Entry",
+    "description": "Redacted, content-bound failure record emitted after bounded retry and deterministic splitting.",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "schemaVersion",
+        "dlqId",
+        "runId",
+        "datasetId",
+        "threadId",
+        "partitionId",
+        "batchId",
+        "itemId",
+        "stage",
+        "errorClass",
+        "safeSummary",
+        "attempts",
+        "splitDepth",
+        "retryable",
+        "inputDigest",
+        "firstFailedAt",
+        "lastFailedAt",
+        "recoveryAction",
+        "redacted",
+        "rawPayloadIncluded",
+        "secretsIncluded",
+        "dlqSha256"
+    ],
+    "properties": {
+        "schemaVersion": {
+            "const": "rappterverse.dlq/v1"
+        },
+        "dlqId": {
+            "type": "string",
+            "pattern": "^urn:rappterverse:dlq:sha256:[a-f0-9]{64}$"
+        },
+        "runId": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/RunId"
+        },
+        "datasetId": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/DatasetId"
+        },
+        "threadId": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/ThreadId"
+        },
+        "partitionId": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/PartitionId"
+        },
+        "batchId": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/BatchId"
+        },
+        "itemId": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/StableKey"
+        },
+        "stage": {
+            "type": "string",
+            "enum": [
+                "preflight",
+                "provider-call",
+                "parse",
+                "schema-validation",
+                "verification",
+                "review",
+                "publication"
+            ]
+        },
+        "errorClass": {
+            "type": "string",
+            "enum": [
+                "oversize",
+                "context-overflow",
+                "rate-limit",
+                "network",
+                "provider",
+                "malformed",
+                "truncated",
+                "schema-invalid",
+                "verifier-failed",
+                "policy-rejected",
+                "conflict",
+                "corruption"
+            ]
+        },
+        "safeSummary": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+        },
+        "attempts": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+        },
+        "splitDepth": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 64
+        },
+        "retryable": {
+            "type": "boolean"
+        },
+        "inputDigest": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+        },
+        "firstFailedAt": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/UtcTimestamp"
+        },
+        "lastFailedAt": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/UtcTimestamp"
+        },
+        "recoveryAction": {
+            "type": "string",
+            "enum": [
+                "retry-later",
+                "manual-review",
+                "skip-with-receipt",
+                "repair-control-state"
+            ]
+        },
+        "redacted": {
+            "const": true
+        },
+        "rawPayloadIncluded": {
+            "const": false
+        },
+        "secretsIncluded": {
+            "const": false
+        },
+        "dlqSha256": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+        }
+    }
+}

@@ -1,0 +1,53 @@
+{
+    "$schema": "rappterverse.policy/publication/v1",
+    "policyVersion": "1.0.0",
+    "defaultAction": "deny",
+    "licenses": {
+        "data": "CC-BY-4.0",
+        "code": "Apache-2.0"
+    },
+    "candidatePathPrefixes": [
+        "catalog/",
+        "datasets/",
+        "objects/",
+        "releases/",
+        "worldpacks/"
+    ],
+    "immutablePathPrefixes": [
+        "objects/",
+        "releases/",
+        "worldpacks/",
+        "catalog/tombstones/"
+    ],
+    "immutablePathGlobs": [
+        "datasets/*/publications/**",
+        "datasets/*/releases/**",
+        "datasets/*/shards/**"
+    ],
+    "publicationManifestSchema": "rappterverse.publication/v1",
+    "reviewDispositions": [
+        "approve_public",
+        "approve_deliberation_only"
+    ],
+    "approvedReviewerIds": [
+        "kody-w"
+    ],
+    "limits": {
+        "canonicalJsonlTargetBytes": 768000,
+        "fileHardBytes": 1000000,
+        "jsonlLineTargetBytes": 128000,
+        "jsonlLineHardBytes": 262144,
+        "manifestTargetBytes": 256000,
+        "manifestHardBytes": 512000,
+        "modelRequestHardBytes": 1000000,
+        "modelVisibleOutputHardBytes": 512000,
+        "modelContextHardPercent": 70,
+        "pullRequestDiffTargetBytes": 750000,
+        "pullRequestDiffHardBytes": 900000,
+        "publicationFilesTarget": 3,
+        "publicationFilesHard": 5
+    },
+    "rejectMixedPolicyAndPublicationChanges": true,
+    "requireDeclaredArtifactHashes": true,
+    "requireMatchingReviewReceipt": true
+}

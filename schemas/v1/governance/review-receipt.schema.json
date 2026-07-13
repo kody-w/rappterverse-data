@@ -1,0 +1,276 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://data.rappterverse.dev/schemas/v1/governance/review-receipt.schema.json",
+    "title": "RAPPterverse Immutable Review Receipt",
+    "description": "A content-bound public review decision. Provider reasoning may publish only under approve_public with explicit redistribution approval.",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "schemaVersion",
+        "reviewId",
+        "datasetId",
+        "batchId",
+        "candidateKind",
+        "candidateSha256",
+        "disposition",
+        "reviewer",
+        "policyVersion",
+        "reviewedAt",
+        "publicArtifactSha256",
+        "reasoningRedistributionApproved",
+        "checks",
+        "reasonCodes",
+        "supersedes",
+        "receiptSha256"
+    ],
+    "properties": {
+        "schemaVersion": {
+            "const": "rappterverse.review-receipt/v1"
+        },
+        "reviewId": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/ReviewId"
+        },
+        "datasetId": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/DatasetId"
+        },
+        "batchId": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/BatchId"
+        },
+        "candidateKind": {
+            "type": "string",
+            "enum": [
+                "record-bundle",
+                "deliberation",
+                "provider-reasoning",
+                "manifest",
+                "world-pack-source"
+            ]
+        },
+        "candidateSha256": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+        },
+        "disposition": {
+            "type": "string",
+            "enum": [
+                "approve_public",
+                "approve_deliberation_only",
+                "reject"
+            ]
+        },
+        "reviewer": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/ActorId"
+        },
+        "policyVersion": {
+            "type": "string",
+            "pattern": "^policy-[a-z0-9][a-z0-9.-]{0,120}$"
+        },
+        "reviewedAt": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/UtcTimestamp"
+        },
+        "publicArtifactSha256": {
+            "anyOf": [
+                {
+                    "type": "null"
+                },
+                {
+                    "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+                }
+            ]
+        },
+        "reasoningRedistributionApproved": {
+            "type": "boolean"
+        },
+        "checks": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "sourceOwnership",
+                "rights",
+                "privacy",
+                "secrets",
+                "safety",
+                "transcriptPolicy",
+                "contamination",
+                "quality"
+            ],
+            "properties": {
+                "sourceOwnership": {
+                    "$ref": "#/$defs/CheckResult"
+                },
+                "rights": {
+                    "$ref": "#/$defs/CheckResult"
+                },
+                "privacy": {
+                    "$ref": "#/$defs/CheckResult"
+                },
+                "secrets": {
+                    "$ref": "#/$defs/CheckResult"
+                },
+                "safety": {
+                    "$ref": "#/$defs/CheckResult"
+                },
+                "transcriptPolicy": {
+                    "$ref": "#/$defs/CheckResult"
+                },
+                "contamination": {
+                    "$ref": "#/$defs/CheckResult"
+                },
+                "quality": {
+                    "$ref": "#/$defs/CheckResult"
+                }
+            }
+        },
+        "reasonCodes": {
+            "type": "array",
+            "uniqueItems": true,
+            "maxItems": 64,
+            "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9][a-z0-9.-]{0,127}$"
+            }
+        },
+        "supersedes": {
+            "anyOf": [
+                {
+                    "type": "null"
+                },
+                {
+                    "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+                }
+            ]
+        },
+        "receiptSha256": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+        }
+    },
+    "allOf": [
+        {
+            "if": {
+                "properties": {
+                    "disposition": {
+                        "const": "reject"
+                    }
+                },
+                "required": [
+                    "disposition"
+                ]
+            },
+            "then": {
+                "properties": {
+                    "publicArtifactSha256": {
+                        "type": "null"
+                    },
+                    "reasoningRedistributionApproved": {
+                        "const": false
+                    }
+                }
+            },
+            "else": {
+                "properties": {
+                    "publicArtifactSha256": {
+                        "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+                    }
+                }
+            }
+        },
+        {
+            "if": {
+                "properties": {
+                    "candidateKind": {
+                        "const": "provider-reasoning"
+                    },
+                    "disposition": {
+                        "const": "approve_public"
+                    }
+                },
+                "required": [
+                    "candidateKind",
+                    "disposition"
+                ]
+            },
+            "then": {
+                "properties": {
+                    "reasoningRedistributionApproved": {
+                        "const": true
+                    }
+                }
+            }
+        },
+        {
+            "if": {
+                "properties": {
+                    "disposition": {
+                        "const": "approve_deliberation_only"
+                    }
+                },
+                "required": [
+                    "disposition"
+                ]
+            },
+            "then": {
+                "properties": {
+                    "reasoningRedistributionApproved": {
+                        "const": false
+                    }
+                }
+            }
+        },
+        {
+            "if": {
+                "properties": {
+                    "disposition": {
+                        "enum": [
+                            "approve_public",
+                            "approve_deliberation_only"
+                        ]
+                    }
+                },
+                "required": [
+                    "disposition"
+                ]
+            },
+            "then": {
+                "properties": {
+                    "checks": {
+                        "properties": {
+                            "sourceOwnership": {
+                                "const": "pass"
+                            },
+                            "rights": {
+                                "const": "pass"
+                            },
+                            "privacy": {
+                                "const": "pass"
+                            },
+                            "secrets": {
+                                "const": "pass"
+                            },
+                            "safety": {
+                                "const": "pass"
+                            },
+                            "transcriptPolicy": {
+                                "const": "pass"
+                            },
+                            "contamination": {
+                                "const": "pass"
+                            },
+                            "quality": {
+                                "const": "pass"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    ],
+    "$defs": {
+        "CheckResult": {
+            "type": "string",
+            "enum": [
+                "pass",
+                "fail",
+                "not-applicable"
+            ]
+        }
+    }
+}

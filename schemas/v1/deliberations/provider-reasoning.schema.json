@@ -1,0 +1,170 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://data.rappterverse.dev/schemas/v1/deliberations/provider-reasoning.schema.json",
+    "title": "RAPPterverse Provider-Exposed Reasoning",
+    "description": "Optional verbatim reasoning deliberately exposed by a provider API. Publication requires redistribution permission and an immutable approve_public review.",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "schemaVersion",
+        "reasoningId",
+        "datasetId",
+        "recordId",
+        "transcriptRef",
+        "availability",
+        "source",
+        "content",
+        "reviewGate",
+        "integrity"
+    ],
+    "properties": {
+        "schemaVersion": {
+            "const": "rappterverse.provider-reasoning/v1"
+        },
+        "reasoningId": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/ReasoningId"
+        },
+        "datasetId": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/DatasetId"
+        },
+        "recordId": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/RecordId"
+        },
+        "transcriptRef": {
+            "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+        },
+        "availability": {
+            "const": "provider-exposed"
+        },
+        "source": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "provider",
+                "modelId",
+                "requestId",
+                "apiField",
+                "providerFormat",
+                "exposedByProvider",
+                "redistributionTermsRef",
+                "redistributionPermitted"
+            ],
+            "properties": {
+                "provider": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9.-]{0,127}$"
+                },
+                "modelId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 256
+                },
+                "requestId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 256
+                },
+                "apiField": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 256
+                },
+                "providerFormat": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 256
+                },
+                "exposedByProvider": {
+                    "const": true
+                },
+                "redistributionTermsRef": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+                },
+                "redistributionPermitted": {
+                    "const": true
+                }
+            }
+        },
+        "content": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "verbatim",
+                "complete",
+                "fragments",
+                "sha256"
+            ],
+            "properties": {
+                "verbatim": {
+                    "const": true
+                },
+                "complete": {
+                    "const": true
+                },
+                "fragments": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 4096,
+                    "items": {
+                        "$ref": "https://data.rappterverse.dev/schemas/v1/common/record-fragment.schema.json"
+                    }
+                },
+                "sha256": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+                }
+            }
+        },
+        "reviewGate": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "reviewReceiptRef",
+                "disposition",
+                "candidateSha256",
+                "publicArtifactSha256",
+                "reviewedAt",
+                "reviewer"
+            ],
+            "properties": {
+                "reviewReceiptRef": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+                },
+                "disposition": {
+                    "const": "approve_public"
+                },
+                "candidateSha256": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+                },
+                "publicArtifactSha256": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+                },
+                "reviewedAt": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/UtcTimestamp"
+                },
+                "reviewer": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v1/common/identifiers.schema.json#/$defs/ActorId"
+                }
+            }
+        },
+        "integrity": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "internalReasoningRequested",
+                "inaccessibleReasoningIncluded",
+                "reasoningSha256"
+            ],
+            "properties": {
+                "internalReasoningRequested": {
+                    "const": false
+                },
+                "inaccessibleReasoningIncluded": {
+                    "const": false
+                },
+                "reasoningSha256": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v1/common/digest.schema.json#/$defs/Sha256Digest"
+                }
+            }
+        }
+    }
+}

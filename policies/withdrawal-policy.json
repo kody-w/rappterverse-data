@@ -1,0 +1,21 @@
+{
+    "$schema": "rappterverse.policy/withdrawal/v1",
+    "policyVersion": "1.0.0",
+    "strategy": "append-only-tombstone",
+    "tombstoneSchema": "rappterverse.withdrawal-tombstone/v1",
+    "tombstonePathPrefix": "catalog/tombstones/",
+    "removalIndexPath": "catalog/removals.json",
+    "deleteOriginal": false,
+    "rewriteHistory": false,
+    "requiredStatus": "withdrawn",
+    "requiredOriginalAvailability": true,
+    "allowedReasonCodes": [
+        "rights-withdrawn",
+        "privacy-risk",
+        "safety-risk",
+        "integrity-failure",
+        "duplicate-release",
+        "superseded"
+    ],
+    "publicReasonMustBeRedacted": true
+}

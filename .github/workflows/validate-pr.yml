@@ -1,0 +1,59 @@
+# SPDX-License-Identifier: Apache-2.0
+name: governance
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: governance-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - name: Check out candidate without credentials
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          path: candidate
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Check out trusted base governance
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          path: trusted-governance
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Test trusted governance
+        env:
+          PYTHONDONTWRITEBYTECODE: "1"
+          TRUSTED_ROOT: ${{ github.workspace }}/trusted-governance
+        run: >-
+          python3 -B -m unittest discover
+          -s "$TRUSTED_ROOT/tests/governance"
+          -p "test_*.py"
+          -v
+
+      - name: Validate candidate with trusted base policy
+        env:
+          PYTHONDONTWRITEBYTECODE: "1"
+          CANDIDATE_ROOT: ${{ github.workspace }}/candidate
+          TRUSTED_ROOT: ${{ github.workspace }}/trusted-governance
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: >-
+          python3 -B "$TRUSTED_ROOT/scripts/governance/validate.py"
+          --root "$CANDIDATE_ROOT"
+          --policy-root "$TRUSTED_ROOT/policies"
+          --base "$BASE_SHA"
+          --head "$HEAD_SHA"
