@@ -1,0 +1,140 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://data.rappterverse.dev/schemas/v2/catalog/release-pointer.schema.json",
+    "title": "RAPPterverse immutable catalog release pointer v2",
+    "description": "Binds exact release-manifest and active-review-set bytes and repeats the release predecessor chain. The pointer omits its own digest and is itself bound by catalog latest.",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "schemaVersion",
+        "releaseId",
+        "createdAt",
+        "sequence",
+        "previousReleaseId",
+        "previousReleasePointerSha256",
+        "policy",
+        "releaseManifest",
+        "activeReviewSet",
+        "totals"
+    ],
+    "properties": {
+        "schemaVersion": {
+            "const": "rappterverse.catalog-release-pointer/v2"
+        },
+        "releaseId": {
+            "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/ReleaseId"
+        },
+        "createdAt": {
+            "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/UtcTimestamp"
+        },
+        "sequence": {
+            "type": "integer",
+            "minimum": 1
+        },
+        "previousReleaseId": {
+            "anyOf": [
+                {
+                    "type": "null"
+                },
+                {
+                    "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/ReleaseId"
+                }
+            ]
+        },
+        "previousReleasePointerSha256": {
+            "anyOf": [
+                {
+                    "type": "null"
+                },
+                {
+                    "$ref": "https://data.rappterverse.dev/schemas/v2/common/digest.schema.json#/$defs/Sha256Hex"
+                }
+            ]
+        },
+        "policy": {
+            "$ref": "https://data.rappterverse.dev/schemas/v2/common/artifact-descriptor.schema.json#/$defs/PolicyRef"
+        },
+        "releaseManifest": {
+            "$ref": "https://data.rappterverse.dev/schemas/v2/common/artifact-descriptor.schema.json#/$defs/ReviewedArtifact"
+        },
+        "activeReviewSet": {
+            "$ref": "https://data.rappterverse.dev/schemas/v2/common/artifact-descriptor.schema.json#/$defs/ReviewedArtifact"
+        },
+        "totals": {
+            "$ref": "#/$defs/Totals"
+        }
+    },
+    "oneOf": [
+        {
+            "properties": {
+                "sequence": {
+                    "const": 1
+                },
+                "previousReleaseId": {
+                    "type": "null"
+                },
+                "previousReleasePointerSha256": {
+                    "type": "null"
+                }
+            }
+        },
+        {
+            "properties": {
+                "sequence": {
+                    "type": "integer",
+                    "minimum": 2
+                },
+                "previousReleaseId": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/ReleaseId"
+                },
+                "previousReleasePointerSha256": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v2/common/digest.schema.json#/$defs/Sha256Hex"
+                }
+            }
+        }
+    ],
+    "$defs": {
+        "Totals": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "datasets",
+                "records",
+                "transcripts",
+                "deliberations",
+                "providerReasoning",
+                "worldPackSources",
+                "contentBytes"
+            ],
+            "properties": {
+                "datasets": {
+                    "const": 10
+                },
+                "records": {
+                    "type": "integer",
+                    "minimum": 10
+                },
+                "transcripts": {
+                    "type": "integer",
+                    "minimum": 10
+                },
+                "deliberations": {
+                    "type": "integer",
+                    "minimum": 10
+                },
+                "providerReasoning": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "worldPackSources": {
+                    "type": "integer",
+                    "minimum": 1
+                },
+                "contentBytes": {
+                    "type": "integer",
+                    "minimum": 1
+                }
+            }
+        }
+    }
+}

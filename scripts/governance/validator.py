@@ -11,18 +11,48 @@ import math
 import re
 import stat
 import subprocess
+import sys
 import unicodedata
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path, PurePosixPath
-from typing import Any, Iterable, Iterator, Sequence
+from typing import Any, Iterable, Iterator, Optional, Sequence, Union
+
+SCRIPTS_ROOT = Path(__file__).resolve().parents[1]
+if str(SCRIPTS_ROOT) not in sys.path:
+    sys.path.insert(0, str(SCRIPTS_ROOT))
+
+from contracts.registry import (  # noqa: E402
+    ARTIFACT_KIND_TO_SCHEMA_VERSION,
+    JSONL_ARTIFACT_KIND_TO_SCHEMA_VERSION,
+    TrustedSchemaRegistry,
+)
+from contracts.canonical import (  # noqa: E402
+    MAX_JSON_NESTING_DEPTH,
+    CanonicalJSONV2DepthError,
+    ensure_json_depth,
+)
+from contracts.release_trust import (  # noqa: E402
+    ReleaseTrustValidator,
+    TrustedPredecessorAnchor,
+)
 
 try:
     from .policy import PolicySet
-    from .scanners import scan_text
+    from .scanners import (
+        governed_digest_paths,
+        scan_json,
+        scan_path,
+        scan_text,
+    )
 except ImportError:  # Direct execution through validate.py.
     from policy import PolicySet
-    from scanners import scan_text
+    from scanners import (
+        governed_digest_paths,
+        scan_json,
+        scan_path,
+        scan_text,
+    )
 
 
 _HEX_40 = re.compile(r"^[0-9a-f]{40}$")
@@ -33,6 +63,19 @@ _REVIEWER_ID = re.compile(r"^[a-z0-9][a-z0-9._-]{2,63}$")
 _RECORD_ID = re.compile(r"^urn:rappterverse:record:sha256:[0-9a-f]{64}$")
 _TOMBSTONE_ID = re.compile(r"^urn:rappterverse:tombstone:sha256:[0-9a-f]{64}$")
 _CONTROL_CHARACTER = re.compile(r"[\x00-\x1f\x7f]")
+_FORMAL_V2 = re.compile(r"^rappterverse\.[a-z0-9-]+/v2$")
+_V2_RELEASE_POINTER_PATH = re.compile(
+    r"^catalog/releases/release-[0-9]{4}-[0-9]{2}-[0-9]{2}-"
+    r"[a-z0-9][a-z0-9.-]{0,63}\.json$"
+)
+_V2_CONTROL_OBJECT_PATH = re.compile(
+    r"^objects/(?:active-review-sets|review-receipts)/sha256/"
+    r"[0-9a-f]{2}/[0-9a-f]{64}\.json$"
+)
+_CONTENT_ADDRESSED_PATH = re.compile(
+    r"^objects/[a-z0-9-]+/sha256/[0-9a-f]{2}/"
+    r"[0-9a-f]{64}\.(?:json|jsonl|txt)$"
+)
 
 
 @dataclass(frozen=True, order=True)
@@ -58,6 +101,8 @@ class Finding:
 
 
 class ValidationReport:
+    MAX_FINDINGS = 200
+
     def __init__(self) -> None:
         self._findings: list[Finding] = []
 
@@ -77,8 +122,10 @@ class ValidationReport:
         line: int = 0,
         column: int = 0,
     ) -> None:
+        if len(self._findings) >= self.MAX_FINDINGS:
+            return
         safe_path = path
-        if _CONTROL_CHARACTER.search(path) or scan_text(path):
+        if _CONTROL_CHARACTER.search(path) or scan_path(path):
             safe_path = "<redacted-path>"
         self._findings.append(Finding("error", code, safe_path, line, column, message))
 
@@ -94,7 +141,7 @@ class ValidationReport:
 class Change:
     status: str
     path: str
-    old_path: str | None = None
+    old_path: Optional[str] = None
 
     @property
     def operation(self) -> str:
@@ -170,12 +217,21 @@ def _reject_duplicate_keys(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
 
 
 def _strict_json_loads(text: str) -> Any:
-    return json.loads(
-        text,
-        object_pairs_hook=_reject_duplicate_keys,
-        parse_constant=_reject_constant,
-        parse_float=_strict_float,
-    )
+    try:
+        value = json.loads(
+            text,
+            object_pairs_hook=_reject_duplicate_keys,
+            parse_constant=_reject_constant,
+            parse_float=_strict_float,
+        )
+    except RecursionError as exc:
+        raise CanonicalJSONV2DepthError(
+            "maximum JSON nesting depth {} exceeded".format(
+                MAX_JSON_NESTING_DEPTH
+            )
+        ) from exc
+    ensure_json_depth(value)
+    return value
 
 
 def _safe_relative_path(value: Any) -> bool:
@@ -191,7 +247,9 @@ def _safe_relative_path(value: Any) -> bool:
     )
 
 
-def _read_json_bytes(data: bytes, path: str, report: ValidationReport) -> Any | None:
+def _read_json_bytes(
+    data: bytes, path: str, report: ValidationReport
+) -> Optional[Any]:
     try:
         return _strict_json_loads(data.decode("utf-8"))
     except UnicodeError:
@@ -203,6 +261,14 @@ def _read_json_bytes(data: bytes, path: str, report: ValidationReport) -> Any | 
             "JSON is not syntactically valid",
             exc.lineno,
             exc.colno,
+        )
+    except CanonicalJSONV2DepthError:
+        report.error(
+            "JSON_DEPTH",
+            path,
+            "JSON nesting exceeds maximum depth {}".format(
+                MAX_JSON_NESTING_DEPTH
+            ),
         )
     except ValueError:
         report.error("JSON_INVALID", path, "JSON is not strictly valid")
@@ -264,21 +330,56 @@ class GovernanceValidator:
 
     def __init__(
         self,
-        root: Path | str,
+        root: Union[Path, str],
         policies: PolicySet,
         *,
-        base_revision: str | None = None,
+        base_revision: Optional[str] = None,
+        trusted_schema_root: Optional[Union[Path, str]] = None,
+        allow_historical_v1: bool = False,
     ) -> None:
         self.root = Path(root).resolve()
         self.policies = policies
         self.base_revision = (
             resolve_git_revision(self.root, base_revision) if base_revision else None
         )
+        schema_root = (
+            Path(trusted_schema_root)
+            if trusted_schema_root is not None
+            else policies.root.parent / "schemas" / "v2"
+        )
+        self.v2_registry = TrustedSchemaRegistry.load(schema_root)
+        self.v2_trust = ReleaseTrustValidator(
+            self.root,
+            self.v2_registry,
+            policies.trust_document_bytes,
+            policies.rights_v2_document_bytes,
+        )
+        self.allow_historical_v1 = allow_historical_v1
         self.report = ValidationReport()
         self._parsed: dict[str, Any] = {}
         self._bytes: dict[str, bytes] = {}
+        self._deferred_v2_scan_paths: set[str] = set()
+        self._deferred_path_scan_paths: set[str] = set()
+        self._verified_v2_scan_paths: set[str] = set()
 
     def validate(self, changes: Iterable[Change], *, diff_bytes: int = 0) -> ValidationReport:
+        """Validate changes and convert recursion exhaustion to a stable finding."""
+
+        try:
+            return self._validate(changes, diff_bytes=diff_bytes)
+        except RecursionError:
+            self.report.error(
+                "JSON_DEPTH",
+                ".",
+                "JSON nesting exceeds maximum depth {}".format(
+                    MAX_JSON_NESTING_DEPTH
+                ),
+            )
+            return self.report
+
+    def _validate(
+        self, changes: Iterable[Change], *, diff_bytes: int = 0
+    ) -> ValidationReport:
         materialized = list(changes)
         hard_diff = self.policies.publication["limits"]["pullRequestDiffHardBytes"]
         if diff_bytes > hard_diff:
@@ -297,18 +398,199 @@ class GovernanceValidator:
             seen_paths.add(change.path)
             self._validate_change(change)
 
+        self._validate_v2_contracts(materialized)
         candidate_changes = [
             item for item in materialized if self._is_candidate(item.path)
         ]
         if candidate_changes:
             self._validate_candidate_set(candidate_changes, materialized)
+        self._validate_deferred_scans()
         return self.report
+
+    @staticmethod
+    def _is_contract_fixture(path: str) -> bool:
+        parts = PurePosixPath(path).parts
+        return (
+            len(parts) >= 5
+            and parts[:4]
+            == ("tests", "fixtures", "contracts", "invalid")
+        ) or (
+            len(parts) >= 6
+            and parts[:5]
+            == (
+                "tests",
+                "fixtures",
+                "contracts",
+                "v2",
+                "release-graph",
+            )
+        )
+
+    @staticmethod
+    def _contains_formal_v2(value: Any) -> bool:
+        if isinstance(value, dict):
+            version = value.get("schemaVersion")
+            if isinstance(version, str) and _FORMAL_V2.fullmatch(version):
+                return True
+            return any(
+                GovernanceValidator._contains_formal_v2(item)
+                for item in value.values()
+            )
+        if isinstance(value, list):
+            return any(
+                GovernanceValidator._contains_formal_v2(item) for item in value
+            )
+        return False
+
+    def _validate_v2_contracts(self, changes: Sequence[Change]) -> None:
+        descriptor_kinds: dict[str, str] = {}
+        for value in self._parsed.values():
+            if not isinstance(value, dict):
+                continue
+            version = value.get("schemaVersion")
+            descriptors = (
+                value.get("shards", [])
+                if version == "rappterverse.dataset-manifest/v2"
+                else value.get("approvedArtifacts", [])
+                if version == "rappterverse.public-review-receipt/v2"
+                else []
+            )
+            for shard in descriptors:
+                if (
+                    isinstance(shard, dict)
+                    and isinstance(shard.get("path"), str)
+                    and isinstance(shard.get("artifactKind"), str)
+                ):
+                    descriptor_kinds[shard["path"]] = shard["artifactKind"]
+
+        for change in changes:
+            if change.operation == "D" or self._is_contract_fixture(change.path):
+                continue
+            value = self._parsed.get(change.path)
+            data = self._bytes.get(change.path)
+            if data is None:
+                continue
+            if change.path.endswith(".json") and isinstance(value, dict):
+                if (
+                    change.path.startswith("templates/")
+                    and isinstance(value.get("$template"), str)
+                ):
+                    continue
+                version = value.get("schemaVersion")
+                if not (
+                    isinstance(version, str)
+                    and (
+                        version in self.v2_registry.schemas_by_version
+                        or _FORMAL_V2.fullmatch(version)
+                    )
+                ):
+                    continue
+                expected = None
+                descriptor_kind = descriptor_kinds.get(change.path)
+                if descriptor_kind is not None:
+                    expected = ARTIFACT_KIND_TO_SCHEMA_VERSION.get(
+                        descriptor_kind
+                    )
+                self.v2_trust.validate_formal_json_bytes(
+                    change.path,
+                    data,
+                    expected_schema_version=expected,
+                )
+            elif change.path.endswith(".jsonl") and isinstance(value, list):
+                versions = {
+                    item.get("schemaVersion")
+                    for item in value
+                    if isinstance(item, dict)
+                    and isinstance(item.get("schemaVersion"), str)
+                    and _FORMAL_V2.fullmatch(item["schemaVersion"])
+                }
+                if not versions:
+                    continue
+                reverse = {
+                    version: kind
+                    for kind, version in (
+                        JSONL_ARTIFACT_KIND_TO_SCHEMA_VERSION.items()
+                    )
+                }
+                inferred = (
+                    reverse.get(next(iter(versions)))
+                    if len(versions) == 1
+                    else None
+                )
+                declared = descriptor_kinds.get(change.path)
+                artifact_kind = declared or inferred
+                if artifact_kind is None:
+                    self.report.error(
+                        "V2_SHARD_KIND",
+                        change.path,
+                        "v2 JSONL does not have one trusted artifact kind",
+                    )
+                    continue
+                if declared is None and self._is_candidate(change.path):
+                    self.report.error(
+                        "V2_SHARD_DESCRIPTOR_REQUIRED",
+                        change.path,
+                        "published v2 JSONL requires a dataset-manifest descriptor",
+                    )
+                self.v2_trust.validate_jsonl_bytes(
+                    change.path, data, artifact_kind
+                )
+
+        for item in self.v2_trust.diagnostics:
+            self.report.error(
+                "V2_{}".format(item.code),
+                item.path,
+                item.message,
+            )
+
+    def _validate_deferred_scans(self) -> None:
+        for path in sorted(self._deferred_path_scan_paths):
+            hits = scan_path(
+                path,
+                verified_content_address=(
+                    path in self._verified_v2_scan_paths
+                ),
+            )
+            if hits:
+                self.report.error(
+                    "PATH_SENSITIVE",
+                    path,
+                    "repository path appears to contain prohibited sensitive data",
+                )
+
+        for path in sorted(self._deferred_v2_scan_paths):
+            value = self._parsed.get(path)
+            verified = path in self._verified_v2_scan_paths
+            values = value if isinstance(value, list) else [value]
+            for number, item in enumerate(values, start=1):
+                digest_paths = (
+                    governed_digest_paths(item) if verified else set()
+                )
+                for hit in scan_json(
+                    item,
+                    verified_digest_paths=digest_paths,
+                ):
+                    self.report.error(
+                        hit.code,
+                        path,
+                        hit.message,
+                        number if isinstance(value, list) else 0,
+                        hit.column,
+                    )
 
     def _validate_change(self, change: Change) -> None:
         if not _safe_relative_path(change.path):
             self.report.error("PATH_UNSAFE", change.path, "repository path is not canonical")
             return
-        if scan_text(change.path):
+        negative_fixture = self._is_contract_fixture(change.path)
+        defer_path_scan = (
+            not negative_fixture
+            and self._is_candidate(change.path)
+            and _CONTENT_ADDRESSED_PATH.fullmatch(change.path) is not None
+        )
+        if defer_path_scan:
+            self._deferred_path_scan_paths.add(change.path)
+        elif not negative_fixture and scan_path(change.path):
             self.report.error(
                 "PATH_SENSITIVE",
                 change.path,
@@ -319,7 +601,7 @@ class GovernanceValidator:
             self.report.error(
                 "PATH_UNSAFE", change.path, "renamed source path is not canonical"
             )
-        elif change.old_path and scan_text(change.old_path):
+        elif change.old_path and scan_path(change.old_path):
             self.report.error(
                 "PATH_SENSITIVE",
                 change.old_path,
@@ -348,8 +630,17 @@ class GovernanceValidator:
 
         path = self.root / change.path
         try:
+            resolved = path.resolve(strict=True)
+            resolved.relative_to(self.root)
+            if resolved != path:
+                self.report.error(
+                    "SYMLINK_FORBIDDEN",
+                    change.path,
+                    "changed path may not traverse a symbolic link",
+                )
+                return
             mode = path.lstat().st_mode
-        except OSError:
+        except (OSError, ValueError):
             self.report.error("FILE_MISSING", change.path, "changed file is unavailable")
             return
         if stat.S_ISLNK(mode):
@@ -382,20 +673,47 @@ class GovernanceValidator:
         except UnicodeError:
             self.report.error("TEXT_UTF8", change.path, "public text must be valid UTF-8")
             return
-        for hit in scan_text(text):
-            self.report.error(hit.code, change.path, hit.message, hit.line, hit.column)
-
         if change.path.endswith(".jsonl"):
             self._parse_jsonl(change.path, data)
         elif change.path.endswith(".json"):
             document = _read_json_bytes(data, change.path, self.report)
             if document is not None:
                 self._parsed[change.path] = document
-                if not change.path.startswith("tests/fixtures/contracts/"):
+                if (
+                    not negative_fixture
+                    and self._is_candidate(change.path)
+                    and self._contains_formal_v2(document)
+                ):
+                    self._deferred_v2_scan_paths.add(change.path)
+                elif not negative_fixture:
+                    for hit in scan_json(document):
+                        self.report.error(
+                            hit.code, change.path, hit.message
+                        )
+                if not negative_fixture:
                     self._validate_forbidden_fields(document, change.path)
+            elif not negative_fixture:
+                for hit in scan_text(text):
+                    self.report.error(
+                        hit.code,
+                        change.path,
+                        hit.message,
+                        hit.line,
+                        hit.column,
+                    )
+        elif not negative_fixture:
+            for hit in scan_text(text):
+                self.report.error(
+                    hit.code,
+                    change.path,
+                    hit.message,
+                    hit.line,
+                    hit.column,
+                )
 
     def _parse_jsonl(self, path: str, data: bytes) -> None:
         objects: list[Any] = []
+        negative_fixture = self._is_contract_fixture(path)
         line_limit = self.policies.publication["limits"]["jsonlLineHardBytes"]
         for number, raw_line in enumerate(data.splitlines(), start=1):
             if len(raw_line) > line_limit:
@@ -412,13 +730,19 @@ class GovernanceValidator:
                 )
                 continue
             try:
-                value = _strict_json_loads(raw_line.decode("utf-8"))
+                line_text = raw_line.decode("utf-8")
+                value = _strict_json_loads(line_text)
             except UnicodeError:
                 self.report.error(
                     "TEXT_UTF8", path, "public text must be valid UTF-8", number
                 )
                 continue
             except json.JSONDecodeError as exc:
+                if not negative_fixture:
+                    for hit in scan_text(line_text):
+                        self.report.error(
+                            hit.code, path, hit.message, number, hit.column
+                        )
                 self.report.error(
                     "JSON_INVALID",
                     path,
@@ -427,7 +751,27 @@ class GovernanceValidator:
                     exc.colno,
                 )
                 continue
+            except CanonicalJSONV2DepthError:
+                if not negative_fixture:
+                    for hit in scan_text(line_text):
+                        self.report.error(
+                            hit.code, path, hit.message, number, hit.column
+                        )
+                self.report.error(
+                    "JSON_DEPTH",
+                    path,
+                    "JSON nesting exceeds maximum depth {}".format(
+                        MAX_JSON_NESTING_DEPTH
+                    ),
+                    number,
+                )
+                continue
             except ValueError:
+                if not negative_fixture:
+                    for hit in scan_text(line_text):
+                        self.report.error(
+                            hit.code, path, hit.message, number, hit.column
+                        )
                 self.report.error(
                     "JSON_INVALID",
                     path,
@@ -436,7 +780,19 @@ class GovernanceValidator:
                 )
                 continue
             objects.append(value)
-            self._validate_forbidden_fields(value, path, number)
+            if (
+                not negative_fixture
+                and self._is_candidate(path)
+                and self._contains_formal_v2(value)
+            ):
+                self._deferred_v2_scan_paths.add(path)
+            elif not negative_fixture:
+                for hit in scan_json(value):
+                    self.report.error(
+                        hit.code, path, hit.message, number, hit.column
+                    )
+            if not negative_fixture:
+                self._validate_forbidden_fields(value, path, number)
         self._parsed[path] = objects
 
     def _validate_forbidden_fields(
@@ -513,21 +869,32 @@ class GovernanceValidator:
 
         if (
             self.policies.publication["rejectMixedPolicyAndPublicationChanges"]
-            and any(item.path.startswith("policies/") for item in all_changes)
+            and any(
+                item.path.startswith(
+                    (
+                        "policies/",
+                        "schemas/v2/",
+                        "scripts/contracts/",
+                        "scripts/governance/",
+                    )
+                )
+                for item in all_changes
+            )
         ):
             self.report.error(
                 "POLICY_PUBLICATION_MIXED",
                 ".",
-                "policy changes and publication changes require separate pull requests",
+                "trust-layer changes and publication changes require separate pull requests",
             )
 
-        maximum = self.policies.publication["limits"]["publicationFilesHard"]
         final_paths = {item.path for item in candidates if item.operation != "D"}
-        if len(final_paths) > maximum:
+        changed_paths = {item.path for item in candidates}
+        maximum = self.policies.publication["limits"]["publicationFilesHard"]
+        if len(changed_paths) > maximum:
             self.report.error(
                 "PUBLICATION_FILE_LIMIT",
                 ".",
-                "publication changes exceed the final-file hard limit",
+                "publication changes exceed the five-file hard limit",
             )
 
         if candidates and all(self._is_withdrawal_path(item.path) for item in candidates):
@@ -538,6 +905,21 @@ class GovernanceValidator:
                 "WITHDRAWAL_MIXED",
                 ".",
                 "withdrawals and ordinary publications require separate pull requests",
+            )
+            return
+
+        has_v2 = any(
+            path in final_paths and self._contains_formal_v2(value)
+            for path, value in self._parsed.items()
+        )
+        if has_v2:
+            self._validate_v2_publication_set(candidates)
+            return
+        if not self.allow_historical_v1:
+            self.report.error(
+                "RELEASE_CONTRACT_INACTIVE",
+                ".",
+                "new public releases must use the v2 trust graph",
             )
             return
 
@@ -578,6 +960,101 @@ class GovernanceValidator:
                 for item in _walk_objects(value):
                     if item.get("schemaVersion") == "rappterverse.public-record/v1":
                         self._validate_record(path, item)
+
+    def _validate_v2_publication_set(self, candidates: Sequence[Change]) -> None:
+        final_paths = {
+            item.path for item in candidates if item.operation != "D"
+        }
+        if "catalog/latest.json" not in final_paths:
+            self._validate_v2_artifact_batch(candidates)
+            return
+
+        latest = self._parsed.get("catalog/latest.json")
+        if not isinstance(latest, dict) or latest.get("schemaVersion") != (
+            "rappterverse.catalog-latest-pointer/v2"
+        ):
+            self.report.error(
+                "V2_LATEST_REQUIRED",
+                "catalog/latest.json",
+                "release activation requires a formal v2 latest pointer",
+            )
+            return
+
+        for path in sorted(final_paths):
+            if not self._is_v2_activation_control(path):
+                self.report.error(
+                    "V2_ACTIVATION_PAYLOAD",
+                    path,
+                    "release activation may change only v2 control files",
+                )
+
+        anchor = self._trusted_predecessor_anchor()
+        graph = ReleaseTrustValidator(
+            self.root,
+            self.v2_registry,
+            self.policies.trust_document_bytes,
+            self.policies.rights_v2_document_bytes,
+            trusted_predecessor_anchor=anchor,
+        )
+        for item in graph.validate_release_graph("catalog/latest.json"):
+            self.report.error(
+                "V2_{}".format(item.code),
+                item.path,
+                item.message,
+            )
+        covered = set(graph.validated_paths)
+        for change in sorted(candidates, key=lambda item: item.path):
+            if change.operation != "D" and change.path not in covered:
+                self.report.error(
+                    "V2_ARTIFACT_COVERAGE",
+                    change.path,
+                    "changed public artifact is not reachable from catalog latest",
+                )
+        if graph.ok and final_paths <= covered:
+            self._verified_v2_scan_paths.update(final_paths)
+
+    @staticmethod
+    def _is_v2_activation_control(path: str) -> bool:
+        return bool(
+            path == "catalog/latest.json"
+            or _V2_RELEASE_POINTER_PATH.fullmatch(path)
+            or _V2_CONTROL_OBJECT_PATH.fullmatch(path)
+        )
+
+    def _validate_v2_artifact_batch(
+        self, candidates: Sequence[Change]
+    ) -> None:
+        final_paths = {
+            item.path for item in candidates if item.operation != "D"
+        }
+        for path in sorted(final_paths):
+            if not self._is_immutable(path):
+                self.report.error(
+                    "V2_BATCH_IMMUTABLE",
+                    path,
+                    "artifact batches may add only immutable v2 files",
+                )
+        graph = ReleaseTrustValidator(
+            self.root,
+            self.v2_registry,
+            self.policies.trust_document_bytes,
+            self.policies.rights_v2_document_bytes,
+        )
+        for item in graph.validate_artifact_batch(final_paths):
+            self.report.error(
+                "V2_{}".format(item.code),
+                item.path,
+                item.message,
+            )
+        covered = set(graph.validated_paths)
+        for path in sorted(final_paths - covered):
+            self.report.error(
+                "V2_ARTIFACT_COVERAGE",
+                path,
+                "changed public artifact was not validated by its batch receipt",
+            )
+        if graph.ok and final_paths <= covered:
+            self._verified_v2_scan_paths.update(final_paths)
 
     def _validate_publication_manifest(
         self, path: str, manifest: dict[str, Any], candidate_paths: set[str]
@@ -741,7 +1218,7 @@ class GovernanceValidator:
                 "publication must declare the append-only tombstone policy",
             )
 
-    def _expected_role_for_path(self, path: str) -> str | None:
+    def _expected_role_for_path(self, path: str) -> Optional[str]:
         prefixes = {
             "objects/records/": "records",
             "objects/transcripts/": "visible-transcript",
@@ -1656,8 +2133,32 @@ class GovernanceValidator:
                 "existing removal-index entries cannot be changed or reordered",
             )
 
-    def _read_base_json(self, path: str) -> Any | None:
+    def _read_base_bytes(self, path: str) -> Optional[bytes]:
         if self.base_revision is None:
+            return None
+        if not _safe_relative_path(path):
+            return None
+        tree = subprocess.run(
+            ["git", "ls-tree", "-z", self.base_revision, "--", path],
+            cwd=self.root,
+            check=False,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+        entries = tree.stdout.rstrip(b"\0").split(b"\0")
+        if tree.returncode != 0 or len(entries) != 1 or not entries[0]:
+            return None
+        try:
+            metadata, encoded_path = entries[0].split(b"\t", 1)
+            mode, object_type, _ = metadata.split(b" ", 2)
+            listed_path = encoded_path.decode("utf-8", errors="strict")
+        except (UnicodeError, ValueError):
+            return None
+        if (
+            listed_path != path
+            or object_type != b"blob"
+            or mode not in {b"100644", b"100755"}
+        ):
             return None
         process = subprocess.run(
             ["git", "show", f"{self.base_revision}:{path}"],
@@ -1668,8 +2169,70 @@ class GovernanceValidator:
         )
         if process.returncode != 0:
             return None
+        if len(process.stdout) > self.policies.publication["limits"]["fileHardBytes"]:
+            return None
+        return process.stdout
+
+    def _trusted_predecessor_anchor(
+        self,
+    ) -> Optional[TrustedPredecessorAnchor]:
+        latest_bytes = self._read_base_bytes("catalog/latest.json")
+        if latest_bytes is None:
+            if self.base_revision is not None:
+                self.report.error(
+                    "BASE_PREDECESSOR_INVALID",
+                    "catalog/latest.json",
+                    "trusted base latest pointer is unavailable",
+                )
+            return None
         try:
-            return _strict_json_loads(process.stdout.decode("utf-8"))
+            latest = _strict_json_loads(latest_bytes.decode("utf-8"))
+        except (UnicodeError, ValueError):
+            self.report.error(
+                "BASE_PREDECESSOR_INVALID",
+                "catalog/latest.json",
+                "trusted base latest pointer cannot be validated",
+            )
+            return None
+        if (
+            not isinstance(latest, dict)
+            or latest.get("schemaVersion")
+            != "rappterverse.catalog-latest-pointer/v2"
+        ):
+            if (
+                isinstance(latest, dict)
+                and latest.get("schema") == "rappterverse.latest/v1"
+                and latest.get("release") is None
+            ):
+                return None
+            self.report.error(
+                "BASE_PREDECESSOR_INVALID",
+                "catalog/latest.json",
+                "trusted base latest pointer has an unknown release state",
+            )
+            return None
+        try:
+            return TrustedPredecessorAnchor.from_release_graph(
+                self.root,
+                self.v2_registry,
+                self.policies.trust_document_bytes,
+                self.policies.rights_v2_document_bytes,
+                artifact_reader=self._read_base_bytes,
+            )
+        except ValueError:
+            self.report.error(
+                "BASE_PREDECESSOR_INVALID",
+                "catalog/latest.json",
+                "trusted base release graph cannot anchor a successor",
+            )
+            return None
+
+    def _read_base_json(self, path: str) -> Optional[Any]:
+        data = self._read_base_bytes(path)
+        if data is None:
+            return None
+        try:
+            return _strict_json_loads(data.decode("utf-8"))
         except (UnicodeError, ValueError):
             self.report.error(
                 "BASE_STATE_INVALID", path, "base removal index cannot be validated"

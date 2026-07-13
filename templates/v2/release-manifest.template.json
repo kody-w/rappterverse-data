@@ -1,0 +1,26 @@
+{
+    "$template": "Documentation only; expand all ten datasets and remove this field.",
+    "schemaVersion": "rappterverse.release-manifest/v2",
+    "releaseId": "release-<immutable-id>",
+    "createdAt": "<UTC-Z>",
+    "sequence": 1,
+    "previousReleaseId": null,
+    "previousReleasePointer": null,
+    "policy": {
+        "policyId": "rappterverse-publication-trust",
+        "policyVersion": "2.0.0",
+        "path": "policies/publication-trust-v2.json",
+        "sha256": "<64-lowercase-hex>"
+    },
+    "datasets": [],
+    "worldPackSources": [],
+    "totals": {
+        "datasets": 10,
+        "records": 10,
+        "transcripts": 10,
+        "deliberations": 10,
+        "providerReasoning": 0,
+        "worldPackSources": 1,
+        "contentBytes": 1
+    }
+}

@@ -1,0 +1,239 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://data.rappterverse.dev/schemas/v2/governance/publication-trust-policy.schema.json",
+    "title": "RAPPterverse publication trust policy and reviewer roster v2",
+    "description": "One digest-pinnable public policy bundle. It contains identities and requirements, never credentials or signing keys.",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "schemaVersion",
+        "policyId",
+        "policyVersion",
+        "effectiveAt",
+        "releaseContract",
+        "canonicalization",
+        "licenses",
+        "rightsRegistry",
+        "reviewerRoster",
+        "approvalMechanisms",
+        "requirements",
+        "limits"
+    ],
+    "properties": {
+        "schemaVersion": {
+            "const": "rappterverse.publication-trust-policy/v2"
+        },
+        "policyId": {
+            "const": "rappterverse-publication-trust"
+        },
+        "policyVersion": {
+            "const": "2.0.0"
+        },
+        "effectiveAt": {
+            "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/UtcTimestamp"
+        },
+        "releaseContract": {
+            "const": "v2-only"
+        },
+        "canonicalization": {
+            "const": "rappterverse-canonical-json/v2"
+        },
+        "licenses": {
+            "$ref": "#/$defs/Licenses"
+        },
+        "rightsRegistry": {
+            "$ref": "#/$defs/RightsRegistry"
+        },
+        "reviewerRoster": {
+            "$ref": "#/$defs/ReviewerRoster"
+        },
+        "approvalMechanisms": {
+            "$ref": "#/$defs/ApprovalMechanisms"
+        },
+        "requirements": {
+            "$ref": "#/$defs/Requirements"
+        },
+        "limits": {
+            "$ref": "#/$defs/Limits"
+        }
+    },
+    "$defs": {
+        "RightsRegistry": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "schemaVersion",
+                "path",
+                "bytes",
+                "sha256"
+            ],
+            "properties": {
+                "schemaVersion": {
+                    "const": "rappterverse.rights-statements/v2"
+                },
+                "path": {
+                    "const": "policies/rights-statements-v2.json"
+                },
+                "bytes": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 1000000
+                },
+                "sha256": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v2/common/digest.schema.json#/$defs/Sha256Hex"
+                }
+            }
+        },
+        "Licenses": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "data",
+                "code"
+            ],
+            "properties": {
+                "data": {
+                    "const": "CC-BY-4.0"
+                },
+                "code": {
+                    "const": "Apache-2.0"
+                }
+            }
+        },
+        "Reviewer": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "reviewerId",
+                "status",
+                "roles"
+            ],
+            "properties": {
+                "reviewerId": {
+                    "const": "kody-w"
+                },
+                "status": {
+                    "const": "active"
+                },
+                "roles": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 4,
+                    "uniqueItems": true,
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "public-data-reviewer",
+                            "release-reviewer"
+                        ]
+                    }
+                }
+            }
+        },
+        "ReviewerRoster": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "minimumApprovals",
+                "reviewers"
+            ],
+            "properties": {
+                "minimumApprovals": {
+                    "const": 1
+                },
+                "reviewers": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 1,
+                    "items": {
+                        "$ref": "#/$defs/Reviewer"
+                    }
+                }
+            }
+        },
+        "ApprovalMechanisms": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "current",
+                "futureApprovalReferenceAllowed",
+                "signedApprovals"
+            ],
+            "properties": {
+                "current": {
+                    "const": "content-addressed-public-review-receipt"
+                },
+                "futureApprovalReferenceAllowed": {
+                    "const": true
+                },
+                "signedApprovals": {
+                    "const": "not-enabled"
+                }
+            }
+        },
+        "Requirements": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "defaultAction",
+                "visibleTranscript",
+                "publicDeliberation",
+                "providerReasoning",
+                "sourceBoundary",
+                "withdrawal"
+            ],
+            "properties": {
+                "defaultAction": {
+                    "const": "deny"
+                },
+                "visibleTranscript": {
+                    "const": "required"
+                },
+                "publicDeliberation": {
+                    "const": "required"
+                },
+                "providerReasoning": {
+                    "const": "optional-approve-public-and-terms-required"
+                },
+                "sourceBoundary": {
+                    "const": "synthetic-or-rappterverse-owned-only"
+                },
+                "withdrawal": {
+                    "const": "append-only-tombstone"
+                }
+            }
+        },
+        "Limits": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "fileHardBytes",
+                "jsonlLineHardBytes",
+                "manifestHardBytes",
+                "pullRequestDiffHardBytes",
+                "publicationFilesHard",
+                "diagnosticsHardCount"
+            ],
+            "properties": {
+                "fileHardBytes": {
+                    "const": 1000000
+                },
+                "jsonlLineHardBytes": {
+                    "const": 262144
+                },
+                "manifestHardBytes": {
+                    "const": 512000
+                },
+                "pullRequestDiffHardBytes": {
+                    "const": 900000
+                },
+                "publicationFilesHard": {
+                    "const": 5
+                },
+                "diagnosticsHardCount": {
+                    "const": 50
+                }
+            }
+        }
+    }
+}

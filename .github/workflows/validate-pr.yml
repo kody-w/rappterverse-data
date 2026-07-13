@@ -37,46 +37,49 @@ jobs:
 
       - name: Select trusted governance root
         env:
-          BASE_SHA: ${{ github.event.pull_request.base.sha }}
-          BOOTSTRAP_BASE_SHA: 0de153ed7e16ff7ad51c91b370732f2ac200688c
-          CANDIDATE_ROOT: ${{ github.workspace }}/candidate
           BASE_ROOT: ${{ github.workspace }}/trusted-governance
         run: |
-          if [ -f "$BASE_ROOT/scripts/governance/validate.py" ]; then
-            echo "TRUSTED_ROOT=$BASE_ROOT" >> "$GITHUB_ENV"
-            exit 0
-          fi
-
-          if [ "$BASE_SHA" != "$BOOTSTRAP_BASE_SHA" ]; then
-            echo "::error::Trusted base governance is missing outside the bootstrap commit"
+          if [ ! -f "$BASE_ROOT/scripts/governance/validate.py" ]; then
+            echo "::error::Trusted base governance is unavailable"
             exit 1
           fi
+          echo "TRUSTED_ROOT=$BASE_ROOT" >> "$GITHUB_ENV"
 
-          while IFS= read -r path; do
-            case "$path" in
-              .github/CODEOWNERS|.github/rulesets/*|.github/workflows/*|\
-              configs/*|policies/*|prompts/*|schemas/*|scripts/build_site.py|\
-              scripts/governance/*|scripts/lake/*|templates/*|tests/*)
-                ;;
-              *)
-                echo "::error::Bootstrap PR contains non-foundation path: $path"
-                exit 1
-                ;;
-            esac
-          done < <(git -C "$CANDIDATE_ROOT" diff --name-only "$BASE_SHA...HEAD" --)
-
-          echo "TRUSTED_ROOT=$CANDIDATE_ROOT" >> "$GITHUB_ENV"
+          if [ -f "$BASE_ROOT/tests/test_contracts_v2.py" ] &&
+             [ -f "$BASE_ROOT/tests/test_release_trust_v2.py" ] &&
+             [ -f "$BASE_ROOT/scripts/contracts/release_trust.py" ] &&
+             [ -f "$BASE_ROOT/scripts/governance/validate_candidate_trust.py" ] &&
+             [ -f "$BASE_ROOT/policies/publication-trust-v2.json" ] &&
+             [ -f "$BASE_ROOT/policies/rights-statements-v2.json" ] &&
+             [ -d "$BASE_ROOT/schemas/v2" ]; then
+            echo "TRUSTED_BASE_HAS_V2=true" >> "$GITHUB_ENV"
+          else
+            echo "TRUSTED_BASE_HAS_V2=false" >> "$GITHUB_ENV"
+          fi
 
       - name: Test trusted governance
         env:
           PYTHONDONTWRITEBYTECODE: "1"
-        run: >-
-          python3 -B -m unittest discover
-          -s "$TRUSTED_ROOT/tests/governance"
-          -p "test_*.py"
-          -v
+        run: |
+          cd "$TRUSTED_ROOT"
+          python3 -B -m unittest discover \
+            -s tests/governance \
+            -p "test_*.py" \
+            -v
+
+      - name: Test v2 contracts from trusted base
+        if: env.TRUSTED_BASE_HAS_V2 == 'true'
+        env:
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: |
+          cd "$TRUSTED_ROOT"
+          python3 -B -m unittest \
+            tests.test_contracts_v2 \
+            tests.test_release_trust_v2 \
+            -v
 
       - name: Validate candidate with trusted base policy
+        if: env.TRUSTED_BASE_HAS_V2 == 'true'
         env:
           PYTHONDONTWRITEBYTECODE: "1"
           CANDIDATE_ROOT: ${{ github.workspace }}/candidate
@@ -88,3 +91,105 @@ jobs:
           --policy-root "$TRUSTED_ROOT/policies"
           --base "$BASE_SHA"
           --head "$HEAD_SHA"
+
+      - name: Exercise candidate trust data with trusted harness
+        if: env.TRUSTED_BASE_HAS_V2 == 'true'
+        env:
+          PYTHONDONTWRITEBYTECODE: "1"
+          CANDIDATE_ROOT: ${{ github.workspace }}/candidate
+        run: >-
+          python3 -B
+          "$TRUSTED_ROOT/scripts/governance/validate_candidate_trust.py"
+          --candidate-root "$CANDIDATE_ROOT"
+          --trusted-root "$TRUSTED_ROOT"
+
+      - name: Test candidate v2 code without credentials in read-only checkout
+        if: env.TRUSTED_BASE_HAS_V2 == 'true'
+        env:
+          CANDIDATE_ROOT: ${{ github.workspace }}/candidate
+          GITHUB_TOKEN: ""
+          GH_TOKEN: ""
+          PYTHONDONTWRITEBYTECODE: "1"
+          RV_TEST_WORKDIR: ${{ runner.temp }}/candidate-v2-tests
+        run: |
+          mkdir -p "$RV_TEST_WORKDIR"
+          chmod -R a-w "$CANDIDATE_ROOT"
+          cd "$CANDIDATE_ROOT"
+          python3 -B -m unittest discover \
+            -s tests \
+            -p "test_*v2.py" \
+            -v
+          python3 -B -m unittest discover \
+            -s tests/governance \
+            -p "test_*v2*.py" \
+            -v
+
+      - name: Validate migration surface with trusted base policy
+        if: env.TRUSTED_BASE_HAS_V2 == 'false'
+        env:
+          PYTHONDONTWRITEBYTECODE: "1"
+          CANDIDATE_ROOT: ${{ github.workspace }}/candidate
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          if git -C "$CANDIDATE_ROOT" diff --diff-filter=D --quiet \
+            "$BASE_SHA...$HEAD_SHA" --; then
+            :
+          else
+            echo "::error::The one-time v2 migration may not delete files"
+            exit 1
+          fi
+
+          changed_files=()
+          while IFS= read -r -d '' path; do
+            case "$path" in
+              policies/publication-trust-v2.json|\
+              policies/rights-statements-v2.json|schemas/v2/*|\
+              scripts/contracts/*|\
+              scripts/governance/validate_candidate_trust.py|templates/v2/*|\
+              tests/fixtures/contracts/v2/*|tests/test_contracts_v2.py|\
+              tests/test_release_trust_v2.py|\
+              tests/governance/test_v2_contracts.py|\
+              tests/governance/test_candidate_trust_v2.py)
+                ;;
+              *)
+                changed_files+=(--changed-file "$path")
+                ;;
+            esac
+          done < <(
+            git -C "$CANDIDATE_ROOT" diff --name-only -z \
+              "$BASE_SHA...$HEAD_SHA" --
+          )
+
+          if [ "${#changed_files[@]}" -gt 0 ]; then
+            diff_bytes="$(
+              git -C "$CANDIDATE_ROOT" diff --no-ext-diff --binary \
+                "$BASE_SHA...$HEAD_SHA" -- | wc -c | tr -d ' '
+            )"
+            python3 -B "$TRUSTED_ROOT/scripts/governance/validate.py" \
+              --root "$CANDIDATE_ROOT" \
+              --policy-root "$TRUSTED_ROOT/policies" \
+              --base "$BASE_SHA" \
+              --diff-bytes "$diff_bytes" \
+              "${changed_files[@]}"
+          fi
+
+      - name: Bootstrap v2 tests from candidate without credentials
+        if: env.TRUSTED_BASE_HAS_V2 == 'false'
+        env:
+          CANDIDATE_ROOT: ${{ github.workspace }}/candidate
+          GITHUB_TOKEN: ""
+          GH_TOKEN: ""
+          PYTHONDONTWRITEBYTECODE: "1"
+          RV_TEST_WORKDIR: ${{ runner.temp }}/candidate-v2-bootstrap-tests
+        run: |
+          mkdir -p "$RV_TEST_WORKDIR"
+          cd "$CANDIDATE_ROOT"
+          python3 -B -m unittest discover \
+            -s tests/governance \
+            -p "test_*.py" \
+            -v
+          python3 -B -m unittest discover \
+            -s tests \
+            -p "test_*v2.py" \
+            -v

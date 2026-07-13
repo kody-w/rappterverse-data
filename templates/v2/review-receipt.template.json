@@ -1,0 +1,113 @@
+{
+    "$template": "Documentation only; replace placeholders and remove this field.",
+    "schemaVersion": "rappterverse.public-review-receipt/v2",
+    "reviewId": "review-<stable-id>",
+    "scope": "dataset-leaves",
+    "datasetId": "<closed-dataset-id-or-null>",
+    "reviewedAt": "<UTC-Z>",
+    "reviewer": "kody-w",
+    "policy": {
+        "policyId": "rappterverse-publication-trust",
+        "policyVersion": "2.0.0",
+        "path": "policies/publication-trust-v2.json",
+        "sha256": "<64-lowercase-hex>"
+    },
+    "approvedArtifacts": [
+        {
+            "path": "objects/records/sha256/<first-two>/<64-hex>.jsonl",
+            "artifactKind": "record-shard",
+            "mediaType": "application/x-ndjson",
+            "bytes": 1,
+            "sha256": "<64-lowercase-hex>"
+        }
+    ],
+    "disposition": "approve_public",
+    "checks": {
+        "sourceOwnership": {
+            "status": "pass",
+            "evidence": [
+                {
+                    "artifactPath": "objects/records/sha256/<first-two>/<64-hex>.jsonl",
+                    "artifactSha256": "<64-lowercase-hex>",
+                    "summary": "<public redacted evidence summary>"
+                }
+            ]
+        },
+        "rights": {
+            "status": "pass",
+            "evidence": [
+                {
+                    "artifactPath": "objects/records/sha256/<first-two>/<64-hex>.jsonl",
+                    "artifactSha256": "<64-lowercase-hex>",
+                    "summary": "<public redacted evidence summary>"
+                }
+            ]
+        },
+        "privacy": {
+            "status": "pass",
+            "evidence": [
+                {
+                    "artifactPath": "objects/records/sha256/<first-two>/<64-hex>.jsonl",
+                    "artifactSha256": "<64-lowercase-hex>",
+                    "summary": "<public redacted evidence summary>"
+                }
+            ]
+        },
+        "secrets": {
+            "status": "pass",
+            "evidence": [
+                {
+                    "artifactPath": "objects/records/sha256/<first-two>/<64-hex>.jsonl",
+                    "artifactSha256": "<64-lowercase-hex>",
+                    "summary": "<public redacted evidence summary>"
+                }
+            ]
+        },
+        "safety": {
+            "status": "pass",
+            "evidence": [
+                {
+                    "artifactPath": "objects/records/sha256/<first-two>/<64-hex>.jsonl",
+                    "artifactSha256": "<64-lowercase-hex>",
+                    "summary": "<public redacted evidence summary>"
+                }
+            ]
+        },
+        "transcriptPolicy": {
+            "status": "pass",
+            "evidence": [
+                {
+                    "artifactPath": "objects/records/sha256/<first-two>/<64-hex>.jsonl",
+                    "artifactSha256": "<64-lowercase-hex>",
+                    "summary": "<public redacted evidence summary>"
+                }
+            ]
+        },
+        "contamination": {
+            "status": "pass",
+            "evidence": [
+                {
+                    "artifactPath": "objects/records/sha256/<first-two>/<64-hex>.jsonl",
+                    "artifactSha256": "<64-lowercase-hex>",
+                    "summary": "<public redacted evidence summary>"
+                }
+            ]
+        },
+        "quality": {
+            "status": "pass",
+            "evidence": [
+                {
+                    "artifactPath": "objects/records/sha256/<first-two>/<64-hex>.jsonl",
+                    "artifactSha256": "<64-lowercase-hex>",
+                    "summary": "<public redacted evidence summary>"
+                }
+            ]
+        }
+    },
+    "providerRedistributionApproval": null,
+    "predecessor": null,
+    "approvalReference": null,
+    "reasonCodes": [
+        "<public-reason-code>"
+    ]
+}

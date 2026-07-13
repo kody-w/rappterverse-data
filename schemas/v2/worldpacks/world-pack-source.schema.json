@@ -1,0 +1,224 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://data.rappterverse.dev/schemas/v2/worldpacks/world-pack-source.schema.json",
+    "title": "RAPPterverse world-pack source ABI v2",
+    "description": "Reviewed deterministic projection input with no mutable runtime defaults and no embedded self hash.",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "schemaVersion",
+        "worldPackSourceId",
+        "releaseId",
+        "projectionRecipe",
+        "namespace",
+        "seedChannels",
+        "entities",
+        "sortedByStableKey",
+        "canonicalization"
+    ],
+    "properties": {
+        "schemaVersion": {
+            "const": "rappterverse.world-pack-source/v2"
+        },
+        "worldPackSourceId": {
+            "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/WorldPackSourceId"
+        },
+        "releaseId": {
+            "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/ReleaseId"
+        },
+        "projectionRecipe": {
+            "$ref": "#/$defs/ProjectionRecipe"
+        },
+        "namespace": {
+            "type": "string",
+            "pattern": "^rappterverse/[a-z0-9][a-z0-9._/-]{0,127}$"
+        },
+        "seedChannels": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 32,
+            "items": {
+                "$ref": "#/$defs/SeedChannel"
+            }
+        },
+        "entities": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 100000,
+            "items": {
+                "$ref": "#/$defs/SourceEntity"
+            }
+        },
+        "sortedByStableKey": {
+            "const": true
+        },
+        "canonicalization": {
+            "const": "rappterverse-canonical-json/v2"
+        }
+    },
+    "$defs": {
+        "ProjectionRecipe": {
+            "$ref": "https://data.rappterverse.dev/schemas/v2/common/artifact-descriptor.schema.json#/$defs/ReviewedArtifact"
+        },
+        "SeedChannel": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "channel",
+                "seed"
+            ],
+            "properties": {
+                "channel": {
+                    "type": "string",
+                    "enum": [
+                        "immutable-layout",
+                        "frames",
+                        "engines",
+                        "visuals",
+                        "audio",
+                        "narrative",
+                        "economy",
+                        "governance"
+                    ]
+                },
+                "seed": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 256
+                }
+            }
+        },
+        "SourceEntity": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "entityId",
+                "kind",
+                "name",
+                "description",
+                "sourceRecordIds",
+                "tags",
+                "attributes",
+                "references",
+                "immutableBase",
+                "preservedOverlayFields"
+            ],
+            "properties": {
+                "entityId": {
+                    "type": "string",
+                    "pattern": "^source:[a-z][a-z0-9-]{1,31}:[a-z0-9][a-z0-9._/-]{0,191}$"
+                },
+                "kind": {
+                    "type": "string",
+                    "enum": [
+                        "world",
+                        "portal",
+                        "agent-blueprint",
+                        "npc-blueprint",
+                        "quest",
+                        "object",
+                        "item",
+                        "currency",
+                        "governance",
+                        "incident",
+                        "lineage"
+                    ]
+                },
+                "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 256
+                },
+                "description": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                },
+                "sourceRecordIds": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 1024,
+                    "items": {
+                        "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/RecordId"
+                    }
+                },
+                "tags": {
+                    "type": "array",
+                    "maxItems": 128,
+                    "uniqueItems": true,
+                    "items": {
+                        "type": "string",
+                        "pattern": "^[a-z0-9][a-z0-9.-]{0,63}$"
+                    }
+                },
+                "attributes": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v2/common/json-value.schema.json#/$defs/JsonObject"
+                },
+                "references": {
+                    "type": "array",
+                    "maxItems": 512,
+                    "items": {
+                        "$ref": "#/$defs/EntityReference"
+                    }
+                },
+                "immutableBase": {
+                    "const": true
+                },
+                "preservedOverlayFields": {
+                    "type": "array",
+                    "maxItems": 64,
+                    "uniqueItems": true,
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "controller",
+                            "position",
+                            "status",
+                            "hp",
+                            "evolved-traits",
+                            "needs",
+                            "mood",
+                            "tasks",
+                            "memory",
+                            "quest-progress",
+                            "damage",
+                            "user-created-state",
+                            "balances",
+                            "listings",
+                            "trades",
+                            "ledger",
+                            "proposals",
+                            "ballots",
+                            "enacted-overlays",
+                            "incident-progress",
+                            "living-descendants",
+                            "history"
+                        ]
+                    }
+                }
+            }
+        },
+        "EntityReference": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "relation",
+                "targetEntityId",
+                "required"
+            ],
+            "properties": {
+                "relation": {
+                    "type": "string",
+                    "pattern": "^[a-z][a-z0-9.-]{0,127}$"
+                },
+                "targetEntityId": {
+                    "type": "string",
+                    "pattern": "^source:[a-z][a-z0-9-]{1,31}:[a-z0-9][a-z0-9._/-]{0,191}$"
+                },
+                "required": {
+                    "type": "boolean"
+                }
+            }
+        }
+    }
+}

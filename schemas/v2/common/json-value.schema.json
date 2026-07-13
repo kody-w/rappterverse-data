@@ -1,0 +1,46 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://data.rappterverse.dev/schemas/v2/common/json-value.schema.json",
+    "title": "RAPPterverse canonical JSON v2 value",
+    "description": "Bounded JSON without floating-point values. Object extension points are explicit and recursively bounded.",
+    "$ref": "#/$defs/JsonValue",
+    "$defs": {
+        "JsonValue": {
+            "anyOf": [
+                {
+                    "type": "null"
+                },
+                {
+                    "type": "boolean"
+                },
+                {
+                    "type": "integer"
+                },
+                {
+                    "type": "string",
+                    "maxLength": 262144
+                },
+                {
+                    "$ref": "#/$defs/JsonArray"
+                },
+                {
+                    "$ref": "#/$defs/JsonObject"
+                }
+            ]
+        },
+        "JsonArray": {
+            "type": "array",
+            "maxItems": 4096,
+            "items": {
+                "$ref": "#/$defs/JsonValue"
+            }
+        },
+        "JsonObject": {
+            "type": "object",
+            "maxProperties": 4096,
+            "additionalProperties": {
+                "$ref": "#/$defs/JsonValue"
+            }
+        }
+    }
+}

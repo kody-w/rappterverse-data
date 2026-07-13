@@ -22,10 +22,99 @@ class RepositoryControlTests(unittest.TestCase):
         self.assertIn("contents: read", workflow)
         self.assertEqual(2, workflow.count("persist-credentials: false"))
         self.assertIn("$TRUSTED_ROOT/scripts/governance/validate.py", workflow)
+        self.assertIn(
+            "$TRUSTED_ROOT/scripts/governance/validate_candidate_trust.py",
+            workflow,
+        )
+        self.assertIn("tests.test_contracts_v2", workflow)
+        self.assertIn("tests.test_release_trust_v2", workflow)
         self.assertIn("github.event.pull_request.base.sha", workflow)
-        self.assertIn("BOOTSTRAP_BASE_SHA", workflow)
-        self.assertIn("Bootstrap PR contains non-foundation path", workflow)
         self.assertIn("ref: ${{ github.event.pull_request.head.sha }}", workflow)
+        self.assertIn("TRUSTED_ROOT=$BASE_ROOT", workflow)
+        self.assertNotIn("TRUSTED_ROOT=$CANDIDATE_ROOT", workflow)
+
+    def test_v2_bootstrap_is_conditional_and_cannot_self_validate(self) -> None:
+        workflow = (ROOT / ".github" / "workflows" / "validate-pr.yml").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("TRUSTED_BASE_HAS_V2=true", workflow)
+        self.assertIn("TRUSTED_BASE_HAS_V2=false", workflow)
+        self.assertIn(
+            "if: env.TRUSTED_BASE_HAS_V2 == 'true'", workflow
+        )
+        self.assertIn(
+            "if: env.TRUSTED_BASE_HAS_V2 == 'false'", workflow
+        )
+        self.assertIn(
+            "- name: Validate migration surface with trusted base policy",
+            workflow,
+        )
+        self.assertIn(
+            "The one-time v2 migration may not delete files", workflow
+        )
+        self.assertIn("scripts/contracts/*", workflow)
+        self.assertIn("schemas/v2/*", workflow)
+        validation_start = workflow.index(
+            "- name: Validate candidate with trusted base policy"
+        )
+        bootstrap_start = workflow.index(
+            "- name: Bootstrap v2 tests from candidate without credentials"
+        )
+        validation_step = workflow[validation_start:bootstrap_start]
+        self.assertLess(validation_start, bootstrap_start)
+        self.assertIn(
+            '--policy-root "$TRUSTED_ROOT/policies"', validation_step
+        )
+        self.assertIn(
+            "if: env.TRUSTED_BASE_HAS_V2 == 'true'", validation_step
+        )
+        self.assertIn(
+            "if: env.TRUSTED_BASE_HAS_V2 == 'false'", validation_step
+        )
+        self.assertNotIn("$CANDIDATE_ROOT/policies", validation_step)
+        self.assertNotIn("$CANDIDATE_ROOT/schemas", validation_step)
+        self.assertIn('GITHUB_TOKEN: ""', workflow[bootstrap_start:])
+        self.assertIn('GH_TOKEN: ""', workflow[bootstrap_start:])
+
+        validator = (
+            ROOT / "scripts" / "governance" / "validator.py"
+        ).read_text(encoding="utf-8")
+        self.assertIn(
+            'else policies.root.parent / "schemas" / "v2"', validator
+        )
+
+    def test_candidate_trust_changes_get_trusted_and_sandboxed_tests(
+        self,
+    ) -> None:
+        workflow = (ROOT / ".github" / "workflows" / "validate-pr.yml").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn(
+            "- name: Exercise candidate trust data with trusted harness",
+            workflow,
+        )
+        self.assertIn(
+            "--candidate-root \"$CANDIDATE_ROOT\"", workflow
+        )
+        self.assertIn(
+            "--trusted-root \"$TRUSTED_ROOT\"", workflow
+        )
+        self.assertNotIn(
+            "$CANDIDATE_ROOT/scripts/governance/validate_candidate_trust.py",
+            workflow,
+        )
+        self.assertIn(
+            "- name: Test candidate v2 code without credentials in read-only checkout",
+            workflow,
+        )
+        self.assertGreaterEqual(workflow.count('GITHUB_TOKEN: ""'), 2)
+        self.assertGreaterEqual(workflow.count('GH_TOKEN: ""'), 2)
+        self.assertEqual(
+            1, workflow.count('chmod -R a-w "$CANDIDATE_ROOT"')
+        )
+        self.assertIn('-p "test_*v2.py"', workflow)
+        self.assertIn('-p "test_*v2*.py"', workflow)
+        self.assertIn("policies/rights-statements-v2.json", workflow)
 
     def test_ruleset_requires_review_and_governance(self) -> None:
         value = json.loads(
@@ -50,7 +139,15 @@ class RepositoryControlTests(unittest.TestCase):
 
     def test_codeowners_covers_publication_paths(self) -> None:
         owners = (ROOT / ".github" / "CODEOWNERS").read_text(encoding="utf-8")
-        for path in ("/catalog/", "/datasets/", "/objects/", "/releases/", "/worldpacks/"):
+        for path in (
+            "/catalog/",
+            "/datasets/",
+            "/objects/",
+            "/releases/",
+            "/worldpacks/",
+            "/scripts/contracts/",
+            "/schemas/v2/",
+        ):
             self.assertIn(f"{path} @kody-w", owners)
 
     def test_json_templates_are_well_formed(self) -> None:

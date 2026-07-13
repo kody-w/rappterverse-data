@@ -3,6 +3,8 @@
 
 /policies/ @kody-w
 /scripts/governance/ @kody-w
+/scripts/contracts/ @kody-w
+/schemas/v2/ @kody-w
 /tests/governance/ @kody-w
 /templates/ @kody-w
 /.github/CODEOWNERS @kody-w
