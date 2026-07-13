@@ -410,10 +410,20 @@ class GovernanceValidator:
     @staticmethod
     def _is_contract_fixture(path: str) -> bool:
         parts = PurePosixPath(path).parts
-        return len(parts) >= 4 and parts[:3] == (
-            "tests",
-            "fixtures",
-            "contracts",
+        return (
+            len(parts) >= 5
+            and parts[:4]
+            == ("tests", "fixtures", "contracts", "invalid")
+        ) or (
+            len(parts) >= 6
+            and parts[:5]
+            == (
+                "tests",
+                "fixtures",
+                "contracts",
+                "v2",
+                "release-graph",
+            )
         )
 
     @staticmethod
