@@ -1,0 +1,64 @@
+{
+    "dataset_id": "d06",
+    "determinism": {
+        "record_selector": "record_index",
+        "seed_path": "/seed",
+        "shared_timeline_path": "/pair/common_noise"
+    },
+    "loss_condition": {
+        "maximum_incorrect_submissions": 3
+    },
+    "player_actions": [
+        {
+            "id": "inspect-shock",
+            "input": "tick",
+            "reads": "/pair/common_noise/{tick}"
+        },
+        {
+            "id": "mark-arm",
+            "input": "world_id and arm",
+            "reads": "/pair/worlds"
+        },
+        {
+            "id": "submit-effect",
+            "input": "signed integer",
+            "reads": "/oracle/paired_effect"
+        }
+    ],
+    "input_schema": "rappterverse.d06-record/v1",
+    "projection_id": "rappterverse.projection.d06/v1",
+    "scoring": {
+        "arm_assignment": 40,
+        "common_noise_identification": 20,
+        "paired_effect": 40
+    },
+    "setup": [
+        {
+            "from": "/pair/worlds/0",
+            "spawn": "paired-world-panel-left"
+        },
+        {
+            "from": "/pair/worlds/1",
+            "spawn": "paired-world-panel-right"
+        },
+        {
+            "from": "/pair/common_noise",
+            "spawn": "shared-timeline-console"
+        }
+    ],
+    "title": "Twin Bridges",
+    "turn_loop": [
+        "reveal the next common-noise tick in both worlds",
+        "animate each recorded outcome without changing the source record",
+        "accept arm labels or a paired-effect submission",
+        "advance until all ticks are visible or the answer is submitted"
+    ],
+    "version": "0.1.0",
+    "win_condition": {
+        "all": [
+            "world-a and world-b arms match /pair/assignment",
+            "submitted effect equals /oracle/paired_effect"
+        ]
+    },
+    "world": "hub"
+}

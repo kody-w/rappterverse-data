@@ -1,0 +1,42 @@
+{
+    "checkpoint": {
+        "schema": "rappterverse.d10-checkpoint/v1",
+        "supported": true
+    },
+    "constraints": {
+        "acyclic": true,
+        "immutable_artifact_digests": true,
+        "maximum_parents": 2,
+        "software_agents_only": true
+    },
+    "dataset_id": "d10",
+    "defaults": {
+        "count": 100,
+        "maximum_nodes": 9,
+        "minimum_nodes": 6,
+        "seed": 10100
+    },
+    "generator": "generators/d10/generate.py",
+    "name": "Software-Agent Lineage",
+    "output": {
+        "committed_release_data": false,
+        "format": "jsonl",
+        "ordering": [
+            "observed_at",
+            "record_id"
+        ]
+    },
+    "projection_recipe": "worldpacks/projections/d10/recipe.json",
+    "reasoning_reference": "datasets/d10-agent-lineage/reasoning.json",
+    "record_schema": "rappterverse.d10-record/v1",
+    "required_surfaces": [
+        "normalized_record",
+        "transcript",
+        "deliberation",
+        "exposed_reasoning_refs",
+        "lineage",
+        "oracle"
+    ],
+    "verifier": "generators/d10/verify.py",
+    "version": "0.1.0-scaffold"
+}
