@@ -1,0 +1,38 @@
+{
+    "dataset_id": "d01",
+    "description": "Replay ledger events as a navigable, deterministic history layer.",
+    "effects": [
+        {
+            "effect": "event_beacon",
+            "input": "event.event_type",
+            "playable_result": "Creates an interactable beacon whose color and interaction verb follow the event type."
+        },
+        {
+            "effect": "actor_trail",
+            "input": "actors and observed_at",
+            "playable_result": "Connects sequential public events into a ghost trail players can follow."
+        },
+        {
+            "effect": "outcome_echo",
+            "input": "event.outcome",
+            "playable_result": "Applies a short ambient animation when a player inspects the event."
+        }
+    ],
+    "input_schema": "rappterverse.d01-record/v1",
+    "projection_id": "rappterverse.projection.d01/v1",
+    "rules": {
+        "canonical_state_writes": false,
+        "position_seed": "sha256(record_id + world)",
+        "reasoning_display": "Show explicit deliberation summaries and public references only.",
+        "sort": [
+            "observed_at",
+            "record_id"
+        ]
+    },
+    "world_effects": {
+        "completion": "Following all beacons in an episode unlocks a replay badge.",
+        "failure": "No canonical history is changed; players may restart the projection.",
+        "interaction": "Inspect, follow, compare lineage, and replay outcome.",
+        "spawn": "A Chronicle Gate appears in the record's world."
+    }
+}

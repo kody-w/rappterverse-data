@@ -1,0 +1,42 @@
+{
+    "checkpoint": {
+        "schema": "rappterverse.d08-checkpoint/v1",
+        "supported": true
+    },
+    "constraints": {
+        "fictional_only": true,
+        "minimum_members": 4,
+        "oracle_is_rule_bound": true,
+        "real_jurisdictions": false
+    },
+    "dataset_id": "d08",
+    "defaults": {
+        "count": 100,
+        "members": 6,
+        "seed": 8080
+    },
+    "generator": "generators/d08/generate.py",
+    "name": "Fictional Governance Oracle",
+    "output": {
+        "committed_release_data": false,
+        "format": "jsonl",
+        "ordering": [
+            "observed_at",
+            "record_id"
+        ]
+    },
+    "projection_recipe": "worldpacks/projections/d08/recipe.json",
+    "reasoning_reference": "datasets/d08-governance-oracle/reasoning.json",
+    "record_schema": "rappterverse.d08-record/v1",
+    "required_surfaces": [
+        "normalized_record",
+        "transcript",
+        "deliberation",
+        "exposed_reasoning_refs",
+        "rules",
+        "ballots",
+        "oracle"
+    ],
+    "verifier": "generators/d08/verify.py",
+    "version": "0.1.0-scaffold"
+}

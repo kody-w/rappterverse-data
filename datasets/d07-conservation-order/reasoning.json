@@ -1,0 +1,40 @@
+{
+    "framework": "three-layer-referenced-reasoning-v1",
+    "description": "Evidence pointers for replay, invariant inference, and the final order/conservation label.",
+    "layers": [
+        {
+            "id": "observation",
+            "required": [
+                "references",
+                "facts"
+            ],
+            "canonical_references": [
+                "/initial_state",
+                "/tape"
+            ]
+        },
+        {
+            "id": "inference",
+            "required": [
+                "references",
+                "rule"
+            ],
+            "canonical_references": [
+                "/tape",
+                "/oracle/initial_total",
+                "/oracle/final_total"
+            ]
+        },
+        {
+            "id": "decision",
+            "required": [
+                "references",
+                "label"
+            ],
+            "canonical_references": [
+                "/oracle/conserved",
+                "/oracle/ordered"
+            ]
+        }
+    ]
+}

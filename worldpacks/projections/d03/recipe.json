@@ -1,0 +1,36 @@
+{
+    "dataset_id": "d03",
+    "description": "Compile blinded candidates into consent-gated review encounters.",
+    "effects": [
+        {
+            "effect": "blind_review_station",
+            "input": "candidate transcript and context",
+            "playable_result": "Presents a pseudonymous candidate without labels or reviewer metadata."
+        },
+        {
+            "effect": "rubric_vote",
+            "input": "candidate context",
+            "playable_result": "Lets players submit a local rubric judgment or abstain."
+        },
+        {
+            "effect": "gold_reveal",
+            "input": "separate consented label",
+            "playable_result": "Reveals gold label, agreement, and adjudication only after a valid consented join."
+        }
+    ],
+    "input_schema": "rappterverse.d03-record/v1",
+    "projection_id": "rappterverse.projection.d03/v1",
+    "rules": {
+        "canonical_state_writes": false,
+        "candidate_blinding_required": true,
+        "label_join_requires": "rappterverse.d03-consented-label/v1",
+        "reasoning_display": "Explicit public deliberation and reviewed references only.",
+        "seed": "sha256(record_id)"
+    },
+    "world_effects": {
+        "completion": "Shows calibration against consented gold where available.",
+        "failure": "Missing or invalid consent keeps the label sealed.",
+        "interaction": "Review, vote, abstain, and inspect aggregate agreement.",
+        "spawn": "A Gold Review Chamber appears in an isolated projection world."
+    }
+}

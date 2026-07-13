@@ -1,0 +1,31 @@
+{
+    "checkpoint": {
+        "schema": "rappterverse.d01-checkpoint/v1",
+        "supported": true
+    },
+    "dataset_id": "d01",
+    "generator": "generators/d01/generate.py",
+    "name": "Open Agent Civilization Ledger",
+    "output": {
+        "committed_release_data": false,
+        "format": "jsonl",
+        "ordering": [
+            "observed_at",
+            "record_id"
+        ]
+    },
+    "record_schema": "rappterverse.d01-record/v1",
+    "required_surfaces": [
+        "normalized_record",
+        "transcript",
+        "deliberation"
+    ],
+    "source_kinds": [
+        "legacy_action_export",
+        "owned_synthetic_event",
+        "rappterverse_owned_event",
+        "synthetic_smoke"
+    ],
+    "verifier": "generators/d01/verify.py",
+    "version": "0.1.0-scaffold"
+}

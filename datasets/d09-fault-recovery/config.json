@@ -1,0 +1,47 @@
+{
+    "checkpoint": {
+        "schema": "rappterverse.d09-checkpoint/v1",
+        "supported": true
+    },
+    "constraints": {
+        "allowed_faults": [
+            "duplicate_delivery",
+            "reordered_delivery",
+            "dropped_ack",
+            "transient_read_error"
+        ],
+        "exactly_once_recovery": true,
+        "real_fault_injection": false,
+        "simulation_scope": "in-memory-only"
+    },
+    "dataset_id": "d09",
+    "defaults": {
+        "count": 100,
+        "operations": 5,
+        "seed": 9090
+    },
+    "generator": "generators/d09/generate.py",
+    "name": "Safe In-Memory Fault Recovery",
+    "output": {
+        "committed_release_data": false,
+        "format": "jsonl",
+        "ordering": [
+            "observed_at",
+            "record_id"
+        ]
+    },
+    "projection_recipe": "worldpacks/projections/d09/recipe.json",
+    "reasoning_reference": "datasets/d09-fault-recovery/reasoning.json",
+    "record_schema": "rappterverse.d09-record/v1",
+    "required_surfaces": [
+        "normalized_record",
+        "transcript",
+        "deliberation",
+        "exposed_reasoning_refs",
+        "fault_trace",
+        "recovery",
+        "oracle"
+    ],
+    "verifier": "generators/d09/verify.py",
+    "version": "0.1.0-scaffold"
+}

@@ -1,0 +1,61 @@
+{
+    "dataset_id": "d07",
+    "determinism": {
+        "record_selector": "record_index",
+        "seed_path": "/seed",
+        "sequence_path": "/tape"
+    },
+    "loss_condition": {
+        "maximum_out_of_order_attempts": 3
+    },
+    "player_actions": [
+        {
+            "id": "inspect-event",
+            "input": "sequence",
+            "reads": "/tape/{sequence}"
+        },
+        {
+            "id": "apply-transfer",
+            "input": "event_id",
+            "requires": "event sequence equals local replay cursor"
+        },
+        {
+            "id": "submit-total",
+            "input": "integer",
+            "reads": "/oracle/final_total"
+        }
+    ],
+    "input_schema": "rappterverse.d07-record/v1",
+    "projection_id": "rappterverse.projection.d07/v1",
+    "scoring": {
+        "conservation_answer": 30,
+        "correct_final_balances": 30,
+        "ordered_transfers": 40
+    },
+    "setup": [
+        {
+            "from": "/initial_state",
+            "spawn": "account-plinth-per-key"
+        },
+        {
+            "from": "/tape",
+            "spawn": "ordered-transfer-token-per-event"
+        }
+    ],
+    "title": "Ledger Relay",
+    "turn_loop": [
+        "show the next event hash and transfer token",
+        "accept exactly the event at the local replay cursor",
+        "move integer quantity between local account plinths",
+        "compare final local balances with the oracle after the terminal event"
+    ],
+    "version": "0.1.0",
+    "win_condition": {
+        "all": [
+            "all tape events applied once in sequence",
+            "local balances equal /oracle/final_state",
+            "submitted total equals /oracle/final_total"
+        ]
+    },
+    "world": "marketplace"
+}

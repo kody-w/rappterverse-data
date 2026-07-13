@@ -1,0 +1,70 @@
+{
+    "dataset_id": "d10",
+    "determinism": {
+        "layout": "generation-then-agent_id",
+        "record_selector": "record_index",
+        "seed_path": "/seed"
+    },
+    "loss_condition": {
+        "maximum_cycle_or_parent_errors": 3
+    },
+    "player_actions": [
+        {
+            "id": "connect-parent",
+            "input": "parent and child software-agent IDs",
+            "reads": "/lineage/edges"
+        },
+        {
+            "id": "select-topological-route",
+            "input": "ordered software-agent IDs",
+            "reads": "/oracle/topological_order"
+        },
+        {
+            "id": "mark-target-ancestors",
+            "input": "set of software-agent IDs",
+            "reads": "/oracle/target_ancestors"
+        }
+    ],
+    "input_schema": "rappterverse.d10-record/v1",
+    "projection_id": "rappterverse.projection.d10/v1",
+    "safety": {
+        "fictional_software_only": true,
+        "forbid_human_genealogy_or_personnel_mapping": true
+    },
+    "scoring": {
+        "ancestry": 35,
+        "edge_reconstruction": 35,
+        "topological_route": 30
+    },
+    "setup": [
+        {
+            "from": "/lineage/nodes",
+            "layout": "x by generation, z by agent_id",
+            "spawn": "software-artifact-star-per-node"
+        },
+        {
+            "from": "/lineage/edges",
+            "spawn": "unlit-provenance-link-per-edge"
+        },
+        {
+            "from": "/query/target_agent_id",
+            "spawn": "target-beacon"
+        }
+    ],
+    "title": "Provenance Constellation",
+    "turn_loop": [
+        "show nodes grouped by recorded generation",
+        "accept parent-child links and reject cycle-forming links",
+        "accept a topological traversal",
+        "accept the complete ancestor set for the target beacon"
+    ],
+    "version": "0.1.0",
+    "win_condition": {
+        "all": [
+            "reconstructed edges equal /lineage/edges",
+            "route respects every parent-before-child constraint",
+            "marked ancestors equal /oracle/target_ancestors"
+        ]
+    },
+    "world": "gallery"
+}

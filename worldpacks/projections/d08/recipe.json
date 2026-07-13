@@ -1,0 +1,68 @@
+{
+    "dataset_id": "d08",
+    "determinism": {
+        "ballot_order": "array order",
+        "record_selector": "record_index",
+        "seed_path": "/seed"
+    },
+    "loss_condition": {
+        "maximum_incorrect_decisions": 2
+    },
+    "player_actions": [
+        {
+            "id": "count-ballots",
+            "input": "yes, no, abstain, turnout"
+        },
+        {
+            "id": "mark-rule",
+            "input": "quorum_met, threshold_met, veto_triggered"
+        },
+        {
+            "id": "submit-decision",
+            "input": "approved boolean",
+            "reads": "/oracle/approved"
+        }
+    ],
+    "input_schema": "rappterverse.d08-record/v1",
+    "projection_id": "rappterverse.projection.d08/v1",
+    "safety": {
+        "fictional_only": true,
+        "forbid_real_jurisdictions": true,
+        "purpose": "rule execution game, not civic or legal advice"
+    },
+    "scoring": {
+        "decision": 40,
+        "rule_markers": 40,
+        "vote_counts": 20
+    },
+    "setup": [
+        {
+            "from": "/members",
+            "spawn": "fictional-council-seat-per-member"
+        },
+        {
+            "from": "/ballots",
+            "spawn": "sealed-ballot-token-per-cast-ballot"
+        },
+        {
+            "from": "/rules",
+            "spawn": "rule-tablet"
+        }
+    ],
+    "title": "Lantern Council",
+    "turn_loop": [
+        "reveal embedded fictional rules and member roles",
+        "open ballot tokens in array order",
+        "accept quorum, threshold, and veto markers",
+        "accept an approve or reject decision"
+    ],
+    "version": "0.1.0",
+    "win_condition": {
+        "all": [
+            "vote counts equal /oracle/counts",
+            "rule markers equal their /oracle fields",
+            "submitted decision equals /oracle/approved"
+        ]
+    },
+    "world": "gallery"
+}

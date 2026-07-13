@@ -1,0 +1,42 @@
+{
+    "checkpoint": {
+        "schema": "rappterverse.d07-checkpoint/v1",
+        "supported": true
+    },
+    "constraints": {
+        "closed_system": true,
+        "integer_quantities": true,
+        "overdrafts": false,
+        "strict_sequence": true
+    },
+    "dataset_id": "d07",
+    "defaults": {
+        "count": 100,
+        "events_per_tape": 6,
+        "seed": 7070
+    },
+    "generator": "generators/d07/generate.py",
+    "name": "Conservation and Order Tapes",
+    "output": {
+        "committed_release_data": false,
+        "format": "jsonl",
+        "ordering": [
+            "observed_at",
+            "record_id"
+        ]
+    },
+    "projection_recipe": "worldpacks/projections/d07/recipe.json",
+    "reasoning_reference": "datasets/d07-conservation-order/reasoning.json",
+    "record_schema": "rappterverse.d07-record/v1",
+    "required_surfaces": [
+        "normalized_record",
+        "transcript",
+        "deliberation",
+        "exposed_reasoning_refs",
+        "initial_state",
+        "tape",
+        "oracle"
+    ],
+    "verifier": "generators/d07/verify.py",
+    "version": "0.1.0-scaffold"
+}

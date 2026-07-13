@@ -1,0 +1,44 @@
+{
+    "checkpoint": {
+        "schema": "rappterverse.d06-checkpoint/v1",
+        "supported": true
+    },
+    "constraints": {
+        "arms": [
+            "control",
+            "treatment"
+        ],
+        "paired_worlds": 2,
+        "shared_common_noise": true,
+        "synthetic_only": true
+    },
+    "dataset_id": "d06",
+    "defaults": {
+        "count": 100,
+        "seed": 6060,
+        "ticks": 6
+    },
+    "generator": "generators/d06/generate.py",
+    "name": "Social Causality",
+    "output": {
+        "committed_release_data": false,
+        "format": "jsonl",
+        "ordering": [
+            "observed_at",
+            "record_id"
+        ]
+    },
+    "projection_recipe": "worldpacks/projections/d06/recipe.json",
+    "reasoning_reference": "datasets/d06-social-causality/reasoning.json",
+    "record_schema": "rappterverse.d06-record/v1",
+    "required_surfaces": [
+        "normalized_record",
+        "transcript",
+        "deliberation",
+        "exposed_reasoning_refs",
+        "pair",
+        "oracle"
+    ],
+    "verifier": "generators/d06/verify.py",
+    "version": "0.1.0-scaffold"
+}

@@ -1,0 +1,85 @@
+{
+    "dataset_id": "d09",
+    "determinism": {
+        "operation_order": "/operations/*/sequence",
+        "record_selector": "record_index",
+        "seed_path": "/seed"
+    },
+    "loss_condition": {
+        "maximum_unsafe_or_incorrect_replays": 3
+    },
+    "player_actions": [
+        {
+            "id": "classify-fault",
+            "input": "allowed fault_type",
+            "reads": "/fault_trace"
+        },
+        {
+            "id": "buffer-operation",
+            "input": "op_id and sequence",
+            "reads": "/operations"
+        },
+        {
+            "id": "deduplicate",
+            "input": "op_id"
+        },
+        {
+            "id": "replay",
+            "input": "canonical operation list",
+            "scope": "local in-memory round state only"
+        }
+    ],
+    "input_schema": "rappterverse.d09-record/v1",
+    "projection_id": "rappterverse.projection.d09/v1",
+    "safety": {
+        "allowed_effects": [
+            "read record",
+            "update local in-memory round state",
+            "render animation"
+        ],
+        "forbidden_effects": [
+            "filesystem corruption",
+            "network manipulation",
+            "process termination",
+            "resource exhaustion",
+            "authoritative state mutation"
+        ],
+        "real_fault_injection": false
+    },
+    "scoring": {
+        "canonical_order": 30,
+        "exactly_once_final_state": 40,
+        "fault_classification": 30
+    },
+    "setup": [
+        {
+            "from": "/initial_state",
+            "spawn": "memory-register-bank"
+        },
+        {
+            "from": "/fault_trace/attempts",
+            "spawn": "trace-card-per-attempt"
+        },
+        {
+            "from": "/operations",
+            "spawn": "operation-card-per-entry"
+        }
+    ],
+    "title": "Memory Recovery Console",
+    "turn_loop": [
+        "reveal the next simulated attempt card",
+        "accept one fault classification",
+        "let players order and deduplicate operation cards",
+        "replay selected cards against disposable local memory",
+        "compare local state with /oracle/final_state"
+    ],
+    "version": "0.1.0",
+    "win_condition": {
+        "all": [
+            "fault classification equals /fault_trace/fault_type",
+            "applied order equals /recovery/applied_order",
+            "local final state equals /oracle/final_state"
+        ]
+    },
+    "world": "dungeon"
+}

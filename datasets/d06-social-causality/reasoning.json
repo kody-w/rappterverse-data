@@ -1,0 +1,39 @@
+{
+    "framework": "three-layer-referenced-reasoning-v1",
+    "description": "Compact auditable rationale with JSON Pointer evidence, not hidden chain-of-thought.",
+    "layers": [
+        {
+            "id": "observation",
+            "required": [
+                "references",
+                "facts"
+            ],
+            "canonical_references": [
+                "/pair/assignment",
+                "/pair/common_noise",
+                "/pair/worlds"
+            ]
+        },
+        {
+            "id": "inference",
+            "required": [
+                "references",
+                "rule"
+            ],
+            "canonical_references": [
+                "/pair/worlds",
+                "/oracle/paired_effect"
+            ]
+        },
+        {
+            "id": "decision",
+            "required": [
+                "references",
+                "label"
+            ],
+            "canonical_references": [
+                "/oracle"
+            ]
+        }
+    ]
+}
