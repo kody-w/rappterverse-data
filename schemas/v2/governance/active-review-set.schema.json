@@ -1,0 +1,50 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://data.rappterverse.dev/schemas/v2/governance/active-review-set.schema.json",
+    "title": "RAPPterverse active review set v2",
+    "description": "Content-bound receipt nodes and declared supersession heads. Fork, cycle, stale-head, and rejection semantics are validated across the set.",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "schemaVersion",
+        "reviewSetId",
+        "releaseId",
+        "generatedAt",
+        "policy",
+        "receipts",
+        "heads"
+    ],
+    "properties": {
+        "schemaVersion": {
+            "const": "rappterverse.active-review-set/v2"
+        },
+        "reviewSetId": {
+            "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/ReviewSetId"
+        },
+        "releaseId": {
+            "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/ReleaseId"
+        },
+        "generatedAt": {
+            "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/UtcTimestamp"
+        },
+        "policy": {
+            "$ref": "https://data.rappterverse.dev/schemas/v2/common/artifact-descriptor.schema.json#/$defs/PolicyRef"
+        },
+        "receipts": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 10000,
+            "items": {
+                "$ref": "https://data.rappterverse.dev/schemas/v2/common/artifact-descriptor.schema.json#/$defs/ReceiptRef"
+            }
+        },
+        "heads": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 10000,
+            "items": {
+                "$ref": "https://data.rappterverse.dev/schemas/v2/common/artifact-descriptor.schema.json#/$defs/ReceiptRef"
+            }
+        }
+    }
+}

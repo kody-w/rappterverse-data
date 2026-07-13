@@ -20,6 +20,7 @@
     "publicationPathGlobs": [
         "catalog/catalog.json",
         "catalog/latest.json",
+        "catalog/releases/**",
         "catalog/removals.json",
         "datasets/*/data-card.json",
         "datasets/*/publications/**",
@@ -30,6 +31,7 @@
         "objects/",
         "releases/",
         "worldpacks/",
+        "catalog/releases/",
         "catalog/tombstones/"
     ],
     "immutablePathGlobs": [
@@ -38,6 +40,7 @@
         "datasets/*/shards/**"
     ],
     "publicationManifestSchema": "rappterverse.publication/v1",
+    "activeReleaseContract": "v2-only",
     "reviewDispositions": [
         "approve_public",
         "approve_deliberation_only"

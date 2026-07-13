@@ -1,0 +1,9 @@
+{
+    "$template": "Documentation only; replace placeholders and remove this field.",
+    "schemaVersion": "rappterverse.projection-recipe/v2",
+    "recipeId": "recipe-<stable-id>",
+    "version": "v1",
+    "engine": "rappterverse-world-pack-projection/v1",
+    "configuration": {},
+    "deterministic": true
+}

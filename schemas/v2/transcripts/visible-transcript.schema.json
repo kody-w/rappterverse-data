@@ -1,0 +1,384 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://data.rappterverse.dev/schemas/v2/transcripts/visible-transcript.schema.json",
+    "title": "RAPPterverse visible transcript v2",
+    "description": "Complete public-safe visible inputs, outputs, tool activity, verifier results, and outcome. The containing shard carries byte integrity.",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "schemaVersion",
+        "transcriptId",
+        "datasetId",
+        "recordId",
+        "runId",
+        "episodeId",
+        "startedAt",
+        "completedAt",
+        "participants",
+        "capture",
+        "events"
+    ],
+    "properties": {
+        "schemaVersion": {
+            "const": "rappterverse.visible-transcript/v2"
+        },
+        "transcriptId": {
+            "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/TranscriptId"
+        },
+        "datasetId": {
+            "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/DatasetId"
+        },
+        "recordId": {
+            "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/RecordId"
+        },
+        "runId": {
+            "type": "string",
+            "pattern": "^run-[a-z0-9][a-z0-9.-]{0,126}$"
+        },
+        "episodeId": {
+            "type": "string",
+            "pattern": "^episode-[a-z0-9][a-z0-9.-]{0,118}$"
+        },
+        "startedAt": {
+            "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/UtcTimestamp"
+        },
+        "completedAt": {
+            "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/UtcTimestamp"
+        },
+        "participants": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 32,
+            "items": {
+                "$ref": "#/$defs/Participant"
+            }
+        },
+        "capture": {
+            "$ref": "#/$defs/Capture"
+        },
+        "events": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 100000,
+            "items": {
+                "oneOf": [
+                    {
+                        "$ref": "#/$defs/MessageEvent"
+                    },
+                    {
+                        "$ref": "#/$defs/ToolCallEvent"
+                    },
+                    {
+                        "$ref": "#/$defs/ToolResultEvent"
+                    },
+                    {
+                        "$ref": "#/$defs/VerifierEvent"
+                    },
+                    {
+                        "$ref": "#/$defs/OutcomeEvent"
+                    }
+                ]
+            }
+        }
+    },
+    "$defs": {
+        "Participant": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "actorId",
+                "role",
+                "displayName"
+            ],
+            "properties": {
+                "actorId": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/ActorId"
+                },
+                "role": {
+                    "type": "string",
+                    "enum": [
+                        "system",
+                        "user",
+                        "assistant",
+                        "tool",
+                        "verifier"
+                    ]
+                },
+                "displayName": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 128
+                }
+            }
+        },
+        "Capture": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "systemPrompts",
+                "userPrompts",
+                "assistantOutputs",
+                "toolCalls",
+                "toolArguments",
+                "toolResults",
+                "verifierResults",
+                "finalOutcomes",
+                "complete",
+                "publicSafe",
+                "inaccessibleReasoningIncluded"
+            ],
+            "properties": {
+                "systemPrompts": {
+                    "const": true
+                },
+                "userPrompts": {
+                    "const": true
+                },
+                "assistantOutputs": {
+                    "const": true
+                },
+                "toolCalls": {
+                    "const": true
+                },
+                "toolArguments": {
+                    "const": true
+                },
+                "toolResults": {
+                    "const": true
+                },
+                "verifierResults": {
+                    "const": true
+                },
+                "finalOutcomes": {
+                    "const": true
+                },
+                "complete": {
+                    "const": true
+                },
+                "publicSafe": {
+                    "const": true
+                },
+                "inaccessibleReasoningIncluded": {
+                    "const": false
+                }
+            }
+        },
+        "MessageEvent": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "eventId",
+                "sequence",
+                "timestamp",
+                "actorId",
+                "kind",
+                "content"
+            ],
+            "properties": {
+                "eventId": {
+                    "type": "string",
+                    "pattern": "^event-[a-z0-9][a-z0-9.-]{0,119}$"
+                },
+                "sequence": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "timestamp": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/UtcTimestamp"
+                },
+                "actorId": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/ActorId"
+                },
+                "kind": {
+                    "type": "string",
+                    "enum": [
+                        "system-prompt",
+                        "user-prompt",
+                        "assistant-output"
+                    ]
+                },
+                "content": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v2/common/json-value.schema.json#/$defs/JsonValue"
+                }
+            }
+        },
+        "ToolCallEvent": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "eventId",
+                "sequence",
+                "timestamp",
+                "actorId",
+                "kind",
+                "callId",
+                "toolName",
+                "arguments"
+            ],
+            "properties": {
+                "eventId": {
+                    "type": "string",
+                    "pattern": "^event-[a-z0-9][a-z0-9.-]{0,119}$"
+                },
+                "sequence": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "timestamp": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/UtcTimestamp"
+                },
+                "actorId": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/ActorId"
+                },
+                "kind": {
+                    "const": "tool-call"
+                },
+                "callId": {
+                    "type": "string",
+                    "pattern": "^call-[a-z0-9][a-z0-9.-]{0,120}$"
+                },
+                "toolName": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                },
+                "arguments": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v2/common/json-value.schema.json#/$defs/JsonValue"
+                }
+            }
+        },
+        "ToolResultEvent": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "eventId",
+                "sequence",
+                "timestamp",
+                "actorId",
+                "kind",
+                "callId",
+                "toolName",
+                "success",
+                "result"
+            ],
+            "properties": {
+                "eventId": {
+                    "type": "string",
+                    "pattern": "^event-[a-z0-9][a-z0-9.-]{0,119}$"
+                },
+                "sequence": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "timestamp": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/UtcTimestamp"
+                },
+                "actorId": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/ActorId"
+                },
+                "kind": {
+                    "const": "tool-result"
+                },
+                "callId": {
+                    "type": "string",
+                    "pattern": "^call-[a-z0-9][a-z0-9.-]{0,120}$"
+                },
+                "toolName": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+                },
+                "success": {
+                    "type": "boolean"
+                },
+                "result": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v2/common/json-value.schema.json#/$defs/JsonValue"
+                }
+            }
+        },
+        "VerifierEvent": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "eventId",
+                "sequence",
+                "timestamp",
+                "actorId",
+                "kind",
+                "verifierId",
+                "passed",
+                "result"
+            ],
+            "properties": {
+                "eventId": {
+                    "type": "string",
+                    "pattern": "^event-[a-z0-9][a-z0-9.-]{0,119}$"
+                },
+                "sequence": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "timestamp": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/UtcTimestamp"
+                },
+                "actorId": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/ActorId"
+                },
+                "kind": {
+                    "const": "verifier-result"
+                },
+                "verifierId": {
+                    "type": "string",
+                    "pattern": "^verifier-[a-z0-9][a-z0-9.-]{0,115}$"
+                },
+                "passed": {
+                    "type": "boolean"
+                },
+                "result": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v2/common/json-value.schema.json#/$defs/JsonValue"
+                }
+            }
+        },
+        "OutcomeEvent": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "eventId",
+                "sequence",
+                "timestamp",
+                "actorId",
+                "kind",
+                "status",
+                "content"
+            ],
+            "properties": {
+                "eventId": {
+                    "type": "string",
+                    "pattern": "^event-[a-z0-9][a-z0-9.-]{0,119}$"
+                },
+                "sequence": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "timestamp": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/UtcTimestamp"
+                },
+                "actorId": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/ActorId"
+                },
+                "kind": {
+                    "const": "final-outcome"
+                },
+                "status": {
+                    "type": "string",
+                    "enum": [
+                        "success",
+                        "verified-failure",
+                        "aborted"
+                    ]
+                },
+                "content": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v2/common/json-value.schema.json#/$defs/JsonValue"
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,161 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://data.rappterverse.dev/schemas/v2/common/artifact-descriptor.schema.json",
+    "title": "RAPPterverse v2 artifact descriptors",
+    "description": "Raw descriptors bind exact bytes. Reviewed descriptors additionally name the immutable receipt approving those bytes.",
+    "$ref": "#/$defs/ReviewedArtifact",
+    "$defs": {
+        "ArtifactKind": {
+            "type": "string",
+            "enum": [
+                "record-shard",
+                "transcript-shard",
+                "deliberation-shard",
+                "provider-reasoning-shard",
+                "data-card",
+                "provider-terms",
+                "review-evidence",
+                "projection-recipe",
+                "dataset-manifest",
+                "release-manifest",
+                "world-pack-source",
+                "active-review-set",
+                "catalog-release-pointer"
+            ]
+        },
+        "MediaType": {
+            "type": "string",
+            "enum": [
+                "application/json",
+                "application/x-ndjson",
+                "text/plain"
+            ]
+        },
+        "RawArtifact": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "path",
+                "artifactKind",
+                "mediaType",
+                "bytes",
+                "sha256"
+            ],
+            "properties": {
+                "path": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/SafePath"
+                },
+                "artifactKind": {
+                    "$ref": "#/$defs/ArtifactKind"
+                },
+                "mediaType": {
+                    "$ref": "#/$defs/MediaType"
+                },
+                "bytes": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 1000000
+                },
+                "sha256": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v2/common/digest.schema.json#/$defs/Sha256Hex"
+                }
+            }
+        },
+        "ReviewedArtifact": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "path",
+                "artifactKind",
+                "mediaType",
+                "bytes",
+                "sha256",
+                "reviewReceiptRef"
+            ],
+            "properties": {
+                "path": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/SafePath"
+                },
+                "artifactKind": {
+                    "$ref": "#/$defs/ArtifactKind"
+                },
+                "mediaType": {
+                    "$ref": "#/$defs/MediaType"
+                },
+                "bytes": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 1000000
+                },
+                "sha256": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v2/common/digest.schema.json#/$defs/Sha256Hex"
+                },
+                "reviewReceiptRef": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/ReceiptPath"
+                }
+            }
+        },
+        "ReceiptRef": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "path",
+                "sha256"
+            ],
+            "properties": {
+                "path": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/ReceiptPath"
+                },
+                "sha256": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v2/common/digest.schema.json#/$defs/Sha256Hex"
+                }
+            }
+        },
+        "PolicyRef": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "policyId",
+                "policyVersion",
+                "path",
+                "sha256"
+            ],
+            "properties": {
+                "policyId": {
+                    "const": "rappterverse-publication-trust"
+                },
+                "policyVersion": {
+                    "const": "2.0.0"
+                },
+                "path": {
+                    "const": "policies/publication-trust-v2.json"
+                },
+                "sha256": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v2/common/digest.schema.json#/$defs/Sha256Hex"
+                }
+            }
+        },
+        "EvidenceRef": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "artifactPath",
+                "artifactSha256",
+                "summary"
+            ],
+            "properties": {
+                "artifactPath": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/SafePath"
+                },
+                "artifactSha256": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v2/common/digest.schema.json#/$defs/Sha256Hex"
+                },
+                "summary": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 1024
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,38 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://data.rappterverse.dev/schemas/v2/worldpacks/projection-recipe.schema.json",
+    "title": "RAPPterverse deterministic projection recipe v2",
+    "description": "Immutable reviewed instructions for projecting a world-pack source. Raw bytes are addressed by the enclosing projection-recipe descriptor.",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "schemaVersion",
+        "recipeId",
+        "version",
+        "engine",
+        "configuration",
+        "deterministic"
+    ],
+    "properties": {
+        "schemaVersion": {
+            "const": "rappterverse.projection-recipe/v2"
+        },
+        "recipeId": {
+            "type": "string",
+            "pattern": "^recipe-[a-z0-9][a-z0-9.-]{0,119}$"
+        },
+        "version": {
+            "type": "string",
+            "pattern": "^v[1-9][0-9]*$"
+        },
+        "engine": {
+            "const": "rappterverse-world-pack-projection/v1"
+        },
+        "configuration": {
+            "$ref": "https://data.rappterverse.dev/schemas/v2/common/json-value.schema.json#/$defs/JsonObject"
+        },
+        "deterministic": {
+            "const": true
+        }
+    }
+}

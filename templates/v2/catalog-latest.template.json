@@ -1,0 +1,12 @@
+{
+    "$template": "Documentation only; replace placeholders and remove this field.",
+    "schemaVersion": "rappterverse.catalog-latest-pointer/v2",
+    "releasePointer": {
+        "path": "catalog/releases/release-<immutable-id>.json",
+        "artifactKind": "catalog-release-pointer",
+        "mediaType": "application/json",
+        "bytes": 1,
+        "sha256": "<64-lowercase-hex>",
+        "reviewReceiptRef": "objects/review-receipts/sha256/<first-two>/<64-hex>.json"
+    }
+}

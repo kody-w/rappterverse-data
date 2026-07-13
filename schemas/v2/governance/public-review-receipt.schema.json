@@ -1,0 +1,299 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://data.rappterverse.dev/schemas/v2/governance/public-review-receipt.schema.json",
+    "title": "RAPPterverse public review receipt v2",
+    "description": "An immutable decision over exact artifact bytes. The receipt omits its own digest; its raw bytes determine its content-addressed object path.",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "schemaVersion",
+        "reviewId",
+        "scope",
+        "datasetId",
+        "reviewedAt",
+        "reviewer",
+        "policy",
+        "approvedArtifacts",
+        "disposition",
+        "checks",
+        "providerRedistributionApproval",
+        "predecessor",
+        "approvalReference",
+        "reasonCodes"
+    ],
+    "properties": {
+        "schemaVersion": {
+            "const": "rappterverse.public-review-receipt/v2"
+        },
+        "reviewId": {
+            "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/ReviewId"
+        },
+        "scope": {
+            "type": "string",
+            "enum": [
+                "dataset-leaves",
+                "dataset-manifests",
+                "release",
+                "catalog-pointer"
+            ]
+        },
+        "datasetId": {
+            "anyOf": [
+                {
+                    "type": "null"
+                },
+                {
+                    "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/DatasetId"
+                }
+            ]
+        },
+        "reviewedAt": {
+            "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/UtcTimestamp"
+        },
+        "reviewer": {
+            "const": "kody-w"
+        },
+        "policy": {
+            "$ref": "https://data.rappterverse.dev/schemas/v2/common/artifact-descriptor.schema.json#/$defs/PolicyRef"
+        },
+        "approvedArtifacts": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 10000,
+            "items": {
+                "$ref": "https://data.rappterverse.dev/schemas/v2/common/artifact-descriptor.schema.json#/$defs/RawArtifact"
+            }
+        },
+        "disposition": {
+            "type": "string",
+            "enum": [
+                "approve_public",
+                "reject"
+            ]
+        },
+        "checks": {
+            "$ref": "#/$defs/Checks"
+        },
+        "providerRedistributionApproval": {
+            "anyOf": [
+                {
+                    "type": "null"
+                },
+                {
+                    "$ref": "#/$defs/ProviderRedistributionApproval"
+                }
+            ]
+        },
+        "predecessor": {
+            "anyOf": [
+                {
+                    "type": "null"
+                },
+                {
+                    "$ref": "https://data.rappterverse.dev/schemas/v2/common/artifact-descriptor.schema.json#/$defs/ReceiptRef"
+                }
+            ]
+        },
+        "approvalReference": {
+            "anyOf": [
+                {
+                    "type": "null"
+                },
+                {
+                    "$ref": "#/$defs/FutureApprovalReference"
+                }
+            ]
+        },
+        "reasonCodes": {
+            "type": "array",
+            "maxItems": 64,
+            "uniqueItems": true,
+            "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9][a-z0-9.-]{0,127}$"
+            }
+        }
+    },
+    "allOf": [
+        {
+            "if": {
+                "properties": {
+                    "disposition": {
+                        "const": "approve_public"
+                    }
+                },
+                "required": [
+                    "disposition"
+                ]
+            },
+            "then": {
+                "properties": {
+                    "checks": {
+                        "properties": {
+                            "sourceOwnership": {
+                                "properties": {
+                                    "status": {
+                                        "const": "pass"
+                                    }
+                                }
+                            },
+                            "rights": {
+                                "properties": {
+                                    "status": {
+                                        "const": "pass"
+                                    }
+                                }
+                            },
+                            "privacy": {
+                                "properties": {
+                                    "status": {
+                                        "const": "pass"
+                                    }
+                                }
+                            },
+                            "secrets": {
+                                "properties": {
+                                    "status": {
+                                        "const": "pass"
+                                    }
+                                }
+                            },
+                            "safety": {
+                                "properties": {
+                                    "status": {
+                                        "const": "pass"
+                                    }
+                                }
+                            },
+                            "transcriptPolicy": {
+                                "properties": {
+                                    "status": {
+                                        "const": "pass"
+                                    }
+                                }
+                            },
+                            "contamination": {
+                                "properties": {
+                                    "status": {
+                                        "const": "pass"
+                                    }
+                                }
+                            },
+                            "quality": {
+                                "properties": {
+                                    "status": {
+                                        "const": "pass"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    ],
+    "$defs": {
+        "Check": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "status",
+                "evidence"
+            ],
+            "properties": {
+                "status": {
+                    "type": "string",
+                    "enum": [
+                        "pass",
+                        "fail",
+                        "not-applicable"
+                    ]
+                },
+                "evidence": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 128,
+                    "items": {
+                        "$ref": "https://data.rappterverse.dev/schemas/v2/common/artifact-descriptor.schema.json#/$defs/EvidenceRef"
+                    }
+                }
+            }
+        },
+        "Checks": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "sourceOwnership",
+                "rights",
+                "privacy",
+                "secrets",
+                "safety",
+                "transcriptPolicy",
+                "contamination",
+                "quality"
+            ],
+            "properties": {
+                "sourceOwnership": {
+                    "$ref": "#/$defs/Check"
+                },
+                "rights": {
+                    "$ref": "#/$defs/Check"
+                },
+                "privacy": {
+                    "$ref": "#/$defs/Check"
+                },
+                "secrets": {
+                    "$ref": "#/$defs/Check"
+                },
+                "safety": {
+                    "$ref": "#/$defs/Check"
+                },
+                "transcriptPolicy": {
+                    "$ref": "#/$defs/Check"
+                },
+                "contamination": {
+                    "$ref": "#/$defs/Check"
+                },
+                "quality": {
+                    "$ref": "#/$defs/Check"
+                }
+            }
+        },
+        "ProviderRedistributionApproval": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "approved",
+                "termsReference"
+            ],
+            "properties": {
+                "approved": {
+                    "const": true
+                },
+                "termsReference": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v2/common/artifact-descriptor.schema.json#/$defs/RawArtifact"
+                }
+            }
+        },
+        "FutureApprovalReference": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "type",
+                "path",
+                "sha256"
+            ],
+            "properties": {
+                "type": {
+                    "const": "signed-approval"
+                },
+                "path": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/SafePath"
+                },
+                "sha256": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v2/common/digest.schema.json#/$defs/Sha256Hex"
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,40 @@
+{
+    "$template": "Documentation only; replace placeholders and remove this field.",
+    "schemaVersion": "rappterverse.catalog-release-pointer/v2",
+    "releaseId": "release-<immutable-id>",
+    "createdAt": "<UTC-Z>",
+    "sequence": 1,
+    "previousReleaseId": null,
+    "previousReleasePointerSha256": null,
+    "policy": {
+        "policyId": "rappterverse-publication-trust",
+        "policyVersion": "2.0.0",
+        "path": "policies/publication-trust-v2.json",
+        "sha256": "<64-lowercase-hex>"
+    },
+    "releaseManifest": {
+        "path": "releases/release-<immutable-id>/manifest.json",
+        "artifactKind": "release-manifest",
+        "mediaType": "application/json",
+        "bytes": 1,
+        "sha256": "<64-lowercase-hex>",
+        "reviewReceiptRef": "objects/review-receipts/sha256/<first-two>/<64-hex>.json"
+    },
+    "activeReviewSet": {
+        "path": "objects/active-review-sets/sha256/<first-two>/<64-hex>.json",
+        "artifactKind": "active-review-set",
+        "mediaType": "application/json",
+        "bytes": 1,
+        "sha256": "<64-lowercase-hex>",
+        "reviewReceiptRef": "objects/review-receipts/sha256/<first-two>/<64-hex>.json"
+    },
+    "totals": {
+        "datasets": 10,
+        "records": 10,
+        "transcripts": 10,
+        "deliberations": 10,
+        "providerReasoning": 0,
+        "worldPackSources": 1,
+        "contentBytes": 1
+    }
+}

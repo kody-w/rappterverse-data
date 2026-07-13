@@ -1,0 +1,86 @@
+{
+    "$template": "Documentation only; replace placeholders and remove this field.",
+    "schemaVersion": "rappterverse.data-card/v2",
+    "datasetId": "<closed-dataset-id>",
+    "datasetVersion": "v2.0.0",
+    "title": "<public title>",
+    "summary": "<public summary>",
+    "maintainers": [
+        "kody-w"
+    ],
+    "policy": {
+        "policyId": "rappterverse-publication-trust",
+        "policyVersion": "2.0.0",
+        "path": "policies/publication-trust-v2.json",
+        "sha256": "<64-lowercase-hex>"
+    },
+    "license": "CC-BY-4.0",
+    "sourceBoundary": {
+        "allowed": [
+            "synthetic"
+        ],
+        "externalCorporaIncluded": false,
+        "lineageComplete": true
+    },
+    "composition": {
+        "recordTypes": [
+            "<record-type>"
+        ],
+        "records": 1,
+        "transcripts": 1,
+        "deliberations": 1,
+        "providerReasoning": 0,
+        "splits": {
+            "train": 1,
+            "validation": 0,
+            "test": 0,
+            "unassigned": 0
+        }
+    },
+    "generation": {
+        "method": "<public generation method>",
+        "visibleTranscripts": "complete",
+        "explicitDeliberations": "required",
+        "providerReasoningPolicy": "optional-external-receipt-gated"
+    },
+    "intendedUses": [
+        "<intended use>"
+    ],
+    "outOfScopeUses": [
+        "Real-person profiling."
+    ],
+    "privacy": {
+        "classification": "synthetic-nonpersonal",
+        "realPiiIncluded": false,
+        "secretsIncluded": false
+    },
+    "rights": {
+        "ownershipVerified": true,
+        "externalContentIncluded": false
+    },
+    "safety": {
+        "reviewed": true,
+        "status": "pass",
+        "knownRisks": [
+            "<known risk>"
+        ]
+    },
+    "contamination": {
+        "publicDataset": true,
+        "evaluationUse": "contamination-prone-not-clean-evaluation"
+    },
+    "quality": {
+        "allRecordsSchemaValid": true,
+        "allVerifiersPassed": true,
+        "allProvenanceVerified": true,
+        "duplicateRecords": 0
+    },
+    "limitations": [
+        "<known limitation>"
+    ],
+    "maintenance": {
+        "immutableRelease": true,
+        "withdrawalPolicy": "append-only-tombstone",
+        "contact": "https://github.com/kody-w/rappterverse-data/issues"
+    }
+}

@@ -5,11 +5,12 @@ from __future__ import annotations
 import copy
 import hashlib
 import json
+import subprocess
 import sys
 import tempfile
 import unittest
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any, Callable, Optional
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -125,9 +126,11 @@ class CandidateFixture(unittest.TestCase):
     def validate(
         self, changes: list[Change], *, diff_bytes: int = 0
     ):
-        return GovernanceValidator(self.root, POLICIES).validate(
-            changes, diff_bytes=diff_bytes
-        )
+        return GovernanceValidator(
+            self.root,
+            POLICIES,
+            allow_historical_v1=True,
+        ).validate(changes, diff_bytes=diff_bytes)
 
     def test_contract_negative_fixture_can_name_forbidden_fields(self) -> None:
         path = "tests/fixtures/contracts/invalid/cases.json"
@@ -198,7 +201,7 @@ class CandidateFixture(unittest.TestCase):
         artifact_data: bytes = b'{"verified":true}\n',
         role: str = "verifier",
         media_type: str = "application/json",
-        mutate: Callable[[dict[str, Any]], None] | None = None,
+        mutate: Optional[Callable[[dict[str, Any]], None]] = None,
     ):
         self.write_bytes(artifact_path, artifact_data)
         manifest = self.manifest_for([(artifact_path, role, media_type)])
@@ -485,6 +488,39 @@ class PublicationTests(CandidateFixture):
             2,
             sum(item.code == "JSON_INVALID" for item in report.findings),
         )
+
+    def test_deep_json_has_stable_diagnostic_at_cli_boundary(self) -> None:
+        path = "notes/deep.json"
+        self.write_bytes(
+            path,
+            ("[" * 141 + "0" + "]" * 141 + "\n").encode("ascii"),
+        )
+
+        process = subprocess.run(
+            [
+                sys.executable,
+                "-B",
+                str(ROOT / "scripts" / "governance" / "validate.py"),
+                "--root",
+                str(self.root),
+                "--policy-root",
+                str(ROOT / "policies"),
+                "--changed-file",
+                path,
+                "--format",
+                "json",
+            ],
+            check=False,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+        )
+        output = json.loads(process.stdout)
+        codes = {item["code"] for item in output["findings"]}
+
+        self.assertEqual(1, process.returncode, process.stderr)
+        self.assertIn("JSON_DEPTH", codes)
+        self.assertNotIn("VALIDATION_INTERNAL", codes)
 
     def test_findings_never_include_secret_value(self) -> None:
         credential = "github_" + "pat_" + ("Z" * 48)

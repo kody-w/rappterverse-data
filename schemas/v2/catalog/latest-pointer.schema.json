@@ -1,0 +1,20 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://data.rappterverse.dev/schemas/v2/catalog/latest-pointer.schema.json",
+    "title": "RAPPterverse catalog latest pointer v2",
+    "description": "The mutable latest document points only to one immutable, reviewed catalog release pointer.",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "schemaVersion",
+        "releasePointer"
+    ],
+    "properties": {
+        "schemaVersion": {
+            "const": "rappterverse.catalog-latest-pointer/v2"
+        },
+        "releasePointer": {
+            "$ref": "https://data.rappterverse.dev/schemas/v2/common/artifact-descriptor.schema.json#/$defs/ReviewedArtifact"
+        }
+    }
+}

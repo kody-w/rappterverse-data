@@ -1,0 +1,207 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://data.rappterverse.dev/schemas/v2/manifests/release-manifest.schema.json",
+    "title": "RAPPterverse civilization release manifest v2",
+    "description": "An atomic ten-dataset release with an explicit sequence and immediate predecessor identity. It omits its own digest and is bound by an immutable catalog release pointer.",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "schemaVersion",
+        "releaseId",
+        "createdAt",
+        "sequence",
+        "previousReleaseId",
+        "previousReleasePointer",
+        "policy",
+        "datasets",
+        "worldPackSources",
+        "totals"
+    ],
+    "properties": {
+        "schemaVersion": {
+            "const": "rappterverse.release-manifest/v2"
+        },
+        "releaseId": {
+            "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/ReleaseId"
+        },
+        "createdAt": {
+            "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/UtcTimestamp"
+        },
+        "sequence": {
+            "type": "integer",
+            "minimum": 1
+        },
+        "previousReleaseId": {
+            "anyOf": [
+                {
+                    "type": "null"
+                },
+                {
+                    "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/ReleaseId"
+                }
+            ]
+        },
+        "previousReleasePointer": {
+            "anyOf": [
+                {
+                    "type": "null"
+                },
+                {
+                    "$ref": "https://data.rappterverse.dev/schemas/v2/common/artifact-descriptor.schema.json#/$defs/RawArtifact"
+                }
+            ]
+        },
+        "policy": {
+            "$ref": "https://data.rappterverse.dev/schemas/v2/common/artifact-descriptor.schema.json#/$defs/PolicyRef"
+        },
+        "datasets": {
+            "type": "array",
+            "minItems": 10,
+            "maxItems": 10,
+            "items": {
+                "$ref": "#/$defs/DatasetRelease"
+            }
+        },
+        "worldPackSources": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 1024,
+            "items": {
+                "$ref": "https://data.rappterverse.dev/schemas/v2/common/artifact-descriptor.schema.json#/$defs/ReviewedArtifact"
+            }
+        },
+        "totals": {
+            "$ref": "#/$defs/Totals"
+        }
+    },
+    "oneOf": [
+        {
+            "properties": {
+                "sequence": {
+                    "const": 1
+                },
+                "previousReleaseId": {
+                    "type": "null"
+                },
+                "previousReleasePointer": {
+                    "type": "null"
+                }
+            }
+        },
+        {
+            "properties": {
+                "sequence": {
+                    "type": "integer",
+                    "minimum": 2
+                },
+                "previousReleaseId": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/ReleaseId"
+                },
+                "previousReleasePointer": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v2/common/artifact-descriptor.schema.json#/$defs/RawArtifact"
+                }
+            }
+        }
+    ],
+    "$defs": {
+        "Counts": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "records",
+                "transcripts",
+                "deliberations",
+                "providerReasoning"
+            ],
+            "properties": {
+                "records": {
+                    "type": "integer",
+                    "minimum": 1
+                },
+                "transcripts": {
+                    "type": "integer",
+                    "minimum": 1
+                },
+                "deliberations": {
+                    "type": "integer",
+                    "minimum": 1
+                },
+                "providerReasoning": {
+                    "type": "integer",
+                    "minimum": 0
+                }
+            }
+        },
+        "DatasetRelease": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "datasetId",
+                "datasetVersion",
+                "manifest",
+                "counts",
+                "contentBytes"
+            ],
+            "properties": {
+                "datasetId": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/DatasetId"
+                },
+                "datasetVersion": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/DatasetVersion"
+                },
+                "manifest": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v2/common/artifact-descriptor.schema.json#/$defs/ReviewedArtifact"
+                },
+                "counts": {
+                    "$ref": "#/$defs/Counts"
+                },
+                "contentBytes": {
+                    "type": "integer",
+                    "minimum": 1
+                }
+            }
+        },
+        "Totals": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "datasets",
+                "records",
+                "transcripts",
+                "deliberations",
+                "providerReasoning",
+                "worldPackSources",
+                "contentBytes"
+            ],
+            "properties": {
+                "datasets": {
+                    "const": 10
+                },
+                "records": {
+                    "type": "integer",
+                    "minimum": 10
+                },
+                "transcripts": {
+                    "type": "integer",
+                    "minimum": 10
+                },
+                "deliberations": {
+                    "type": "integer",
+                    "minimum": 10
+                },
+                "providerReasoning": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "worldPackSources": {
+                    "type": "integer",
+                    "minimum": 1
+                },
+                "contentBytes": {
+                    "type": "integer",
+                    "minimum": 1
+                }
+            }
+        }
+    }
+}

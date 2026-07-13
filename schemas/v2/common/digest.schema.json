@@ -1,0 +1,21 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://data.rappterverse.dev/schemas/v2/common/digest.schema.json",
+    "title": "RAPPterverse v2 digests",
+    "description": "Lowercase digest and Git identifiers. Artifact descriptors use raw SHA-256 hex because the algorithm is already named by the field.",
+    "$ref": "#/$defs/Sha256Hex",
+    "$defs": {
+        "Sha256Hex": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+        },
+        "GitCommit": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{40}$"
+        },
+        "GitObject": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{40,64}$"
+        }
+    }
+}

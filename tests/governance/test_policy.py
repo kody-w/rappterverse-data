@@ -44,6 +44,38 @@ class PolicyTests(unittest.TestCase):
         with self.assertRaises(PolicyConfigurationError):
             self.load()
 
+    def test_missing_v2_trust_policy_fails_closed(self) -> None:
+        (self.root / "policies" / "publication-trust-v2.json").unlink()
+        with self.assertRaises(PolicyConfigurationError):
+            self.load()
+
+    def test_missing_v2_rights_registry_fails_closed(self) -> None:
+        (self.root / "policies" / "rights-statements-v2.json").unlink()
+        with self.assertRaises(PolicyConfigurationError):
+            self.load()
+
+    def test_v2_rights_registry_pin_cannot_be_replaced(self) -> None:
+        path = self.root / "policies" / "rights-statements-v2.json"
+        value = json.loads(path.read_text(encoding="utf-8"))
+        value["statements"][0]["status"] = "revoked"
+        path.write_text(
+            json.dumps(value, sort_keys=True, separators=(",", ":")) + "\n",
+            encoding="utf-8",
+        )
+        with self.assertRaises(PolicyConfigurationError):
+            self.load()
+
+    def test_v2_policy_cannot_claim_signed_approvals_are_enabled(self) -> None:
+        path = self.root / "policies" / "publication-trust-v2.json"
+        value = json.loads(path.read_text(encoding="utf-8"))
+        value["approvalMechanisms"]["signedApprovals"] = "enabled"
+        path.write_text(
+            json.dumps(value, sort_keys=True, separators=(",", ":")) + "\n",
+            encoding="utf-8",
+        )
+        with self.assertRaises(PolicyConfigurationError):
+            self.load()
+
     def test_file_limit_cannot_be_weakened(self) -> None:
         self.rewrite(
             "publication-policy.json",

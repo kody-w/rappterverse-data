@@ -1,0 +1,126 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://data.rappterverse.dev/schemas/v2/deliberations/provider-reasoning.schema.json",
+    "title": "RAPPterverse provider-exposed reasoning v2",
+    "description": "Optional provider-exposed content. Approval and redistribution permission are enforced by the external public review receipt that approves its shard.",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "schemaVersion",
+        "reasoningId",
+        "datasetId",
+        "recordId",
+        "transcriptId",
+        "availability",
+        "source",
+        "content",
+        "internalReasoningRequested",
+        "inaccessibleReasoningIncluded"
+    ],
+    "properties": {
+        "schemaVersion": {
+            "const": "rappterverse.provider-reasoning/v2"
+        },
+        "reasoningId": {
+            "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/ReasoningId"
+        },
+        "datasetId": {
+            "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/DatasetId"
+        },
+        "recordId": {
+            "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/RecordId"
+        },
+        "transcriptId": {
+            "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/TranscriptId"
+        },
+        "availability": {
+            "const": "provider-exposed"
+        },
+        "source": {
+            "$ref": "#/$defs/Source"
+        },
+        "content": {
+            "$ref": "#/$defs/Content"
+        },
+        "internalReasoningRequested": {
+            "const": false
+        },
+        "inaccessibleReasoningIncluded": {
+            "const": false
+        }
+    },
+    "$defs": {
+        "Source": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "provider",
+                "modelId",
+                "requestId",
+                "apiField",
+                "providerFormat",
+                "exposedByProvider",
+                "redistributionTermsRef"
+            ],
+            "properties": {
+                "provider": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9.-]{0,127}$"
+                },
+                "modelId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 256
+                },
+                "requestId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 256
+                },
+                "apiField": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 256
+                },
+                "providerFormat": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 256
+                },
+                "exposedByProvider": {
+                    "const": true
+                },
+                "redistributionTermsRef": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v2/common/artifact-descriptor.schema.json#/$defs/RawArtifact"
+                }
+            }
+        },
+        "Content": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "verbatim",
+                "complete",
+                "fragments"
+            ],
+            "properties": {
+                "verbatim": {
+                    "const": true
+                },
+                "complete": {
+                    "const": true
+                },
+                "fragments": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 4096,
+                    "items": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 262144
+                    }
+                }
+            }
+        }
+    }
+}

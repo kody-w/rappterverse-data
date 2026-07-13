@@ -1,0 +1,301 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://data.rappterverse.dev/schemas/v2/records/public-record.schema.json",
+    "title": "RAPPterverse public record envelope v2",
+    "description": "A closed released record. Its containing shard and review receipt bind its raw bytes; the record never embeds its own digest.",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "schemaVersion",
+        "datasetId",
+        "recordId",
+        "recordType",
+        "episodeId",
+        "sequence",
+        "split",
+        "eventTime",
+        "payload",
+        "provenance",
+        "generation",
+        "governance"
+    ],
+    "properties": {
+        "schemaVersion": {
+            "const": "rappterverse.public-record/v2"
+        },
+        "datasetId": {
+            "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/DatasetId"
+        },
+        "recordId": {
+            "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/RecordId"
+        },
+        "recordType": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]{1,63}$"
+        },
+        "episodeId": {
+            "type": "string",
+            "pattern": "^episode-[a-z0-9][a-z0-9.-]{0,118}$"
+        },
+        "sequence": {
+            "type": "integer",
+            "minimum": 0
+        },
+        "split": {
+            "type": "string",
+            "enum": [
+                "train",
+                "validation",
+                "test",
+                "unassigned"
+            ]
+        },
+        "eventTime": {
+            "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/UtcTimestamp"
+        },
+        "payload": {
+            "$ref": "https://data.rappterverse.dev/schemas/v2/common/json-value.schema.json#/$defs/JsonObject"
+        },
+        "provenance": {
+            "$ref": "#/$defs/Provenance"
+        },
+        "generation": {
+            "$ref": "#/$defs/Generation"
+        },
+        "governance": {
+            "$ref": "#/$defs/Governance"
+        }
+    },
+    "$defs": {
+        "Provenance": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "rightsBasis",
+                "rightsStatementId",
+                "lineageComplete",
+                "externalContentIncluded",
+                "sources"
+            ],
+            "properties": {
+                "rightsBasis": {
+                    "type": "string",
+                    "enum": [
+                        "synthetic",
+                        "rappterverse-owned"
+                    ]
+                },
+                "rightsStatementId": {
+                    "type": "string",
+                    "pattern": "^rights-[a-z0-9][a-z0-9.-]{0,119}$"
+                },
+                "lineageComplete": {
+                    "const": true
+                },
+                "externalContentIncluded": {
+                    "const": false
+                },
+                "sources": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 128,
+                    "items": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/$defs/SyntheticSource"
+                            },
+                            {
+                                "$ref": "#/$defs/RepositorySource"
+                            },
+                            {
+                                "$ref": "#/$defs/SystemSource"
+                            },
+                            {
+                                "$ref": "#/$defs/ConsentedSource"
+                            }
+                        ]
+                    }
+                }
+            }
+        },
+        "SyntheticSource": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "sourceType",
+                "sourceId",
+                "generatorCommit"
+            ],
+            "properties": {
+                "sourceType": {
+                    "type": "string",
+                    "enum": [
+                        "deterministic-synthetic",
+                        "model-generated-synthetic"
+                    ]
+                },
+                "sourceId": {
+                    "type": "string",
+                    "pattern": "^urn:rappterverse:synthetic:[a-z0-9][a-z0-9._:-]{0,191}$"
+                },
+                "generatorCommit": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v2/common/digest.schema.json#/$defs/GitCommit"
+                }
+            }
+        },
+        "RepositorySource": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "sourceType",
+                "repository",
+                "commit",
+                "path",
+                "blobSha256"
+            ],
+            "properties": {
+                "sourceType": {
+                    "const": "rappterverse-repository"
+                },
+                "repository": {
+                    "type": "string",
+                    "enum": [
+                        "kody-w/rappterverse",
+                        "kody-w/rappterverse-data"
+                    ]
+                },
+                "commit": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v2/common/digest.schema.json#/$defs/GitCommit"
+                },
+                "path": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/SafePath"
+                },
+                "blobSha256": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v2/common/digest.schema.json#/$defs/Sha256Hex"
+                }
+            }
+        },
+        "SystemSource": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "sourceType",
+                "agentId",
+                "ownershipEvidence"
+            ],
+            "properties": {
+                "sourceType": {
+                    "const": "system-controlled-agent"
+                },
+                "agentId": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/ActorId"
+                },
+                "ownershipEvidence": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v2/common/artifact-descriptor.schema.json#/$defs/EvidenceRef"
+                }
+            }
+        },
+        "ConsentedSource": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "sourceType",
+                "publicDataConsent",
+                "license",
+                "consentedAt",
+                "consentEvidence"
+            ],
+            "properties": {
+                "sourceType": {
+                    "const": "consented-human-judgment"
+                },
+                "publicDataConsent": {
+                    "const": true
+                },
+                "license": {
+                    "const": "CC-BY-4.0"
+                },
+                "consentedAt": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/UtcTimestamp"
+                },
+                "consentEvidence": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v2/common/artifact-descriptor.schema.json#/$defs/EvidenceRef"
+                }
+            }
+        },
+        "Generation": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "runId",
+                "generatorCommit",
+                "seed",
+                "transcriptId",
+                "deliberationId",
+                "providerReasoningId"
+            ],
+            "properties": {
+                "runId": {
+                    "type": "string",
+                    "pattern": "^run-[a-z0-9][a-z0-9.-]{0,126}$"
+                },
+                "generatorCommit": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v2/common/digest.schema.json#/$defs/GitCommit"
+                },
+                "seed": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 256
+                },
+                "transcriptId": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/TranscriptId"
+                },
+                "deliberationId": {
+                    "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/DeliberationId"
+                },
+                "providerReasoningId": {
+                    "anyOf": [
+                        {
+                            "type": "null"
+                        },
+                        {
+                            "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/ReasoningId"
+                        }
+                    ]
+                }
+            }
+        },
+        "Governance": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "license",
+                "privacy",
+                "safetyReviewPassed",
+                "contamination",
+                "qualityPassed"
+            ],
+            "properties": {
+                "license": {
+                    "const": "CC-BY-4.0"
+                },
+                "privacy": {
+                    "type": "string",
+                    "enum": [
+                        "synthetic-nonpersonal",
+                        "consented-public-judgment"
+                    ]
+                },
+                "safetyReviewPassed": {
+                    "const": true
+                },
+                "contamination": {
+                    "const": "public-generated-contamination-risk"
+                },
+                "qualityPassed": {
+                    "const": true
+                }
+            }
+        }
+    }
+}

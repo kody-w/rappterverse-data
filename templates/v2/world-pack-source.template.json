@@ -1,0 +1,19 @@
+{
+    "$template": "Documentation only; replace placeholders and remove this field.",
+    "schemaVersion": "rappterverse.world-pack-source/v2",
+    "worldPackSourceId": "world-pack-source-<stable-id>",
+    "releaseId": "release-<immutable-id>",
+    "projectionRecipe": {
+        "path": "objects/projection-recipes/sha256/<first-two>/<64-hex>.json",
+        "artifactKind": "projection-recipe",
+        "mediaType": "application/json",
+        "bytes": 1,
+        "sha256": "<64-lowercase-hex>",
+        "reviewReceiptRef": "objects/review-receipts/sha256/<first-two>/<64-hex>.json"
+    },
+    "namespace": "rappterverse/<stable-namespace>",
+    "seedChannels": [],
+    "entities": [],
+    "sortedByStableKey": true,
+    "canonicalization": "rappterverse-canonical-json/v2"
+}

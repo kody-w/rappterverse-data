@@ -1,0 +1,37 @@
+{
+    "$template": "Documentation only; replace placeholders and remove this field.",
+    "schemaVersion": "rappterverse.dataset-manifest/v2",
+    "datasetId": "<closed-dataset-id>",
+    "datasetVersion": "v2.0.0",
+    "createdAt": "<UTC-Z>",
+    "policy": {
+        "policyId": "rappterverse-publication-trust",
+        "policyVersion": "2.0.0",
+        "path": "policies/publication-trust-v2.json",
+        "sha256": "<64-lowercase-hex>"
+    },
+    "dataCard": {
+        "path": "objects/data-cards/sha256/<first-two>/<64-hex>.json",
+        "artifactKind": "data-card",
+        "mediaType": "application/json",
+        "bytes": 1,
+        "sha256": "<64-lowercase-hex>",
+        "reviewReceiptRef": "objects/review-receipts/sha256/<first-two>/<64-hex>.json"
+    },
+    "shards": [],
+    "supportingArtifacts": [],
+    "counts": {
+        "records": 1,
+        "transcripts": 1,
+        "deliberations": 1,
+        "providerReasoning": 0
+    },
+    "splits": {
+        "train": 1,
+        "validation": 0,
+        "test": 0,
+        "unassigned": 0
+    },
+    "artifactCount": 4,
+    "contentBytes": 1
+}

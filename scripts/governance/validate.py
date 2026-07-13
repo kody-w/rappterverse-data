@@ -11,6 +11,11 @@ import os
 import subprocess
 import sys
 from pathlib import Path
+from typing import List, Optional
+
+SCRIPTS_ROOT = Path(__file__).resolve().parents[1]
+if str(SCRIPTS_ROOT) not in sys.path:
+    sys.path.insert(0, str(SCRIPTS_ROOT))
 
 try:
     from .policy import PolicyConfigurationError, PolicySet
@@ -107,7 +112,7 @@ def _emit_fatal(output_format: str, code: str, message: str) -> None:
         print(f"ERROR {code} .: {message}")
 
 
-def main(argv: list[str] | None = None) -> int:
+def main(argv: Optional[List[str]] = None) -> int:
     args = _parser().parse_args(argv)
     root = Path(args.root).resolve()
     policy_root = Path(args.policy_root).resolve() if args.policy_root else root / "policies"
@@ -138,6 +143,13 @@ def main(argv: list[str] | None = None) -> int:
             args.format,
             "VALIDATION_PRECONDITION",
             "governance validation could not establish trusted inputs",
+        )
+        return 2
+    except RecursionError:
+        _emit_fatal(
+            args.format,
+            "JSON_DEPTH",
+            "JSON nesting exceeds the deterministic maximum depth",
         )
         return 2
     except Exception:

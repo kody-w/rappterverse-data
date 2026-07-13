@@ -1,0 +1,129 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://data.rappterverse.dev/schemas/v2/manifests/dataset-manifest.schema.json",
+    "title": "RAPPterverse dataset manifest v2",
+    "description": "A non-self-hashing manifest over reviewed data-card, shard, and supporting artifact bytes. A release-level descriptor and receipt review this manifest.",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "schemaVersion",
+        "datasetId",
+        "datasetVersion",
+        "createdAt",
+        "policy",
+        "dataCard",
+        "shards",
+        "supportingArtifacts",
+        "counts",
+        "splits",
+        "artifactCount",
+        "contentBytes"
+    ],
+    "properties": {
+        "schemaVersion": {
+            "const": "rappterverse.dataset-manifest/v2"
+        },
+        "datasetId": {
+            "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/DatasetId"
+        },
+        "datasetVersion": {
+            "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/DatasetVersion"
+        },
+        "createdAt": {
+            "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/UtcTimestamp"
+        },
+        "policy": {
+            "$ref": "https://data.rappterverse.dev/schemas/v2/common/artifact-descriptor.schema.json#/$defs/PolicyRef"
+        },
+        "dataCard": {
+            "$ref": "https://data.rappterverse.dev/schemas/v2/common/artifact-descriptor.schema.json#/$defs/ReviewedArtifact"
+        },
+        "shards": {
+            "type": "array",
+            "minItems": 3,
+            "maxItems": 16384,
+            "items": {
+                "$ref": "https://data.rappterverse.dev/schemas/v2/manifests/shard-descriptor.schema.json"
+            }
+        },
+        "supportingArtifacts": {
+            "type": "array",
+            "maxItems": 4096,
+            "items": {
+                "$ref": "https://data.rappterverse.dev/schemas/v2/common/artifact-descriptor.schema.json#/$defs/ReviewedArtifact"
+            }
+        },
+        "counts": {
+            "$ref": "#/$defs/Counts"
+        },
+        "splits": {
+            "$ref": "#/$defs/Splits"
+        },
+        "artifactCount": {
+            "type": "integer",
+            "minimum": 4
+        },
+        "contentBytes": {
+            "type": "integer",
+            "minimum": 1
+        }
+    },
+    "$defs": {
+        "Counts": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "records",
+                "transcripts",
+                "deliberations",
+                "providerReasoning"
+            ],
+            "properties": {
+                "records": {
+                    "type": "integer",
+                    "minimum": 1
+                },
+                "transcripts": {
+                    "type": "integer",
+                    "minimum": 1
+                },
+                "deliberations": {
+                    "type": "integer",
+                    "minimum": 1
+                },
+                "providerReasoning": {
+                    "type": "integer",
+                    "minimum": 0
+                }
+            }
+        },
+        "Splits": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "train",
+                "validation",
+                "test",
+                "unassigned"
+            ],
+            "properties": {
+                "train": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "validation": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "test": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "unassigned": {
+                    "type": "integer",
+                    "minimum": 0
+                }
+            }
+        }
+    }
+}

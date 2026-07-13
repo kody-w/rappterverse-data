@@ -1,0 +1,142 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://data.rappterverse.dev/schemas/v2/deliberations/public-deliberation.schema.json",
+    "title": "RAPPterverse explicit public deliberation v2",
+    "description": "A deliberately authored publishable rationale, never inferred inaccessible reasoning. Its containing shard carries byte integrity.",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "schemaVersion",
+        "deliberationId",
+        "datasetId",
+        "recordId",
+        "transcriptId",
+        "generatedAt",
+        "purpose",
+        "evidence",
+        "assumptions",
+        "alternatives",
+        "uncertainty",
+        "critiques",
+        "rejectedOptions",
+        "decision",
+        "expectedOutcome",
+        "limitations",
+        "inaccessibleReasoningIncluded"
+    ],
+    "properties": {
+        "schemaVersion": {
+            "const": "rappterverse.public-deliberation/v2"
+        },
+        "deliberationId": {
+            "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/DeliberationId"
+        },
+        "datasetId": {
+            "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/DatasetId"
+        },
+        "recordId": {
+            "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/RecordId"
+        },
+        "transcriptId": {
+            "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/TranscriptId"
+        },
+        "generatedAt": {
+            "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/UtcTimestamp"
+        },
+        "purpose": {
+            "const": "explicit-publishable-deliberation"
+        },
+        "evidence": {
+            "$ref": "#/$defs/TextList"
+        },
+        "assumptions": {
+            "$ref": "#/$defs/TextList"
+        },
+        "alternatives": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 64,
+            "items": {
+                "$ref": "#/$defs/Alternative"
+            }
+        },
+        "uncertainty": {
+            "$ref": "#/$defs/Uncertainty"
+        },
+        "critiques": {
+            "$ref": "#/$defs/TextList"
+        },
+        "rejectedOptions": {
+            "$ref": "#/$defs/TextList"
+        },
+        "decision": {
+            "$ref": "#/$defs/Text"
+        },
+        "expectedOutcome": {
+            "$ref": "#/$defs/Text"
+        },
+        "limitations": {
+            "$ref": "#/$defs/TextList"
+        },
+        "inaccessibleReasoningIncluded": {
+            "const": false
+        }
+    },
+    "$defs": {
+        "Text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 16384
+        },
+        "TextList": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 128,
+            "items": {
+                "$ref": "#/$defs/Text"
+            }
+        },
+        "Alternative": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "option",
+                "benefits",
+                "risks"
+            ],
+            "properties": {
+                "option": {
+                    "$ref": "#/$defs/Text"
+                },
+                "benefits": {
+                    "$ref": "#/$defs/TextList"
+                },
+                "risks": {
+                    "$ref": "#/$defs/TextList"
+                }
+            }
+        },
+        "Uncertainty": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "confidenceBasisPoints",
+                "summary",
+                "unknowns"
+            ],
+            "properties": {
+                "confidenceBasisPoints": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 10000
+                },
+                "summary": {
+                    "$ref": "#/$defs/Text"
+                },
+                "unknowns": {
+                    "$ref": "#/$defs/TextList"
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,26 @@
+[
+    {
+        "name": "sorted-nfc-object",
+        "value": {
+            "z": [
+                "Café",
+                {
+                    "beta": false,
+                    "alpha": 7
+                }
+            ],
+            "a": null
+        },
+        "canonical": "{\"a\":null,\"z\":[\"Café\",{\"alpha\":7,\"beta\":false}]}",
+        "stored": "{\"a\":null,\"z\":[\"Café\",{\"alpha\":7,\"beta\":false}]}\n"
+    },
+    {
+        "name": "unicode-key-order",
+        "value": {
+            "é": "composed",
+            "A": 1
+        },
+        "canonical": "{\"A\":1,\"é\":\"composed\"}",
+        "stored": "{\"A\":1,\"é\":\"composed\"}\n"
+    }
+]

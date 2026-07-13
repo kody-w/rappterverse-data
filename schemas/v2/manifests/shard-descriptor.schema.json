@@ -1,0 +1,67 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://data.rappterverse.dev/schemas/v2/manifests/shard-descriptor.schema.json",
+    "title": "RAPPterverse reviewed canonical shard descriptor v2",
+    "description": "An exact canonical JSONL shard and the immutable receipt approving it.",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "path",
+        "artifactKind",
+        "mediaType",
+        "bytes",
+        "sha256",
+        "reviewReceiptRef",
+        "itemCount",
+        "firstItemId",
+        "lastItemId",
+        "maxLineBytes",
+        "canonicalization"
+    ],
+    "properties": {
+        "path": {
+            "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/SafePath"
+        },
+        "artifactKind": {
+            "type": "string",
+            "enum": [
+                "record-shard",
+                "transcript-shard",
+                "deliberation-shard",
+                "provider-reasoning-shard"
+            ]
+        },
+        "mediaType": {
+            "const": "application/x-ndjson"
+        },
+        "bytes": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1000000
+        },
+        "sha256": {
+            "$ref": "https://data.rappterverse.dev/schemas/v2/common/digest.schema.json#/$defs/Sha256Hex"
+        },
+        "reviewReceiptRef": {
+            "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/ReceiptPath"
+        },
+        "itemCount": {
+            "type": "integer",
+            "minimum": 1
+        },
+        "firstItemId": {
+            "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/StableId"
+        },
+        "lastItemId": {
+            "$ref": "https://data.rappterverse.dev/schemas/v2/common/identifiers.schema.json#/$defs/StableId"
+        },
+        "maxLineBytes": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 262144
+        },
+        "canonicalization": {
+            "const": "rappterverse-canonical-json/v2"
+        }
+    }
+}
