@@ -22,24 +22,42 @@ from validate_candidate_trust import (  # noqa: E402
 )
 
 
+def _copytree_for_mutable_fixture(source: Path, target: Path) -> None:
+    """Copy trusted data into a scratch fixture without inheriting read-only bits."""
+    shutil.copytree(source, target)
+    for path in (target, *target.rglob("*")):
+        if path.is_dir():
+            path.chmod(path.stat().st_mode | 0o700)
+        elif path.is_file():
+            path.chmod(path.stat().st_mode | 0o600)
+
+
 class CandidateTrustHarnessTests(unittest.TestCase):
     def setUp(self) -> None:
         self.temporary = tempfile.TemporaryDirectory(dir=WORK)
         self.addCleanup(self.temporary.cleanup)
         self.root = Path(self.temporary.name)
         for directory in ("schemas", "policies", "templates"):
-            shutil.copytree(ROOT / directory, self.root / directory)
+            _copytree_for_mutable_fixture(
+                ROOT / directory,
+                self.root / directory,
+            )
         for relative in _required_relative_files(ROOT):
             source = ROOT / relative
             target = self.root / relative
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(source, target)
+            target.chmod(target.stat().st_mode | 0o600)
 
     def errors(self):
         return validate_candidate_tree(self.root, ROOT)
 
     def test_repository_candidate_tree_passes_trusted_vectors(self) -> None:
         self.assertEqual((), self.errors())
+
+    def test_mutable_fixture_does_not_inherit_read_only_candidate_mode(self) -> None:
+        readme = self.root / "templates" / "v2" / "README.md"
+        readme.write_bytes(readme.read_bytes())
 
     def test_deleted_schema_or_registry_fails_closed(self) -> None:
         cases = (
