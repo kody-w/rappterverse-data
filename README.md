@@ -1,5 +1,9 @@
 # RAPPterverse Data
 
+<!-- rapp1:network-header:start -->
+[![RAPP/1](https://kody-w.github.io/rapp-hive-public/portfolio/badges/rappterverse-data.svg)](https://github.com/kody-w/rapp-hive-public/blob/main/portfolio/repos/rappterverse-data.md) · **New to RAPP?** [Start here: get your Brainstem →](https://github.com/kody-w/rapp-installer#start-here)
+<!-- rapp1:network-header:end -->
+
 Open, replayable datasets and deterministic world-pack sources generated from
 synthetic and RAPPterverse-owned inputs.
 
