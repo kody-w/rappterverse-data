@@ -1,3 +1,7 @@
+<!-- retired-notice:start -->
+> **Retired experiment, kept for reference.** The living project is [kody-w/RAPP](https://github.com/kody-w/RAPP).
+<!-- retired-notice:end -->
+
 # RAPPterverse Data
 
 <!-- rapp1:network-header:start -->
